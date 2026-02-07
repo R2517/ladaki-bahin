@@ -227,13 +227,10 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Buttons - hidden on print */}
+      {/* Single button - Save + Print */}
       <div className="no-print button-bar">
-        <button className="action-btn" onClick={handleSave} disabled={saving}>
-          {saving ? "Saving..." : "Save Data"}
-        </button>
-        <button className="action-btn" onClick={handlePrint}>
-          Print / Save as PDF
+        <button className="action-btn" onClick={handlePrint} disabled={saving}>
+          {saving ? "Saving..." : "Save & Print / Save as PDF"}
         </button>
       </div>
     </div>
