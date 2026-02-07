@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import {
   FileText, Shield, AlertTriangle, FilePlus,
   Landmark, Users, BookOpen, FileCheck,
-  Search, LayoutGrid,
+  Search, LayoutGrid, Radio,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -132,7 +132,31 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* ===== Services Section ===== */}
+      {/* ===== Live News Ticker ===== */}
+      <div className="ticker-wrap">
+        <div className="ticker-bar">
+          <span className="ticker-live-badge">
+            <Radio size={12} /> LIVE
+          </span>
+          <span className="ticker-label">📢 नवीन फिचर:</span>
+          <div className="ticker-scroll">
+            <div className="ticker-content">
+              <span className="ticker-item">⭐ **मोठी बातमी:** लाडकी बहिण योजना Re-Verification साठी हमीपत्र फॉर्म आता उपलब्ध आहे!</span>
+              <span className="ticker-sep">|</span>
+              <span className="ticker-item">📋 स्वयंघोषणा पत्र, तक्रार नोंदणी व नवीन अर्ज फॉर्म लवकरच येत आहेत.</span>
+              <span className="ticker-sep">|</span>
+              <span className="ticker-item">💾 Google Sheet मध्ये data auto-save होतो — इंटरनेट आवश्यक.</span>
+              <span className="ticker-sep">|</span>
+              <span className="ticker-item">🖨️ Save & Print एका क्लिकवर — A4 format मध्ये print होतो.</span>
+              <span className="ticker-sep">|</span>
+              <span className="ticker-item">⭐ **मोठी बातमी:** लाडकी बहिण योजना Re-Verification साठी हमीपत्र फॉर्म आता उपलब्ध आहे!</span>
+              <span className="ticker-sep">|</span>
+              <span className="ticker-item">📋 स्वयंघोषणा पत्र, तक्रार नोंदणी व नवीन अर्ज फॉर्म लवकरच येत आहेत.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="dash-content">
         <div className="dash-section-header">
           <div className="dash-section-title-row">
