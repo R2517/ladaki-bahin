@@ -53,7 +53,10 @@ const Index = () => {
     }
   };
 
-  const handlePrint = () => window.print();
+  const handlePrint = async () => {
+    await handleSave();
+    window.print();
+  };
 
   return (
     <div className="a4-page-wrapper">
