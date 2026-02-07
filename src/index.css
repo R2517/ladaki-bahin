@@ -7,48 +7,48 @@
 
 @layer base {
   :root {
-    --background: 220 25% 97%;
-    --foreground: 224 28% 14%;
+    --background: 180 20% 97%;
+    --foreground: 190 30% 12%;
     --card: 0 0% 100%;
-    --card-foreground: 224 28% 14%;
+    --card-foreground: 190 30% 12%;
     --popover: 0 0% 100%;
-    --popover-foreground: 224 28% 14%;
-    --primary: 224 76% 48%;
+    --popover-foreground: 190 30% 12%;
+    --primary: 175 70% 38%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 220 18% 93%;
-    --secondary-foreground: 224 28% 14%;
-    --muted: 220 18% 93%;
-    --muted-foreground: 220 12% 50%;
-    --accent: 220 18% 93%;
-    --accent-foreground: 224 28% 14%;
+    --secondary: 180 16% 93%;
+    --secondary-foreground: 190 30% 12%;
+    --muted: 180 16% 93%;
+    --muted-foreground: 180 10% 46%;
+    --accent: 180 16% 93%;
+    --accent-foreground: 190 30% 12%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 220 20% 90%;
-    --input: 220 20% 90%;
-    --ring: 224 76% 48%;
+    --border: 180 18% 89%;
+    --input: 180 18% 89%;
+    --ring: 175 70% 38%;
     --radius: 12px;
   }
 
   .dark {
-    --background: 224 30% 8%;
-    --foreground: 210 20% 92%;
-    --card: 224 25% 12%;
-    --card-foreground: 210 20% 92%;
-    --popover: 224 25% 12%;
-    --popover-foreground: 210 20% 92%;
-    --primary: 217 91% 60%;
+    --background: 192 35% 7%;
+    --foreground: 180 15% 92%;
+    --card: 192 30% 11%;
+    --card-foreground: 180 15% 92%;
+    --popover: 192 30% 11%;
+    --popover-foreground: 180 15% 92%;
+    --primary: 175 65% 50%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 224 20% 18%;
-    --secondary-foreground: 210 20% 92%;
-    --muted: 224 20% 18%;
-    --muted-foreground: 215 15% 55%;
-    --accent: 224 20% 18%;
-    --accent-foreground: 210 20% 92%;
+    --secondary: 192 22% 16%;
+    --secondary-foreground: 180 15% 92%;
+    --muted: 192 22% 16%;
+    --muted-foreground: 180 12% 52%;
+    --accent: 192 22% 16%;
+    --accent-foreground: 180 15% 92%;
     --destructive: 0 62% 30%;
-    --destructive-foreground: 210 20% 92%;
-    --border: 224 20% 20%;
-    --input: 224 20% 20%;
-    --ring: 217 91% 60%;
+    --destructive-foreground: 180 15% 92%;
+    --border: 192 22% 18%;
+    --input: 192 22% 18%;
+    --ring: 175 65% 50%;
     --radius: 12px;
   }
 }
@@ -78,12 +78,12 @@ html, body {
 
 /* -- Nav -- */
 .dash-nav {
-  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #3b82f6 100%);
+  background: linear-gradient(135deg, #0f766e 0%, #0d9488 50%, #14b8a6 100%);
   padding: 0;
   position: sticky;
   top: 0;
   z-index: 50;
-  box-shadow: 0 4px 24px rgba(30, 58, 138, 0.3);
+  box-shadow: 0 4px 24px rgba(13, 148, 136, 0.3);
 }
 
 .dash-nav-inner {
@@ -159,7 +159,7 @@ html, body {
 }
 
 .dash-banner {
-  background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 40%, #3b82f6 100%);
+  background: linear-gradient(135deg, #0f766e 0%, #0d9488 40%, #14b8a6 100%);
   border-radius: 16px;
   padding: 26px 30px;
   color: #fff;
@@ -167,7 +167,7 @@ html, body {
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  box-shadow: 0 8px 32px rgba(37, 99, 235, 0.2);
+  box-shadow: 0 8px 32px rgba(13, 148, 136, 0.2);
   position: relative;
   overflow: hidden;
 }
@@ -516,7 +516,7 @@ html, body {
 }
 
 .form-header {
-  background: linear-gradient(135deg, #1e3a8a, #2563eb);
+  background: linear-gradient(135deg, #0f766e, #0d9488);
   color: #fff;
   padding: 22px 28px;
   text-align: center;
@@ -598,7 +598,7 @@ html, body {
   font-size: 15px;
   font-family: 'Noto Sans Devanagari', sans-serif;
   font-weight: 700;
-  background: linear-gradient(135deg, #1e3a8a, #2563eb);
+  background: linear-gradient(135deg, #0f766e, #0d9488);
   color: #fff;
   border: none;
   border-radius: 10px;
