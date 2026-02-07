@@ -79,8 +79,22 @@ html, body {
   text-align: center;
   font-size: 18px;
   font-weight: 700;
-  margin: 8px 0 12px;
+  margin: 8px 0 4px;
   text-decoration: underline;
+}
+
+.page-subtitle {
+  text-align: center;
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0 0 10px;
+}
+
+.intro-line,
+.oath-line,
+.closing-line {
+  margin: 10px 0 8px;
+  font-weight: 600;
 }
 
 .form-row {
