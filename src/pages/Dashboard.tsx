@@ -185,12 +185,14 @@ const forms: FormCard[] = [
   },
   {
     id: "caste-validity",
-    title: "जात पडताळणीसाठी शपथपत्र",
+    title: "जात पडताळणी",
     icon: BadgeCheck,
     iconBg: "linear-gradient(135deg, #CCFBF1, #99F6E4)",
     iconColor: "#0D9488",
     path: "/caste-validity",
-    ready: false,
+    ready: true,
+    badge: "READY",
+    badgeType: "ready",
   },
   {
     id: "domicile",
