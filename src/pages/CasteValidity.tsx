@@ -1,61 +1,76 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Landmark, Sun, Moon, BadgeCheck, FileText, FileSpreadsheet } from "lucide-react";
+import { toast } from "sonner";
+import { ArrowLeft, BadgeCheck, Landmark, Sun, Moon } from "lucide-react";
 import { getThemeGradient } from "@/lib/themes";
 
-interface SubCard {
-  id: string;
-  title: string;
-  icon: React.ElementType;
-  iconBg: string;
-  iconColor: string;
-  path: string;
-  ready: boolean;
-  badge?: string;
-  badgeType?: "ready" | "new" | "hot" | "fast";
-}
+const GOOGLE_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbxKjtz4R68s1lDUU2FwDxaI_Sp3qTFUKROTwZ6UPDVHGouzleZ72yeJ41nHWLH3n2Sf/exec";
 
-const subCards: SubCard[] = [
-  {
-    id: "namuna-03",
-    title: "नमुना 03",
-    icon: FileText,
-    iconBg: "linear-gradient(135deg, #CCFBF1, #99F6E4)",
-    iconColor: "#0D9488",
-    path: "/caste-validity/namuna-03",
-    ready: false,
-    badge: "NEW",
-    badgeType: "new",
-  },
-  {
-    id: "namuna-17",
-    title: "नमुना 17",
-    icon: FileSpreadsheet,
-    iconBg: "linear-gradient(135deg, #E0E7FF, #C7D2FE)",
-    iconColor: "#4338CA",
-    path: "/caste-validity/namuna-17",
-    ready: false,
-    badge: "NEW",
-    badgeType: "new",
-  },
-];
-
-const badgeStyles: Record<string, string> = {
-  ready: "badge-ready",
-  new: "badge-new",
-  hot: "badge-hot",
-  fast: "badge-fast",
+const getTodayDate = () => {
+  const d = new Date();
+  return `${String(d.getDate()).padStart(2, "0")} / ${String(d.getMonth() + 1).padStart(2, "0")} / ${d.getFullYear()}`;
 };
 
 const CasteValidity = () => {
   const navigate = useNavigate();
   const themeGradient = getThemeGradient();
+  const [showForm, setShowForm] = useState(false);
   const [dark, setDark] = useState(() => localStorage.getItem("theme") === "dark");
+  const [name, setName] = useState("");
+  const [fatherName, setFatherName] = useState("");
+  const [caste, setCaste] = useState("");
+  const [subCaste, setSubCaste] = useState("");
+  const [aadhaar, setAadhaar] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [address, setAddress] = useState("");
+  const [dob, setDob] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  const taluka = "नांदगाव खंडेश्वर";
+  const district = "अमरावती";
+  const place = "पापळ";
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark);
     localStorage.setItem("theme", dark ? "dark" : "light");
   }, [dark]);
+
+  const validate = () => {
+    if (!name.trim()) { toast.error("कृपया नाव भरा"); return false; }
+    if (!caste.trim()) { toast.error("कृपया जात भरा"); return false; }
+    if (aadhaar && !/^\d{12}$/.test(aadhaar)) { toast.error("आधार क्रमांक 12 अंकी असावा"); return false; }
+    if (!mobile.trim() || !/^\d{10}$/.test(mobile)) { toast.error("मोबाईल क्र. 10 अंकी असावा"); return false; }
+    return true;
+  };
+
+  const handleSaveAndPrint = async () => {
+    if (!validate()) return;
+    setSaving(true);
+    try {
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          formType: "जात पडताळणी",
+          timestamp: new Date().toISOString(),
+          name, fatherName, caste, subCaste, aadhaar, mobile, address, dob, taluka, district, place,
+        }),
+        mode: "no-cors",
+      });
+      toast.success("Data Google Sheet मध्ये Saved झाला आहे");
+    } catch {
+      toast.error("Data Save करताना Error आला.");
+      setSaving(false);
+      return;
+    } finally {
+      setSaving(false);
+    }
+    setTimeout(() => {
+      window.print();
+      setName(""); setFatherName(""); setCaste(""); setSubCaste("");
+      setAadhaar(""); setMobile(""); setAddress(""); setDob("");
+    }, 300);
+  };
 
   return (
     <div className="dash-root">
@@ -77,69 +92,131 @@ const CasteValidity = () => {
         </div>
       </nav>
 
-      {/* ===== Back Button ===== */}
-      <div style={{ maxWidth: 900, margin: "0 auto", padding: "18px 16px 0" }}>
-        <button className="back-btn no-print" onClick={() => navigate("/")}>
-          <ArrowLeft size={18} />
-          <span>मुख्यपृष्ठ</span>
+      {/* ===== Content ===== */}
+      <div className="no-print" style={{ padding: "12px 16px 0" }}>
+        <button className="back-btn px-[9px] py-[7px] font-extralight font-sans shadow-sm rounded-sm" style={{ color: `hsl(var(--primary))` }} onClick={() => showForm ? setShowForm(false) : navigate("/")}>
+          <ArrowLeft size={18} /> {showForm ? "कार्ड वर परत जा" : "डॅशबोर्ड वर परत जा"}
         </button>
       </div>
 
-      {/* ===== Banner ===== */}
-      <div className="dash-banner-wrap">
-        <div className="dash-banner" style={{ background: themeGradient }}>
-          <div className="banner-text">
-            <h2 className="dash-welcome-title">
-              <BadgeCheck size={28} style={{ marginRight: 8, verticalAlign: "middle" }} />
-              जात पडताळणी
-            </h2>
-            <p className="dash-welcome-sub">
-              जात पडताळणीसाठी आवश्यक नमुने खाली निवडा.
-            </p>
+      <div className="no-print form-page-wrapper" style={{ paddingTop: 0 }}>
+        {!showForm ? (
+          <div style={{ display: "flex", justifyContent: "center", paddingTop: 20 }}>
+            <button
+              className="dash-card hamipatra-hero-card"
+              style={{ maxWidth: 240, padding: "32px 24px 24px", animationDelay: "0s" }}
+              onClick={() => setShowForm(true)}
+            >
+              <span className="dash-card-badge badge-ready">READY</span>
+              <div
+                className="dash-card-icon"
+                style={{ background: "linear-gradient(135deg, #CCFBF1, #99F6E4)", width: 64, height: 64 }}
+              >
+                <BadgeCheck size={30} color="#0D9488" strokeWidth={1.8} />
+              </div>
+              <span className="dash-card-label" style={{ fontSize: 14 }}>जात पडताळणी</span>
+              <span style={{ fontSize: 11, color: "hsl(var(--muted-foreground))", marginTop: 4 }}>
+                फॉर्म भरण्यासाठी क्लिक करा →
+              </span>
+            </button>
           </div>
-          <div className="banner-stats">
-            <div className="stat-chip">
-              <span className="stat-num">{subCards.length}</span>
-              <span className="stat-label">नमुने उपलब्ध</span>
+        ) : (
+          <div className="form-container">
+            <div className="form-header" style={{ background: themeGradient }}>
+              <h1 className="form-heading">जात पडताळणी</h1>
+              <p className="form-subheading">जात पडताळणी प्रमाणपत्रासाठी माहिती भरा</p>
+            </div>
+            <div className="form-body">
+              <div className="input-group">
+                <label>अर्जदाराचे पूर्ण नाव *</label>
+                <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="अर्जदाराचे पूर्ण नाव" />
+              </div>
+              <div className="input-group">
+                <label>वडिलांचे / पतीचे नाव</label>
+                <input type="text" value={fatherName} onChange={(e) => setFatherName(e.target.value)} placeholder="वडिलांचे / पतीचे पूर्ण नाव" />
+              </div>
+              <div className="input-row-2">
+                <div className="input-group">
+                  <label>जात *</label>
+                  <input type="text" value={caste} onChange={(e) => setCaste(e.target.value)} placeholder="जात" />
+                </div>
+                <div className="input-group">
+                  <label>पोटजात</label>
+                  <input type="text" value={subCaste} onChange={(e) => setSubCaste(e.target.value)} placeholder="पोटजात" />
+                </div>
+              </div>
+              <div className="input-group">
+                <label>जन्मतारीख</label>
+                <input type="date" value={dob} onChange={(e) => setDob(e.target.value)} />
+              </div>
+              <div className="input-row-2">
+                <div className="input-group">
+                  <label>आधार क्रमांक</label>
+                  <input type="text" value={aadhaar} onChange={(e) => setAadhaar(e.target.value.replace(/\D/g, "").slice(0, 12))} maxLength={12} inputMode="numeric" placeholder="12 अंकी क्रमांक" />
+                </div>
+                <div className="input-group">
+                  <label>मोबाईल क्र. *</label>
+                  <input type="text" value={mobile} onChange={(e) => setMobile(e.target.value.replace(/\D/g, "").slice(0, 10))} maxLength={10} inputMode="numeric" placeholder="10 अंकी क्र." />
+                </div>
+              </div>
+              <div className="input-group">
+                <label>राहणार (पूर्ण पत्ता)</label>
+                <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="गाव / शहर, पोस्ट, तालुका" />
+              </div>
+              <hr className="section-divider" />
+              <div className="input-row-2">
+                <div className="input-group">
+                  <label>तालुका</label>
+                  <input type="text" value={taluka} readOnly className="readonly" />
+                </div>
+                <div className="input-group">
+                  <label>जिल्हा</label>
+                  <input type="text" value={district} readOnly className="readonly" />
+                </div>
+              </div>
+              <button className="submit-btn" style={{ background: themeGradient }} onClick={handleSaveAndPrint} disabled={saving}>
+                {saving ? "Saving..." : "💾 Save & Print / Save as PDF"}
+              </button>
+              <p className="form-footer-note">Data Google Sheet मध्ये Save होईल आणि A4 format मध्ये Print होईल</p>
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* ===== Cards ===== */}
-      <div className="dash-content">
-        <div className="dash-cards-grid" style={{ maxWidth: 600, margin: "0 auto" }}>
-          {subCards.map((card, i) => (
-            <button
-              key={card.id}
-              className="dash-card"
-              style={{ animationDelay: `${i * 0.04}s` }}
-              onClick={() => {
-                if (card.ready) {
-                  navigate(card.path);
-                } else {
-                  alert("हा नमुना लवकरच उपलब्ध होईल.");
-                }
-              }}
-            >
-              {card.badge && (
-                <span className={`dash-card-badge ${badgeStyles[card.badgeType || "new"]}`}>
-                  {card.badge}
-                </span>
-              )}
-              <div className="dash-card-icon" style={{ background: card.iconBg }}>
-                <card.icon size={26} color={card.iconColor} strokeWidth={1.8} />
-              </div>
-              <span className="dash-card-label">{card.title}</span>
-            </button>
-          ))}
-        </div>
+        )}
       </div>
 
       {/* ===== Footer ===== */}
-      <footer className="dash-footer">
+      <footer className="dash-footer no-print">
         © 2026 SETU Suvidha — सेतु सुविधा महा ई-सेवा पोर्टल
       </footer>
+
+      {/* ===== A4 PRINT FORMAT ===== */}
+      <div className="print-only a4-page">
+        <h2 className="print-title">जात पडताळणी प्रमाणपत्र अर्ज</h2>
+        <h3 className="print-subtitle">Caste Validity Certificate Application</h3>
+        <hr className="print-divider" />
+        <div className="print-row"><span className="print-label">अर्जदाराचे नाव :</span><span className="print-value-underline">{name}</span></div>
+        <div className="print-row"><span className="print-label">वडिलांचे / पतीचे नाव :</span><span className="print-value-underline">{fatherName || "________________________"}</span></div>
+        <div className="print-row">
+          <span className="print-label">जात :</span><span className="print-value-underline">{caste}</span>
+          <span className="print-label" style={{ marginLeft: 20 }}>पोटजात :</span><span className="print-value-underline">{subCaste || "____________"}</span>
+        </div>
+        <div className="print-row"><span className="print-label">जन्मतारीख :</span><span className="print-value-underline">{dob || "________________________"}</span></div>
+        <div className="print-row">
+          <span className="print-label">आधार क्रमांक :</span><span className="print-value-underline">{aadhaar || "____________"}</span>
+          <span className="print-label" style={{ marginLeft: 20 }}>मोबाईल क्र. :</span><span className="print-value-underline">{mobile}</span>
+        </div>
+        <div className="print-row"><span className="print-label">राहणार :</span><span className="print-value-underline">{address || "________________________"}</span></div>
+        <div className="print-row">
+          <span className="print-label">तालुका :</span><span className="print-value-underline">{taluka}</span>
+          <span className="print-label" style={{ marginLeft: 20 }}>जिल्हा :</span><span className="print-value-underline">{district}</span>
+        </div>
+        <div className="print-row"><span className="print-label">राज्य :</span><span className="print-value-underline">महाराष्ट्र</span></div>
+        <hr className="print-divider" />
+        <p className="print-oath">मी वरील माहिती सत्य व अचूक असल्याचे प्रतिज्ञापूर्वक सांगतो/सांगते.</p>
+        <div className="print-footer">
+          <div className="print-footer-row"><span>ठिकाण : {place}</span><span>अर्जदाराची सही / अंगठा</span></div>
+          <div className="print-footer-row" style={{ marginTop: 10 }}><span>दिनांक : {getTodayDate()}</span><span>अर्जदाराचे नाव : {name || "_______________"}</span></div>
+        </div>
+      </div>
     </div>
   );
 };
