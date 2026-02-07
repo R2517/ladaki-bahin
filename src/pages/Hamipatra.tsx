@@ -64,27 +64,36 @@ const Hamipatra = () => {
     <>
       {/* ===== INPUT FORM ===== */}
       <div className="no-print form-page-wrapper">
+        {/* Page Header */}
+        <div className="hamipatra-page-header" style={{ background: themeGradient }}>
+          <FileText size={24} color="#fff" />
+          <div>
+            <h1 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#fff", fontFamily: "'Noto Sans Devanagari', sans-serif" }}>हमीपत्र (Disclaimer)</h1>
+            <p style={{ margin: 0, fontSize: 12, color: "rgba(255,255,255,0.8)", fontFamily: "'Noto Sans Devanagari', sans-serif" }}>लाडकी बहिण योजना — Re‑Verification / Grievance</p>
+          </div>
+        </div>
+
         <button className="back-btn" style={{ color: `hsl(var(--primary))` }} onClick={() => showForm ? setShowForm(false) : navigate("/")}>
           <ArrowLeft size={18} /> {showForm ? "कार्ड वर परत जा" : "डॅशबोर्ड वर परत जा"}
         </button>
 
         {!showForm ? (
           /* ===== CARD VIEW ===== */
-          <div style={{ display: "flex", justifyContent: "center", paddingTop: 30 }}>
+          <div style={{ display: "flex", justifyContent: "center", paddingTop: 20 }}>
             <button
-              className="dash-card"
-              style={{ maxWidth: 220, padding: "30px 20px 22px", animationDelay: "0s" }}
+              className="dash-card hamipatra-hero-card"
+              style={{ maxWidth: 240, padding: "32px 24px 24px", animationDelay: "0s" }}
               onClick={() => setShowForm(true)}
             >
               <span className="dash-card-badge badge-ready">READY</span>
               <div
                 className="dash-card-icon"
-                style={{ background: "linear-gradient(135deg, #DBEAFE, #BFDBFE)" }}
+                style={{ background: "linear-gradient(135deg, #DBEAFE, #BFDBFE)", width: 64, height: 64 }}
               >
-                <FileText size={28} color="#2563EB" strokeWidth={1.8} />
+                <FileText size={30} color="#2563EB" strokeWidth={1.8} />
               </div>
-              <span className="dash-card-label">हमीपत्र (Disclaimer)</span>
-              <span style={{ fontSize: 11, color: "hsl(var(--muted-foreground))", marginTop: 2 }}>
+              <span className="dash-card-label" style={{ fontSize: 14 }}>हमीपत्र (Disclaimer)</span>
+              <span style={{ fontSize: 11, color: "hsl(var(--muted-foreground))", marginTop: 4 }}>
                 फॉर्म भरण्यासाठी क्लिक करा →
               </span>
             </button>
