@@ -86,7 +86,7 @@ const Grievance = () => {
       </nav>
 
       <div className="no-print form-page-wrapper">
-        <button className="back-btn px-[9px] py-[7px] font-extralight font-sans text-right shadow-sm rounded-sm" style={{
+        <button className="back-btn px-[9px] py-[7px] font-extralight font-sans text-left shadow-sm rounded-sm" style={{
         color: `hsl(var(--primary))`
       }} onClick={() => showForm ? setShowForm(false) : navigate("/")}>
           <ArrowLeft size={18} /> {showForm ? "कार्ड वर परत जा" : "डॅशबोर्ड वर परत जा"}
