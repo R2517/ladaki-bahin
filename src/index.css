@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -7,49 +7,55 @@
 
 @layer base {
   :root {
-    --background: 180 20% 97%;
-    --foreground: 190 30% 12%;
+    --background: 220 20% 97%;
+    --foreground: 220 25% 10%;
     --card: 0 0% 100%;
-    --card-foreground: 190 30% 12%;
+    --card-foreground: 220 25% 10%;
     --popover: 0 0% 100%;
-    --popover-foreground: 190 30% 12%;
+    --popover-foreground: 220 25% 10%;
     --primary: 175 70% 38%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 180 16% 93%;
-    --secondary-foreground: 190 30% 12%;
-    --muted: 180 16% 93%;
-    --muted-foreground: 180 10% 46%;
-    --accent: 180 16% 93%;
-    --accent-foreground: 190 30% 12%;
+    --secondary: 220 14% 93%;
+    --secondary-foreground: 220 25% 10%;
+    --muted: 220 14% 93%;
+    --muted-foreground: 220 8% 50%;
+    --accent: 220 14% 93%;
+    --accent-foreground: 220 25% 10%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 180 18% 89%;
-    --input: 180 18% 89%;
+    --border: 220 13% 90%;
+    --input: 220 13% 90%;
     --ring: 175 70% 38%;
-    --radius: 12px;
+    --radius: 16px;
+    --glass-bg: rgba(255, 255, 255, 0.6);
+    --glass-border: rgba(255, 255, 255, 0.4);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
   }
 
   .dark {
-    --background: 192 35% 7%;
-    --foreground: 180 15% 92%;
-    --card: 192 30% 11%;
-    --card-foreground: 180 15% 92%;
-    --popover: 192 30% 11%;
-    --popover-foreground: 180 15% 92%;
+    --background: 225 30% 6%;
+    --foreground: 220 15% 92%;
+    --card: 225 25% 10%;
+    --card-foreground: 220 15% 92%;
+    --popover: 225 25% 10%;
+    --popover-foreground: 220 15% 92%;
     --primary: 175 65% 50%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 192 22% 16%;
-    --secondary-foreground: 180 15% 92%;
-    --muted: 192 22% 16%;
-    --muted-foreground: 180 12% 52%;
-    --accent: 192 22% 16%;
-    --accent-foreground: 180 15% 92%;
+    --secondary: 225 20% 14%;
+    --secondary-foreground: 220 15% 92%;
+    --muted: 225 20% 14%;
+    --muted-foreground: 220 10% 50%;
+    --accent: 225 20% 14%;
+    --accent-foreground: 220 15% 92%;
     --destructive: 0 62% 30%;
-    --destructive-foreground: 180 15% 92%;
-    --border: 192 22% 18%;
-    --input: 192 22% 18%;
+    --destructive-foreground: 220 15% 92%;
+    --border: 225 18% 16%;
+    --input: 225 18% 16%;
     --ring: 175 65% 50%;
-    --radius: 12px;
+    --radius: 16px;
+    --glass-bg: rgba(15, 20, 35, 0.65);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
   }
 }
 
@@ -66,7 +72,7 @@ html, body {
 }
 
 /* ============================
-   DASHBOARD — NEXT-GEN UI
+   GLASSMORPHISM DASHBOARD
    ============================ */
 
 .dash-root {
@@ -74,67 +80,105 @@ html, body {
   display: flex;
   flex-direction: column;
   background: hsl(var(--background));
+  position: relative;
+}
+
+/* Ambient gradient blobs */
+.dash-root::before,
+.dash-root::after {
+  content: '';
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.25;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.dash-root::before {
+  width: 600px;
+  height: 600px;
+  top: -200px;
+  right: -100px;
+  background: hsl(var(--primary) / 0.5);
+}
+
+.dash-root::after {
+  width: 500px;
+  height: 500px;
+  bottom: -150px;
+  left: -100px;
+  background: hsl(var(--primary) / 0.3);
 }
 
 /* -- Nav -- */
 .dash-nav {
-  background: linear-gradient(135deg, #0f766e 0%, #0d9488 50%, #14b8a6 100%);
-  padding: 0;
   position: sticky;
   top: 0;
   z-index: 50;
-  box-shadow: 0 4px 24px rgba(13, 148, 136, 0.3);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow: 0 1px 24px rgba(0, 0, 0, 0.06);
 }
 
 .dash-nav-inner {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 14px 28px;
+  padding: 12px 28px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
 .theme-toggle {
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
   background: rgba(255,255,255,0.15);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(12px);
   border: 1px solid rgba(255,255,255,0.2);
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.2s, transform 0.15s;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .theme-toggle:hover {
-  background: rgba(255,255,255,0.25);
-  transform: scale(1.08);
+  background: rgba(255,255,255,0.28);
+  transform: scale(1.1) rotate(15deg);
+  box-shadow: 0 4px 16px rgba(255,255,255,0.15);
 }
 
 /* -- Color Palette Popup -- */
 .color-palette-popup {
   position: absolute;
-  top: 48px;
+  top: 52px;
   left: 0;
-  background: hsl(var(--card));
-  border: 1px solid hsl(var(--border));
-  border-radius: 14px;
-  padding: 14px;
-  width: 260px;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: 18px;
+  padding: 16px;
+  width: 270px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.18);
   z-index: 100;
-  animation: card-enter 0.2s ease-out;
+  animation: glass-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes glass-pop {
+  from { opacity: 0; transform: translateY(-8px) scale(0.92); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .color-palette-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   color: hsl(var(--foreground));
   font-family: 'Noto Sans Devanagari', sans-serif;
 }
@@ -144,8 +188,9 @@ html, body {
   border: none;
   color: hsl(var(--muted-foreground));
   cursor: pointer;
-  padding: 4px;
-  border-radius: 6px;
+  padding: 5px;
+  border-radius: 8px;
+  transition: background 0.2s;
 }
 
 .color-palette-close:hover {
@@ -162,30 +207,31 @@ html, body {
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  border: 2px solid transparent;
+  border: 2.5px solid transparent;
   cursor: pointer;
-  transition: transform 0.15s, border-color 0.15s;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .color-dot:hover {
-  transform: scale(1.2);
+  transform: scale(1.25);
   border-color: rgba(255,255,255,0.5);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.2);
 }
 
 .color-dot.active {
   border-color: #fff;
-  box-shadow: 0 0 0 2px hsl(var(--foreground) / 0.3);
+  box-shadow: 0 0 0 2px hsl(var(--foreground) / 0.3), 0 4px 14px rgba(0,0,0,0.15);
   transform: scale(1.15);
 }
 
 .color-dot-check {
   color: #fff;
-  font-size: 14px;
-  font-weight: 800;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+  font-size: 13px;
+  font-weight: 900;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
 }
 
 .dash-brand {
@@ -195,23 +241,28 @@ html, body {
 }
 
 .dash-brand-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
   background: rgba(255,255,255,0.15);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
   display: flex;
   align-items: center;
   justify-content: center;
   border: 1px solid rgba(255,255,255,0.2);
+  transition: transform 0.2s;
+}
+
+.dash-brand-icon:hover {
+  transform: rotate(-8deg) scale(1.05);
 }
 
 .dash-brand-title {
   display: block;
-  font-size: 20px;
-  font-weight: 800;
+  font-size: 21px;
+  font-weight: 900;
   color: #fff;
-  letter-spacing: -0.3px;
+  letter-spacing: -0.5px;
   font-family: 'Inter', sans-serif;
 }
 
@@ -228,63 +279,66 @@ html, body {
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
-  padding: 20px 28px 0;
+  padding: 22px 28px 0;
+  position: relative;
+  z-index: 1;
   animation: banner-fade-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes banner-fade-in {
-  from { opacity: 0; transform: translateY(-18px) scale(0.98); }
+  from { opacity: 0; transform: translateY(-20px) scale(0.97); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .dash-banner {
-  background: linear-gradient(135deg, #0f766e 0%, #0d9488 40%, #14b8a6 100%);
-  border-radius: 16px;
-  padding: 26px 30px;
+  border-radius: 20px;
+  padding: 28px 32px;
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
-  box-shadow: 0 8px 32px rgba(13, 148, 136, 0.2);
+  gap: 24px;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
 }
 
+/* Decorative shapes on banner */
 .dash-banner::before {
   content: '';
   position: absolute;
-  top: -60px;
-  right: -40px;
-  width: 200px;
-  height: 200px;
+  top: -80px;
+  right: -50px;
+  width: 250px;
+  height: 250px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.08);
 }
 
 .dash-banner::after {
   content: '';
   position: absolute;
-  bottom: -30px;
-  right: 80px;
-  width: 120px;
-  height: 120px;
+  bottom: -40px;
+  right: 120px;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.04);
+  background: rgba(255,255,255,0.05);
 }
 
 .banner-text { position: relative; z-index: 1; }
 
 .dash-welcome-title {
-  font-size: 22px;
-  font-weight: 700;
-  margin: 0 0 4px;
+  font-size: 24px;
+  font-weight: 800;
+  margin: 0 0 6px;
   font-family: 'Noto Sans Devanagari', sans-serif;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
 .dash-welcome-sub {
-  font-size: 13px;
-  opacity: 0.8;
+  font-size: 13.5px;
+  opacity: 0.85;
   margin: 0;
   font-weight: 400;
   font-family: 'Noto Sans Devanagari', sans-serif;
@@ -292,34 +346,41 @@ html, body {
 
 .banner-stats {
   display: flex;
-  gap: 12px;
+  gap: 14px;
   position: relative;
   z-index: 1;
 }
 
 .stat-chip {
-  background: rgba(255,255,255,0.12);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 12px;
-  padding: 10px 18px;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 16px;
+  padding: 12px 22px;
   text-align: center;
-  min-width: 80px;
+  min-width: 85px;
+  transition: all 0.2s;
+}
+
+.stat-chip:hover {
+  background: rgba(255,255,255,0.22);
+  transform: translateY(-2px);
 }
 
 .stat-num {
   display: block;
-  font-size: 22px;
-  font-weight: 800;
+  font-size: 24px;
+  font-weight: 900;
   font-family: 'Inter', sans-serif;
   line-height: 1;
 }
 
 .stat-label {
   display: block;
-  font-size: 10px;
+  font-size: 10.5px;
   opacity: 0.75;
-  margin-top: 3px;
+  margin-top: 4px;
   font-family: 'Noto Sans Devanagari', sans-serif;
 }
 
@@ -329,27 +390,31 @@ html, body {
   width: 100%;
   margin: 0 auto;
   padding: 14px 28px 0;
+  position: relative;
+  z-index: 1;
 }
 
 .ticker-bar {
   display: flex;
   align-items: center;
-  background: hsl(var(--card));
-  border: 1px solid hsl(var(--border));
-  border-radius: 10px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
   overflow: hidden;
-  height: 38px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+  height: 40px;
+  box-shadow: var(--glass-shadow);
 }
 
 .ticker-live-badge {
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 0 12px;
+  gap: 5px;
+  padding: 0 14px;
   font-size: 10px;
   font-weight: 800;
-  letter-spacing: 0.8px;
+  letter-spacing: 1px;
   color: #fff;
   background: linear-gradient(135deg, #EF4444, #DC2626);
   height: 100%;
@@ -364,7 +429,7 @@ html, body {
 }
 
 .ticker-label {
-  padding: 0 10px;
+  padding: 0 12px;
   font-size: 12px;
   font-weight: 600;
   color: hsl(var(--foreground));
@@ -397,20 +462,22 @@ html, body {
   100% { transform: translateX(-50%); }
 }
 
-/* -- Services -- */
+/* -- Services Section -- */
 .dash-content {
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
-  padding: 22px 28px 40px;
+  padding: 24px 28px 40px;
   flex: 1;
+  position: relative;
+  z-index: 1;
 }
 
 .dash-section-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
   flex-wrap: wrap;
   gap: 12px;
 }
@@ -418,25 +485,25 @@ html, body {
 .dash-section-title-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   color: hsl(var(--foreground));
 }
 
 .dash-section-title {
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 17px;
+  font-weight: 800;
   margin: 0;
   font-family: 'Noto Sans Devanagari', sans-serif;
 }
 
 .dash-search-box {
   position: relative;
-  width: 240px;
+  width: 260px;
 }
 
 .dash-search-icon {
   position: absolute;
-  left: 12px;
+  left: 14px;
   top: 50%;
   transform: translateY(-50%);
   color: hsl(var(--muted-foreground));
@@ -444,57 +511,83 @@ html, body {
 
 .dash-search-input {
   width: 100%;
-  padding: 9px 12px 9px 36px;
+  padding: 10px 14px 10px 40px;
   font-size: 13px;
   font-family: 'Noto Sans Devanagari', sans-serif;
-  border: 1.5px solid hsl(var(--border));
-  border-radius: 10px;
-  background: hsl(var(--card));
+  border: 1.5px solid var(--glass-border);
+  border-radius: 14px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   outline: none;
   box-sizing: border-box;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: all 0.25s;
+  color: hsl(var(--foreground));
 }
 
 .dash-search-input:focus {
   border-color: hsl(var(--primary));
-  box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
+  box-shadow: 0 0 0 4px hsl(var(--primary) / 0.12), 0 4px 20px hsl(var(--primary) / 0.08);
 }
 
-/* -- Card Grid -- */
+.dash-search-input::placeholder {
+  color: hsl(var(--muted-foreground));
+}
+
+/* -- Glass Card Grid -- */
 .dash-cards-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
+  gap: 16px;
 }
 
 @keyframes card-enter {
-  from { opacity: 0; transform: translateY(24px) scale(0.95); }
+  from { opacity: 0; transform: translateY(30px) scale(0.92); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .dash-card {
   position: relative;
-  background: hsl(var(--card));
-  border: 1px solid hsl(var(--border));
-  border-radius: 14px;
-  padding: 22px 14px 16px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: 18px;
+  padding: 24px 16px 18px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   cursor: pointer;
   text-align: center;
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
-              box-shadow 0.2s,
-              border-color 0.2s;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   animation: card-enter 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  box-shadow: var(--glass-shadow);
+  overflow: hidden;
+}
+
+/* Glass shimmer effect on hover */
+.dash-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+  transition: left 0.5s;
+  pointer-events: none;
+}
+
+.dash-card:hover::before {
+  left: 100%;
 }
 
 .dash-card:hover {
-  transform: translateY(-5px) scale(1.02);
-  box-shadow: 0 12px 32px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
   border-color: hsl(var(--primary) / 0.4);
+  background: var(--glass-bg);
 }
 
 .dash-card:active {
@@ -504,15 +597,16 @@ html, body {
 /* Badges */
 .dash-card-badge {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  padding: 2px 8px;
-  border-radius: 6px;
+  top: 10px;
+  right: 10px;
+  padding: 3px 10px;
+  border-radius: 8px;
   font-size: 9px;
   font-weight: 800;
   color: #fff;
-  letter-spacing: 0.6px;
+  letter-spacing: 0.7px;
   font-family: 'Inter', sans-serif;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
 .badge-ready { background: linear-gradient(135deg, #22C55E, #16A34A); }
@@ -521,17 +615,19 @@ html, body {
 .badge-fast { background: linear-gradient(135deg, #06B6D4, #0891B2); }
 
 .dash-card-icon {
-  width: 54px;
-  height: 54px;
-  border-radius: 50%;
+  width: 58px;
+  height: 58px;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.2s;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
 }
 
 .dash-card:hover .dash-card-icon {
-  transform: scale(1.1);
+  transform: scale(1.12) rotate(-3deg);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
 }
 
 .dash-card-label {
@@ -552,12 +648,16 @@ html, body {
 /* -- Footer -- */
 .dash-footer {
   text-align: center;
-  padding: 18px;
+  padding: 20px;
   font-size: 12px;
   color: hsl(var(--muted-foreground));
   border-top: 1px solid hsl(var(--border));
-  background: hsl(var(--card));
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   font-family: 'Noto Sans Devanagari', sans-serif;
+  position: relative;
+  z-index: 1;
 }
 
 /* ============================
@@ -569,7 +669,7 @@ html, body {
   align-items: center;
   gap: 14px;
   padding: 18px 24px;
-  border-radius: 14px;
+  border-radius: 18px;
   margin-bottom: 14px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.12);
 }
@@ -585,7 +685,7 @@ html, body {
   content: '';
   position: absolute;
   inset: 0;
-  border-radius: 14px;
+  border-radius: 18px;
   padding: 2px;
   background: var(--hero-card-gradient, linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary) / 0.4)));
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -631,7 +731,7 @@ html, body {
   margin-bottom: 14px;
   padding: 6px 2px;
   transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
-  border-radius: 8px;
+  border-radius: 10px;
 }
 
 .back-btn:hover {
@@ -642,24 +742,40 @@ html, body {
 }
 
 .form-container {
-  background: hsl(var(--card));
-  border-radius: 16px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 10px 36px rgba(0,0,0,0.06);
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.04), 0 16px 48px rgba(0,0,0,0.08);
   overflow: hidden;
 }
 
 .form-header {
-  background: linear-gradient(135deg, #0f766e, #0d9488);
   color: #fff;
-  padding: 22px 28px;
+  padding: 24px 28px;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.form-header::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -30px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
 }
 
 .form-heading {
-  font-size: 18px;
+  font-size: 19px;
   font-weight: 700;
   margin: 0 0 2px;
   font-family: 'Noto Sans Devanagari', sans-serif;
+  position: relative;
 }
 
 .form-subheading {
@@ -667,9 +783,10 @@ html, body {
   opacity: 0.8;
   margin: 0;
   font-family: 'Noto Sans Devanagari', sans-serif;
+  position: relative;
 }
 
-.form-body { padding: 24px 28px 28px; }
+.form-body { padding: 26px 28px 28px; }
 
 .input-group { margin-bottom: 16px; }
 
@@ -677,29 +794,30 @@ html, body {
   display: block;
   font-size: 11.5px;
   font-weight: 700;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
   color: hsl(var(--muted-foreground));
   text-transform: uppercase;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.5px;
   font-family: 'Inter', sans-serif;
 }
 
 .input-group input {
   width: 100%;
-  padding: 10px 12px;
+  padding: 11px 14px;
   font-size: 14px;
   font-family: 'Noto Sans Devanagari', sans-serif;
   border: 1.5px solid hsl(var(--border));
-  border-radius: 10px;
+  border-radius: 12px;
   background: hsl(var(--background));
   outline: none;
   box-sizing: border-box;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: all 0.25s;
+  color: hsl(var(--foreground));
 }
 
 .input-group input:focus {
   border-color: hsl(var(--primary));
-  box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
+  box-shadow: 0 0 0 4px hsl(var(--primary) / 0.1);
 }
 
 .input-group input.readonly {
@@ -720,26 +838,40 @@ html, body {
 .section-divider {
   border: none;
   border-top: 1px dashed hsl(var(--border));
-  margin: 18px 0;
+  margin: 20px 0;
 }
 
 .submit-btn {
   display: block;
   width: 100%;
-  margin-top: 22px;
-  padding: 13px;
+  margin-top: 24px;
+  padding: 14px;
   font-size: 15px;
   font-family: 'Noto Sans Devanagari', sans-serif;
   font-weight: 700;
-  background: linear-gradient(135deg, #0f766e, #0d9488);
   color: #fff;
   border: none;
-  border-radius: 10px;
+  border-radius: 14px;
   cursor: pointer;
-  transition: opacity 0.15s, transform 0.1s;
+  transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  position: relative;
+  overflow: hidden;
 }
 
-.submit-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+.submit-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  transition: left 0.4s;
+}
+
+.submit-btn:hover::before { left: 100%; }
+.submit-btn:hover { opacity: 0.92; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.16); }
 .submit-btn:active { transform: translateY(0); }
 .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
@@ -768,15 +900,15 @@ html, body {
 @media (max-width: 420px) {
   .input-row-2 { flex-direction: column; gap: 0; }
   .form-body { padding: 18px 18px 22px; }
-  .form-header { padding: 16px 18px; }
-  .dash-nav-inner { padding: 12px 16px; }
-  .dash-brand-title { font-size: 17px; }
+  .form-header { padding: 18px 18px; }
+  .dash-nav-inner { padding: 10px 16px; }
+  .dash-brand-title { font-size: 18px; }
   .dash-content { padding: 16px 12px 24px; }
   .dash-banner-wrap { padding: 14px 12px 0; }
   .ticker-wrap { padding: 10px 12px 0; }
   .dash-cards-grid { gap: 10px; }
-  .dash-card { padding: 18px 10px 14px; }
-  .dash-card-icon { width: 46px; height: 46px; }
+  .dash-card { padding: 20px 12px 16px; border-radius: 14px; }
+  .dash-card-icon { width: 48px; height: 48px; border-radius: 12px; }
   .dash-card-label { font-size: 11.5px; }
   .banner-stats { width: 100%; }
   .stat-chip { flex: 1; }
