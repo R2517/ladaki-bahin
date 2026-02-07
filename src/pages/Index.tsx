@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { toast } from "sonner";
 
 const GOOGLE_SCRIPT_URL =
@@ -15,11 +15,13 @@ const Index = () => {
   const [aadhaar, setAadhaar] = useState("");
   const [mobile, setMobile] = useState("");
   const [address, setAddress] = useState("");
-  const [taluka, setTaluka] = useState("नांदगाव खंडेश्वर");
-  const [district, setDistrict] = useState("अमरावती");
   const [saving, setSaving] = useState(false);
 
+  const taluka = "नांदगाव खंडेश्वर";
+  const district = "अमरावती";
   const place = "पापळ";
+
+  const printRef = useRef<HTMLDivElement>(null);
 
   const validate = () => {
     if (!name.trim()) {
@@ -37,7 +39,7 @@ const Index = () => {
     return true;
   };
 
-  const handleSave = async () => {
+  const handleSaveAndPrint = async () => {
     if (!validate()) return;
 
     setSaving(true);
@@ -59,186 +61,212 @@ const Index = () => {
       });
 
       toast.success("Data Google Sheet मध्ये Saved झाला आहे");
+    } catch {
+      toast.error("Data Save करताना Error आला. कृपया पुन्हा प्रयत्न करा.");
+      setSaving(false);
+      return;
+    } finally {
+      setSaving(false);
+    }
+
+    // Small delay then print
+    setTimeout(() => {
+      window.print();
+      // Reset after print
       setApplicationNo("");
       setName("");
       setAadhaar("");
       setMobile("");
       setAddress("");
-    } catch {
-      toast.error("Data Save करताना Error आला. कृपया पुन्हा प्रयत्न करा.");
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const handlePrint = async () => {
-    await handleSave();
-    window.print();
+    }, 300);
   };
 
   return (
-    <div className="a4-page-wrapper">
-      <div className="a4-page">
-        {/* Header - Application Number */}
-        <div className="form-row" style={{ marginBottom: 10 }}>
-          <label className="form-label" style={{ whiteSpace: "nowrap" }}>
-            लाडकी बहिण अर्ज नंबर :
-          </label>
+    <>
+      {/* ===== INPUT FORM (visible on screen, hidden on print) ===== */}
+      <div className="no-print form-container">
+        <h1 className="form-heading">लाडकी बहिण योजना – हमीपत्र</h1>
+        <p className="form-subheading">खालील माहिती भरा आणि Save & Print करा</p>
+
+        <div className="input-group">
+          <label>लाडकी बहिण अर्ज नंबर</label>
           <input
             type="text"
-            className="form-input flex-1"
             value={applicationNo}
             onChange={(e) => setApplicationNo(e.target.value)}
             placeholder="NYS-09250861-669e9d814e4b79726"
           />
         </div>
 
-        <hr className="divider" />
+        <div className="input-group">
+          <label>नाव *</label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="अर्जदाराचे पूर्ण नाव"
+          />
+        </div>
 
-        {/* Title */}
-        <h2 className="page-title">हमीपत्र व (Disclaimer)</h2>
-        <h3 className="page-subtitle">
+        <div className="input-row-2">
+          <div className="input-group">
+            <label>आधार क्रमांक</label>
+            <input
+              type="text"
+              value={aadhaar}
+              onChange={(e) => {
+                const v = e.target.value.replace(/\D/g, "").slice(0, 12);
+                setAadhaar(v);
+              }}
+              maxLength={12}
+              inputMode="numeric"
+              placeholder="12 अंकी आधार क्रमांक"
+            />
+          </div>
+          <div className="input-group">
+            <label>मोबाईल क्र. *</label>
+            <input
+              type="text"
+              value={mobile}
+              onChange={(e) => {
+                const v = e.target.value.replace(/\D/g, "").slice(0, 10);
+                setMobile(v);
+              }}
+              maxLength={10}
+              inputMode="numeric"
+              placeholder="10 अंकी मोबाईल क्र."
+            />
+          </div>
+        </div>
+
+        <div className="input-group">
+          <label>राहणार (पूर्ण पत्ता)</label>
+          <input
+            type="text"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            placeholder="गाव / शहर, पोस्ट, तालुका"
+          />
+        </div>
+
+        <div className="input-row-2">
+          <div className="input-group">
+            <label>तालुका</label>
+            <input type="text" value={taluka} readOnly className="readonly" />
+          </div>
+          <div className="input-group">
+            <label>जिल्हा</label>
+            <input type="text" value={district} readOnly className="readonly" />
+          </div>
+        </div>
+
+        <button
+          className="submit-btn"
+          onClick={handleSaveAndPrint}
+          disabled={saving}
+        >
+          {saving ? "Saving..." : "Save & Print / Save as PDF"}
+        </button>
+      </div>
+
+      {/* ===== A4 PRINT FORMAT (hidden on screen, visible on print) ===== */}
+      <div className="print-only a4-page" ref={printRef}>
+        {/* Header */}
+        <div className="print-row">
+          <span className="print-label">लाडकी बहिण अर्ज नंबर :</span>
+          <span className="print-value-underline">{applicationNo || "________________________"}</span>
+        </div>
+
+        <hr className="print-divider" />
+
+        <h2 className="print-title">हमीपत्र व (Disclaimer)</h2>
+        <h3 className="print-subtitle">
           लाडकी बहिण योजना – Re‑Verification / Grievance साठी
         </h3>
 
-        <p className="intro-line">मी खाली सही करणारी,</p>
+        <p className="print-intro">मी खाली सही करणारी,</p>
 
-        {/* Name */}
-        <div className="form-row">
-          <label className="form-label">नाव :</label>
-          <input
-            type="text"
-            className="form-input flex-1"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
+        {/* Filled data */}
+        <div className="print-row">
+          <span className="print-label">नाव :</span>
+          <span className="print-value-underline">{name}</span>
+        </div>
+        <div className="print-row">
+          <span className="print-label">आधार क्रमांक :</span>
+          <span className="print-value-underline">{aadhaar || "____________"}</span>
+          <span className="print-label" style={{ marginLeft: 20 }}>मोबाईल क्र. :</span>
+          <span className="print-value-underline">{mobile}</span>
+        </div>
+        <div className="print-row">
+          <span className="print-label">राहणार :</span>
+          <span className="print-value-underline">{address || "________________________"}</span>
+        </div>
+        <div className="print-row">
+          <span className="print-label">तालुका :</span>
+          <span className="print-value-underline">{taluka}</span>
+          <span className="print-label" style={{ marginLeft: 20 }}>जिल्हा :</span>
+          <span className="print-value-underline">{district}</span>
+        </div>
+        <div className="print-row">
+          <span className="print-label">राज्य :</span>
+          <span className="print-value-underline">महाराष्ट्र</span>
         </div>
 
-        {/* Aadhaar + Mobile */}
-        <div className="form-row">
-          <label className="form-label">आधार क्रमांक :</label>
-          <input
-            type="text"
-            className="form-input"
-            style={{ width: "38%" }}
-            value={aadhaar}
-            onChange={(e) => {
-              const v = e.target.value.replace(/\D/g, "").slice(0, 12);
-              setAadhaar(v);
-            }}
-            maxLength={12}
-            inputMode="numeric"
-          />
-          <label className="form-label" style={{ marginLeft: 16 }}>
-            मोबाईल क्र. :
-          </label>
-          <input
-            type="text"
-            className="form-input"
-            style={{ width: "25%" }}
-            value={mobile}
-            onChange={(e) => {
-              const v = e.target.value.replace(/\D/g, "").slice(0, 10);
-              setMobile(v);
-            }}
-            maxLength={10}
-            inputMode="numeric"
-          />
-        </div>
-
-        {/* Address */}
-        <div className="form-row">
-          <label className="form-label">राहणार :</label>
-          <input
-            type="text"
-            className="form-input flex-1"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-          />
-        </div>
-
-        {/* Taluka + District */}
-        <div className="form-row">
-          <label className="form-label">तालुका :</label>
-          <span className="readonly-value">{taluka}</span>
-          <label className="form-label" style={{ marginLeft: 24 }}>
-            जिल्हा :
-          </label>
-          <span className="readonly-value">{district}</span>
-        </div>
-
-        {/* State */}
-        <div className="form-row">
-          <label className="form-label">राज्य :</label>
-          <span className="readonly-value">महाराष्ट्र</span>
-        </div>
-
-        <p className="oath-line">
+        <p className="print-oath">
           याद्वारे सत्यप्रतिज्ञेवर खालीलप्रमाणे स्पष्ट व बिनशर्त हमी देते की —
         </p>
 
-        {/* Disclaimer Content - exact from PDF */}
-        <div className="disclaimer-content">
-          <ol>
-            <li>
-              लाडकी बहिण योजना अंतर्गत माझा अर्ज भरताना / पुन्हा तपासणी
-              (Re‑Verification) / तक्रार (Grievance) नोंद करताना, माझा अर्ज मंजूर
-              (Approve) होईल किंवा नामंजूर (Reject) होईल, याची कोणतीही हमी नाही,
-              याची मला पूर्ण जाणीव आहे.
-            </li>
-            <li>
-              माझा अर्ज पूर्वी Reject झालेला असल्यास, किंवा भविष्यात
-              कागदपत्रांतील त्रुटी, माहितीतील चूक, e-KYC समस्या, बँक
-              तपशीलातील अडचण इत्यादी कारणांमुळे अर्ज Reject झाल्यास, त्याची
-              पूर्ण जबाबदारी माझी स्वतःची राहील.
-            </li>
-            <li>
-              या अर्जाच्या संदर्भात CSC / VLE / SETU केंद्र चालक, Maha e-Seva
-              Kendra किंवा कर्मचारी यांच्यावर कुठल्याही कारची जबाबदारी, दोष
-              किंवा गुन्हा लागू होणार नाही, यास मी पूर्णपणे सहमत आहे.
-            </li>
-            <li>
-              संबंधित केंद्राकडून मला फक्त अर्ज / तक्रार नोंदणीची सुविधा
-              देण्यात येत असून अर्ज मंजुरी, दुरुस्ती किंवा लाभ मिळण्याची
-              कोणतीही हमी दिली जात नाही, हे मला मान्य आहे.
-            </li>
-            <li>
-              मी सादर केलेली सर्व माहिती व कागदपत्रे माझ्या माहितीनुसार खरी व
-              अचूक आहेत. खोटी किंवा चुकीची माहिती आढळल्यास शासन जे निर्णय
-              घेईल, यास मी पूर्णतः जबाबदार राहीन.
-            </li>
-          </ol>
-        </div>
+        {/* Disclaimer */}
+        <ol className="print-disclaimer">
+          <li>
+            लाडकी बहिण योजना अंतर्गत माझा अर्ज भरताना / पुन्हा तपासणी
+            (Re‑Verification) / तक्रार (Grievance) नोंद करताना, माझा अर्ज मंजूर
+            (Approve) होईल किंवा नामंजूर (Reject) होईल, याची कोणतीही हमी नाही,
+            याची मला पूर्ण जाणीव आहे.
+          </li>
+          <li>
+            माझा अर्ज पूर्वी Reject झालेला असल्यास, किंवा भविष्यात
+            कागदपत्रांतील त्रुटी, माहितीतील चूक, e-KYC समस्या, बँक
+            तपशीलातील अडचण इत्यादी कारणांमुळे अर्ज Reject झाल्यास, त्याची
+            पूर्ण जबाबदारी माझी स्वतःची राहील.
+          </li>
+          <li>
+            या अर्जाच्या संदर्भात CSC / VLE / SETU केंद्र चालक, Maha e-Seva
+            Kendra किंवा कर्मचारी यांच्यावर कुठल्याही कारची जबाबदारी, दोष
+            किंवा गुन्हा लागू होणार नाही, यास मी पूर्णपणे सहमत आहे.
+          </li>
+          <li>
+            संबंधित केंद्राकडून मला फक्त अर्ज / तक्रार नोंदणीची सुविधा
+            देण्यात येत असून अर्ज मंजुरी, दुरुस्ती किंवा लाभ मिळण्याची
+            कोणतीही हमी दिली जात नाही, हे मला मान्य आहे.
+          </li>
+          <li>
+            मी सादर केलेली सर्व माहिती व कागदपत्रे माझ्या माहितीनुसार खरी व
+            अचूक आहेत. खोटी किंवा चुकीची माहिती आढळल्यास शासन जे निर्णय
+            घेईल, यास मी पूर्णतः जबाबदार राहीन.
+          </li>
+        </ol>
 
-        <p className="closing-line">
+        <p className="print-closing">
           वरील सर्व अटी मला समजलेल्या असून त्या मला मान्य आहेत, म्हणून हे
           हमीपत्र मी स्वेच्छेने देत आहे.
         </p>
 
-        <hr className="divider" />
+        <hr className="print-divider" />
 
         {/* Footer */}
-        <div className="footer-section">
-          <div className="footer-row">
+        <div className="print-footer">
+          <div className="print-footer-row">
             <span>ठिकाण : {place}</span>
             <span>अर्जदाराची सही / अंगठा</span>
           </div>
-          <div className="footer-row" style={{ marginTop: 10 }}>
+          <div className="print-footer-row" style={{ marginTop: 10 }}>
             <span>दिनांक : {getTodayDate()}</span>
-            <span>
-              अर्जदाराचे नाव : {name || "_______________"}
-            </span>
+            <span>अर्जदाराचे नाव : {name || "_______________"}</span>
           </div>
         </div>
       </div>
-
-      {/* Single button - Save + Print */}
-      <div className="no-print button-bar">
-        <button className="action-btn" onClick={handlePrint} disabled={saving}>
-          {saving ? "Saving..." : "Save & Print / Save as PDF"}
-        </button>
-      </div>
-    </div>
+    </>
   );
 };
 
