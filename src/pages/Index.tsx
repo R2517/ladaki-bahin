@@ -21,11 +21,24 @@ const Index = () => {
 
   const place = "पापळ";
 
-  const handleSave = async () => {
-    if (!name.trim() || !mobile.trim()) {
-      toast.error("कृपया नाव आणि मोबाईल क्र. भरा");
-      return;
+  const validate = () => {
+    if (!name.trim()) {
+      toast.error("कृपया नाव भरा");
+      return false;
     }
+    if (aadhaar && !/^\d{12}$/.test(aadhaar)) {
+      toast.error("आधार क्रमांक 12 अंकी असावा");
+      return false;
+    }
+    if (!mobile.trim() || !/^\d{10}$/.test(mobile)) {
+      toast.error("मोबाईल क्र. 10 अंकी असावा");
+      return false;
+    }
+    return true;
+  };
+
+  const handleSave = async () => {
+    if (!validate()) return;
 
     setSaving(true);
     try {
@@ -104,7 +117,12 @@ const Index = () => {
             className="form-input"
             style={{ width: "38%" }}
             value={aadhaar}
-            onChange={(e) => setAadhaar(e.target.value)}
+            onChange={(e) => {
+              const v = e.target.value.replace(/\D/g, "").slice(0, 12);
+              setAadhaar(v);
+            }}
+            maxLength={12}
+            inputMode="numeric"
           />
           <label className="form-label" style={{ marginLeft: 16 }}>
             मोबाईल क्र. :
@@ -114,7 +132,12 @@ const Index = () => {
             className="form-input"
             style={{ width: "25%" }}
             value={mobile}
-            onChange={(e) => setMobile(e.target.value)}
+            onChange={(e) => {
+              const v = e.target.value.replace(/\D/g, "").slice(0, 10);
+              setMobile(v);
+            }}
+            maxLength={10}
+            inputMode="numeric"
           />
         </div>
 
