@@ -85,88 +85,98 @@ const Index = () => {
     <>
       {/* ===== INPUT FORM (visible on screen, hidden on print) ===== */}
       <div className="no-print form-container">
-        <h1 className="form-heading">लाडकी बहिण योजना – हमीपत्र</h1>
-        <p className="form-subheading">खालील माहिती भरा आणि Save & Print करा</p>
-
-        <div className="input-group">
-          <label>लाडकी बहिण अर्ज नंबर</label>
-          <input
-            type="text"
-            value={applicationNo}
-            onChange={(e) => setApplicationNo(e.target.value)}
-            placeholder="NYS-09250861-669e9d814e4b79726"
-          />
+        <div className="form-header">
+          <h1 className="form-heading">लाडकी बहिण योजना – हमीपत्र</h1>
+          <p className="form-subheading">Re‑Verification / Grievance साठी माहिती भरा</p>
         </div>
 
-        <div className="input-group">
-          <label>नाव *</label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="अर्जदाराचे पूर्ण नाव"
-          />
-        </div>
-
-        <div className="input-row-2">
+        <div className="form-body">
           <div className="input-group">
-            <label>आधार क्रमांक</label>
+            <label>लाडकी बहिण अर्ज नंबर</label>
             <input
               type="text"
-              value={aadhaar}
-              onChange={(e) => {
-                const v = e.target.value.replace(/\D/g, "").slice(0, 12);
-                setAadhaar(v);
-              }}
-              maxLength={12}
-              inputMode="numeric"
-              placeholder="12 अंकी आधार क्रमांक"
+              value={applicationNo}
+              onChange={(e) => setApplicationNo(e.target.value)}
+              placeholder="NYS-09250861-669e9d814e4b79726"
             />
           </div>
+
           <div className="input-group">
-            <label>मोबाईल क्र. *</label>
+            <label>नाव *</label>
             <input
               type="text"
-              value={mobile}
-              onChange={(e) => {
-                const v = e.target.value.replace(/\D/g, "").slice(0, 10);
-                setMobile(v);
-              }}
-              maxLength={10}
-              inputMode="numeric"
-              placeholder="10 अंकी मोबाईल क्र."
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="अर्जदाराचे पूर्ण नाव"
             />
           </div>
-        </div>
 
-        <div className="input-group">
-          <label>राहणार (पूर्ण पत्ता)</label>
-          <input
-            type="text"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            placeholder="गाव / शहर, पोस्ट, तालुका"
-          />
-        </div>
-
-        <div className="input-row-2">
-          <div className="input-group">
-            <label>तालुका</label>
-            <input type="text" value={taluka} readOnly className="readonly" />
+          <div className="input-row-2">
+            <div className="input-group">
+              <label>आधार क्रमांक</label>
+              <input
+                type="text"
+                value={aadhaar}
+                onChange={(e) => {
+                  const v = e.target.value.replace(/\D/g, "").slice(0, 12);
+                  setAadhaar(v);
+                }}
+                maxLength={12}
+                inputMode="numeric"
+                placeholder="12 अंकी क्रमांक"
+              />
+            </div>
+            <div className="input-group">
+              <label>मोबाईल क्र. *</label>
+              <input
+                type="text"
+                value={mobile}
+                onChange={(e) => {
+                  const v = e.target.value.replace(/\D/g, "").slice(0, 10);
+                  setMobile(v);
+                }}
+                maxLength={10}
+                inputMode="numeric"
+                placeholder="10 अंकी क्र."
+              />
+            </div>
           </div>
-          <div className="input-group">
-            <label>जिल्हा</label>
-            <input type="text" value={district} readOnly className="readonly" />
-          </div>
-        </div>
 
-        <button
-          className="submit-btn"
-          onClick={handleSaveAndPrint}
-          disabled={saving}
-        >
-          {saving ? "Saving..." : "Save & Print / Save as PDF"}
-        </button>
+          <div className="input-group">
+            <label>राहणार (पूर्ण पत्ता)</label>
+            <input
+              type="text"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              placeholder="गाव / शहर, पोस्ट, तालुका"
+            />
+          </div>
+
+          <hr className="section-divider" />
+
+          <div className="input-row-2">
+            <div className="input-group">
+              <label>तालुका</label>
+              <input type="text" value={taluka} readOnly className="readonly" />
+            </div>
+            <div className="input-group">
+              <label>जिल्हा</label>
+              <input type="text" value={district} readOnly className="readonly" />
+            </div>
+          </div>
+
+          <button
+            className="submit-btn"
+            onClick={handleSaveAndPrint}
+            disabled={saving}
+          >
+            {saving ? "Saving..." : "💾 Save & Print / Save as PDF"}
+          </button>
+
+          <p className="form-footer-note">
+            Data Google Sheet मध्ये Save होईल आणि A4 format मध्ये Print होईल
+          </p>
+        </div>
       </div>
 
       {/* ===== A4 PRINT FORMAT (hidden on screen, visible on print) ===== */}
