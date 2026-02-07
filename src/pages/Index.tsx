@@ -59,6 +59,11 @@ const Index = () => {
       });
 
       toast.success("Data Google Sheet मध्ये Saved झाला आहे");
+      setApplicationNo("");
+      setName("");
+      setAadhaar("");
+      setMobile("");
+      setAddress("");
     } catch {
       toast.error("Data Save करताना Error आला. कृपया पुन्हा प्रयत्न करा.");
     } finally {
