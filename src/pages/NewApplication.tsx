@@ -71,10 +71,13 @@ const NewApplication = () => {
         </div>
       </nav>
 
-      <div className="no-print form-page-wrapper">
-        <button className="back-btn" style={{ color: `hsl(var(--primary))` }} onClick={() => showForm ? setShowForm(false) : navigate("/")}>
+      <div className="no-print" style={{ padding: "12px 16px 0" }}>
+        <button className="back-btn px-[9px] py-[7px] font-extralight font-sans shadow-sm rounded-sm" style={{ color: `hsl(var(--primary))` }} onClick={() => showForm ? setShowForm(false) : navigate("/")}>
           <ArrowLeft size={18} /> {showForm ? "कार्ड वर परत जा" : "डॅशबोर्ड वर परत जा"}
         </button>
+      </div>
+
+      <div className="no-print form-page-wrapper" style={{ paddingTop: 0 }}>
 
         {!showForm ? (
           <div style={{ display: "flex", justifyContent: "center", paddingTop: 20 }}>
