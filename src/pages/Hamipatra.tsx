@@ -63,7 +63,7 @@ const Hamipatra = () => {
     <>
       {/* ===== INPUT FORM ===== */}
       <div className="no-print form-page-wrapper">
-        <button className="back-btn" onClick={() => navigate("/")}>
+        <button className="back-btn" style={{ color: `hsl(var(--primary))` }} onClick={() => navigate("/")}>
           <ArrowLeft size={18} /> डॅशबोर्ड वर परत जा
         </button>
 
