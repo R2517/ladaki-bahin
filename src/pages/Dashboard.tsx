@@ -2,7 +2,9 @@ import { useNavigate } from "react-router-dom";
 import {
   FileText, Shield, AlertTriangle, FilePlus,
   Landmark, Users, BookOpen, FileCheck,
-  Search, LayoutGrid, Radio,
+  Search, LayoutGrid, Radio, Home,
+  CreditCard, Fingerprint, FileSpreadsheet,
+  Scale, Leaf, Award, GraduationCap, BadgeCheck,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -15,7 +17,7 @@ interface FormCard {
   path: string;
   ready: boolean;
   badge?: string;
-  badgeColor?: string;
+  badgeType?: "ready" | "new" | "hot" | "fast";
 }
 
 const forms: FormCard[] = [
@@ -23,19 +25,19 @@ const forms: FormCard[] = [
     id: "hamipatra",
     title: "हमीपत्र (Disclaimer)",
     icon: FileText,
-    iconBg: "#EBF5FF",
-    iconColor: "#3B82F6",
+    iconBg: "linear-gradient(135deg, #DBEAFE, #BFDBFE)",
+    iconColor: "#2563EB",
     path: "/hamipatra",
     ready: true,
     badge: "READY",
-    badgeColor: "#22C55E",
+    badgeType: "ready",
   },
   {
     id: "self-declaration",
-    title: "स्वयंघोषणा पत्र",
+    title: "स्वयंघोषणापत्र",
     icon: Shield,
-    iconBg: "#F0FDF4",
-    iconColor: "#16A34A",
+    iconBg: "linear-gradient(135deg, #D1FAE5, #A7F3D0)",
+    iconColor: "#059669",
     path: "/self-declaration",
     ready: false,
   },
@@ -43,57 +45,164 @@ const forms: FormCard[] = [
     id: "grievance",
     title: "तक्रार नोंदणी (Grievance)",
     icon: AlertTriangle,
-    iconBg: "#FFFBEB",
-    iconColor: "#F59E0B",
+    iconBg: "linear-gradient(135deg, #FEF3C7, #FDE68A)",
+    iconColor: "#D97706",
     path: "/grievance",
     ready: false,
+    badge: "NEW",
+    badgeType: "new",
   },
   {
     id: "new-application",
     title: "नवीन अर्ज (New Application)",
     icon: FilePlus,
-    iconBg: "#F5F3FF",
-    iconColor: "#8B5CF6",
+    iconBg: "linear-gradient(135deg, #EDE9FE, #DDD6FE)",
+    iconColor: "#7C3AED",
     path: "/new-application",
     ready: false,
+  },
+  {
+    id: "farmer-id",
+    title: "शेतकरी दाखला (FARMER ID CARD)",
+    icon: Home,
+    iconBg: "linear-gradient(135deg, #CFFAFE, #A5F3FC)",
+    iconColor: "#0891B2",
+    path: "/farmer-id",
+    ready: false,
+    badge: "HIGH DEMAND",
+    badgeType: "hot",
+  },
+  {
+    id: "aadhaar-hub",
+    title: "आधार सेवा केंद्र (Hub)",
+    icon: Fingerprint,
+    iconBg: "linear-gradient(135deg, #FFE4E6, #FECDD3)",
+    iconColor: "#E11D48",
+    path: "/aadhaar-hub",
+    ready: false,
+    badge: "NEW",
+    badgeType: "new",
+  },
+  {
+    id: "pan-card",
+    title: "पॅन कार्ड सेवा (PAN Card)",
+    icon: CreditCard,
+    iconBg: "linear-gradient(135deg, #E0E7FF, #C7D2FE)",
+    iconColor: "#4338CA",
+    path: "/pan-card",
+    ready: false,
+    badge: "FAST",
+    badgeType: "fast",
+  },
+  {
+    id: "bond-format",
+    title: "बांधकाम कामगार 90 दिवस प्रमाणपत्र",
+    icon: FileSpreadsheet,
+    iconBg: "linear-gradient(135deg, #FFF7ED, #FED7AA)",
+    iconColor: "#EA580C",
+    path: "/bond-format",
+    ready: false,
+    badge: "NEW",
+    badgeType: "new",
   },
   {
     id: "income-cert",
     title: "उत्पन्नाचे स्वयंघोषणापत्र",
     icon: Landmark,
-    iconBg: "#FFF1F2",
-    iconColor: "#E11D48",
+    iconBg: "linear-gradient(135deg, #FCE7F3, #FBCFE8)",
+    iconColor: "#DB2777",
     path: "/income-cert",
     ready: false,
   },
   {
-    id: "caste-cert",
-    title: "जात प्रमाणपत्रासाठी शपथपत्र",
-    icon: Users,
-    iconBg: "#ECFDF5",
-    iconColor: "#059669",
-    path: "/caste-cert",
+    id: "revenue-notice",
+    title: "राजपत्र नमुना नोटीस",
+    icon: Scale,
+    iconBg: "linear-gradient(135deg, #ECFDF5, #BBF7D0)",
+    iconColor: "#16A34A",
+    path: "/revenue-notice",
     ready: false,
   },
   {
-    id: "domicile",
-    title: "अधिवास प्रमाणपत्र",
-    icon: BookOpen,
-    iconBg: "#EFF6FF",
-    iconColor: "#2563EB",
-    path: "/domicile",
+    id: "caste-cert",
+    title: "जात प्रमाणपत्रासाठीचे शपथपत्र",
+    icon: Users,
+    iconBg: "linear-gradient(135deg, #FDF4FF, #F5D0FE)",
+    iconColor: "#A855F7",
+    path: "/caste-cert",
     ready: false,
   },
   {
     id: "ews",
     title: "EWS प्रमाणपत्रासाठीचा अर्ज",
-    icon: FileCheck,
-    iconBg: "#FDF4FF",
-    iconColor: "#A855F7",
+    icon: BookOpen,
+    iconBg: "linear-gradient(135deg, #F0FDF4, #BBF7D0)",
+    iconColor: "#15803D",
     path: "/ews",
     ready: false,
   },
+  {
+    id: "landless",
+    title: "भूमिहीन प्रमाणपत्रासाठी अर्ज",
+    icon: Leaf,
+    iconBg: "linear-gradient(135deg, #ECFCCB, #BEF264)",
+    iconColor: "#4D7C0F",
+    path: "/landless",
+    ready: false,
+  },
+  {
+    id: "annasaheb",
+    title: "अण्णासाहेब पाटील योजनेचा अर्ज",
+    icon: Award,
+    iconBg: "linear-gradient(135deg, #FFE4E6, #FDA4AF)",
+    iconColor: "#BE123C",
+    path: "/annasaheb",
+    ready: false,
+  },
+  {
+    id: "minority",
+    title: "अल्पभूधारक प्रमाणपत्रासाठी अर्ज",
+    icon: FileCheck,
+    iconBg: "linear-gradient(135deg, #F3E8FF, #E9D5FF)",
+    iconColor: "#9333EA",
+    path: "/minority",
+    ready: false,
+  },
+  {
+    id: "non-creamy",
+    title: "नॉन क्रिमिलीयर प्रमाणपत्रासाठी शपथपत्र",
+    icon: GraduationCap,
+    iconBg: "linear-gradient(135deg, #FEF9C3, #FDE047)",
+    iconColor: "#A16207",
+    path: "/non-creamy",
+    ready: false,
+  },
+  {
+    id: "caste-validity",
+    title: "जात पडताळणीसाठी शपथपत्र",
+    icon: BadgeCheck,
+    iconBg: "linear-gradient(135deg, #CCFBF1, #99F6E4)",
+    iconColor: "#0D9488",
+    path: "/caste-validity",
+    ready: false,
+  },
+  {
+    id: "domicile",
+    title: "अधिवास प्रमाणपत्रासाठी स्वयंघोषणापत्र",
+    icon: Home,
+    iconBg: "linear-gradient(135deg, #DBEAFE, #93C5FD)",
+    iconColor: "#1D4ED8",
+    path: "/domicile",
+    ready: false,
+  },
 ];
+
+const badgeStyles: Record<string, string> = {
+  ready: "badge-ready",
+  new: "badge-new",
+  hot: "badge-hot",
+  fast: "badge-fast",
+};
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -113,8 +222,8 @@ const Dashboard = () => {
               <Landmark size={22} color="#fff" />
             </div>
             <div>
-              <span className="dash-brand-title">महा ई-सेवा केंद्र</span>
-              <span className="dash-brand-sub">लाडकी बहिण योजना — फॉर्म पोर्टल</span>
+              <span className="dash-brand-title">SETU Suvidha</span>
+              <span className="dash-brand-sub">सेतु सुविधा — महा ई-सेवा फॉर्म पोर्टल</span>
             </div>
           </div>
         </div>
@@ -123,11 +232,21 @@ const Dashboard = () => {
       {/* ===== Welcome Banner ===== */}
       <div className="dash-banner-wrap">
         <div className="dash-banner">
-          <div>
+          <div className="banner-text">
             <h2 className="dash-welcome-title">🙏 नमस्कार!</h2>
             <p className="dash-welcome-sub">
-              महा ई-सेवा पोर्टलवर तुमचे स्वागत आहे. खालील सेवा निवडा.
+              SETU Suvidha पोर्टलवर तुमचे स्वागत आहे. खालील सेवा निवडा आणि फॉर्म भरा.
             </p>
+          </div>
+          <div className="banner-stats">
+            <div className="stat-chip">
+              <span className="stat-num">{forms.length}</span>
+              <span className="stat-label">सेवा उपलब्ध</span>
+            </div>
+            <div className="stat-chip">
+              <span className="stat-num">{forms.filter(f => f.ready).length}</span>
+              <span className="stat-label">तयार आहे</span>
+            </div>
           </div>
         </div>
       </div>
@@ -138,25 +257,26 @@ const Dashboard = () => {
           <span className="ticker-live-badge">
             <Radio size={12} /> LIVE
           </span>
-          <span className="ticker-label">📢 नवीन फिचर:</span>
+          <span className="ticker-label">📢 नवीन:</span>
           <div className="ticker-scroll">
             <div className="ticker-content">
-              <span className="ticker-item">⭐ **मोठी बातमी:** लाडकी बहिण योजना Re-Verification साठी हमीपत्र फॉर्म आता उपलब्ध आहे!</span>
-              <span className="ticker-sep">|</span>
-              <span className="ticker-item">📋 स्वयंघोषणा पत्र, तक्रार नोंदणी व नवीन अर्ज फॉर्म लवकरच येत आहेत.</span>
-              <span className="ticker-sep">|</span>
-              <span className="ticker-item">💾 Google Sheet मध्ये data auto-save होतो — इंटरनेट आवश्यक.</span>
-              <span className="ticker-sep">|</span>
-              <span className="ticker-item">🖨️ Save & Print एका क्लिकवर — A4 format मध्ये print होतो.</span>
-              <span className="ticker-sep">|</span>
-              <span className="ticker-item">⭐ **मोठी बातमी:** लाडकी बहिण योजना Re-Verification साठी हमीपत्र फॉर्म आता उपलब्ध आहे!</span>
-              <span className="ticker-sep">|</span>
-              <span className="ticker-item">📋 स्वयंघोषणा पत्र, तक्रार नोंदणी व नवीन अर्ज फॉर्म लवकरच येत आहेत.</span>
+              <span className="ticker-item">⭐ लाडकी बहिण योजना हमीपत्र फॉर्म आता उपलब्ध!</span>
+              <span className="ticker-sep">•</span>
+              <span className="ticker-item">📋 स्वयंघोषणा पत्र, तक्रार नोंदणी फॉर्म लवकरच येत आहे</span>
+              <span className="ticker-sep">•</span>
+              <span className="ticker-item">💾 Google Sheet मध्ये data auto-save</span>
+              <span className="ticker-sep">•</span>
+              <span className="ticker-item">🖨️ Save & Print एका क्लिकवर</span>
+              <span className="ticker-sep">•</span>
+              <span className="ticker-item">⭐ लाडकी बहिण योजना हमीपत्र फॉर्म आता उपलब्ध!</span>
+              <span className="ticker-sep">•</span>
+              <span className="ticker-item">📋 स्वयंघोषणा पत्र, तक्रार नोंदणी फॉर्म लवकरच येत आहे</span>
             </div>
           </div>
         </div>
       </div>
 
+      {/* ===== Services Section ===== */}
       <div className="dash-content">
         <div className="dash-section-header">
           <div className="dash-section-title-row">
@@ -176,10 +296,11 @@ const Dashboard = () => {
         </div>
 
         <div className="dash-cards-grid">
-          {filtered.map((form) => (
+          {filtered.map((form, i) => (
             <button
               key={form.id}
               className="dash-card"
+              style={{ animationDelay: `${i * 0.04}s` }}
               onClick={() => {
                 if (form.ready) {
                   navigate(form.path);
@@ -189,10 +310,7 @@ const Dashboard = () => {
               }}
             >
               {form.badge && (
-                <span
-                  className="dash-card-badge"
-                  style={{ background: form.badgeColor }}
-                >
+                <span className={`dash-card-badge ${badgeStyles[form.badgeType || "new"]}`}>
                   {form.badge}
                 </span>
               )}
@@ -200,7 +318,7 @@ const Dashboard = () => {
                 className="dash-card-icon"
                 style={{ background: form.iconBg }}
               >
-                <form.icon size={28} color={form.iconColor} />
+                <form.icon size={26} color={form.iconColor} strokeWidth={1.8} />
               </div>
               <span className="dash-card-label">{form.title}</span>
             </button>
@@ -214,7 +332,7 @@ const Dashboard = () => {
 
       {/* ===== Footer ===== */}
       <footer className="dash-footer">
-        © 2026 महा ई-सेवा केंद्र — लाडकी बहिण योजना
+        © 2026 SETU Suvidha — सेतु सुविधा महा ई-सेवा पोर्टल
       </footer>
     </div>
   );
