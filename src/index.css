@@ -921,6 +921,153 @@ html, body {
 }
 
 /* ============================
+   SUBMISSIONS LIST
+   ============================ */
+
+.submissions-section {
+  max-width: 700px;
+  margin: 24px auto 0;
+  padding: 0 12px;
+}
+
+.submissions-header {
+  margin-bottom: 12px;
+}
+
+.submissions-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: hsl(var(--foreground));
+  font-family: 'Noto Sans Devanagari', sans-serif;
+  margin: 0;
+}
+
+.submissions-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 32px 0;
+  color: hsl(var(--muted-foreground));
+  font-size: 13px;
+  font-family: 'Noto Sans Devanagari', sans-serif;
+}
+
+.submissions-empty {
+  text-align: center;
+  color: hsl(var(--muted-foreground));
+  font-size: 13px;
+  padding: 24px 0;
+  font-family: 'Noto Sans Devanagari', sans-serif;
+}
+
+.submissions-table-wrap {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: var(--glass-shadow);
+}
+
+.submissions-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+  font-family: 'Noto Sans Devanagari', sans-serif;
+}
+
+.submissions-table thead {
+  background: hsl(var(--secondary));
+}
+
+.submissions-table th {
+  padding: 10px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: hsl(var(--muted-foreground));
+  text-align: left;
+  font-family: 'Inter', sans-serif;
+  white-space: nowrap;
+}
+
+.submissions-table td {
+  padding: 10px 12px;
+  border-top: 1px solid hsl(var(--border));
+  color: hsl(var(--foreground));
+}
+
+.submissions-table tbody tr:hover {
+  background: hsl(var(--accent) / 0.5);
+}
+
+.submissions-name-cell {
+  font-weight: 600;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.submissions-date-cell {
+  font-size: 11px;
+  color: hsl(var(--muted-foreground));
+  white-space: nowrap;
+}
+
+.submissions-actions {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+
+.submissions-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.submissions-btn-print {
+  background: hsl(var(--primary) / 0.1);
+  color: hsl(var(--primary));
+}
+
+.submissions-btn-print:hover {
+  background: hsl(var(--primary) / 0.2);
+  transform: scale(1.1);
+}
+
+.submissions-btn-delete {
+  background: hsl(var(--destructive) / 0.1);
+  color: hsl(var(--destructive));
+}
+
+.submissions-btn-delete:hover {
+  background: hsl(var(--destructive) / 0.2);
+  transform: scale(1.1);
+}
+
+@media (max-width: 600px) {
+  .submissions-table th,
+  .submissions-table td {
+    padding: 8px 8px;
+    font-size: 11px;
+  }
+  .submissions-section {
+    padding: 0 4px;
+  }
+}
+
+/* ============================
    PRINT
    ============================ */
 
