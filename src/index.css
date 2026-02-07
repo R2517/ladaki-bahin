@@ -944,4 +944,18 @@ html, body {
   .print-only { display: block !important; }
   .a4-page { width: 100%; padding: 20mm 20mm 20mm 25mm; border: 2px solid #000; box-sizing: border-box; }
   @page { size: A4 portrait; margin: 0; }
+
+  /* Hide all toast/sonner notifications in print */
+  [data-sonner-toaster],
+  [data-sonner-toast],
+  .sonner-toast,
+  .toaster,
+  [role="status"],
+  ol[data-sonner-toaster],
+  section[aria-label*="Notifications"],
+  [data-radix-toast-viewport],
+  [class*="Toaster"],
+  [class*="toaster"] {
+    display: none !important;
+  }
 }
