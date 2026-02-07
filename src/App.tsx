@@ -5,6 +5,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import Hamipatra from "./pages/Hamipatra";
+import SelfDeclaration from "./pages/SelfDeclaration";
+import Grievance from "./pages/Grievance";
+import NewApplication from "./pages/NewApplication";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -18,6 +21,9 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/hamipatra" element={<Hamipatra />} />
+          <Route path="/self-declaration" element={<SelfDeclaration />} />
+          <Route path="/grievance" element={<Grievance />} />
+          <Route path="/new-application" element={<NewApplication />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
