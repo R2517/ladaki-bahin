@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { ArrowLeft } from "lucide-react";
+import { getThemeGradient } from "@/lib/themes";
 
 const GOOGLE_SCRIPT_URL =
   "https://script.google.com/macros/s/AKfycbxKjtz4R68s1lDUU2FwDxaI_Sp3qTFUKROTwZ6UPDVHGouzleZ72yeJ41nHWLH3n2Sf/exec";
@@ -13,6 +14,7 @@ const getTodayDate = () => {
 
 const Hamipatra = () => {
   const navigate = useNavigate();
+  const themeGradient = getThemeGradient();
   const [applicationNo, setApplicationNo] = useState("");
   const [name, setName] = useState("");
   const [aadhaar, setAadhaar] = useState("");
@@ -66,7 +68,7 @@ const Hamipatra = () => {
         </button>
 
         <div className="form-container">
-          <div className="form-header">
+          <div className="form-header" style={{ background: themeGradient }}>
             <h1 className="form-heading">हमीपत्र व (Disclaimer)</h1>
             <p className="form-subheading">Re‑Verification / Grievance साठी माहिती भरा</p>
           </div>
@@ -104,7 +106,7 @@ const Hamipatra = () => {
                 <input type="text" value={district} readOnly className="readonly" />
               </div>
             </div>
-            <button className="submit-btn" onClick={handleSaveAndPrint} disabled={saving}>
+            <button className="submit-btn" style={{ background: themeGradient }} onClick={handleSaveAndPrint} disabled={saving}>
               {saving ? "Saving..." : "💾 Save & Print / Save as PDF"}
             </button>
             <p className="form-footer-note">Data Google Sheet मध्ये Save होईल आणि A4 format मध्ये Print होईल</p>
