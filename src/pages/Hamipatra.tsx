@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, FileText } from "lucide-react";
 import { getThemeGradient } from "@/lib/themes";
 
 const GOOGLE_SCRIPT_URL =
@@ -15,6 +15,7 @@ const getTodayDate = () => {
 const Hamipatra = () => {
   const navigate = useNavigate();
   const themeGradient = getThemeGradient();
+  const [showForm, setShowForm] = useState(false);
   const [applicationNo, setApplicationNo] = useState("");
   const [name, setName] = useState("");
   const [aadhaar, setAadhaar] = useState("");
@@ -63,9 +64,32 @@ const Hamipatra = () => {
     <>
       {/* ===== INPUT FORM ===== */}
       <div className="no-print form-page-wrapper">
-        <button className="back-btn" style={{ color: `hsl(var(--primary))` }} onClick={() => navigate("/")}>
-          <ArrowLeft size={18} /> डॅशबोर्ड वर परत जा
+        <button className="back-btn" style={{ color: `hsl(var(--primary))` }} onClick={() => showForm ? setShowForm(false) : navigate("/")}>
+          <ArrowLeft size={18} /> {showForm ? "कार्ड वर परत जा" : "डॅशबोर्ड वर परत जा"}
         </button>
+
+        {!showForm ? (
+          /* ===== CARD VIEW ===== */
+          <div style={{ display: "flex", justifyContent: "center", paddingTop: 30 }}>
+            <button
+              className="dash-card"
+              style={{ maxWidth: 220, padding: "30px 20px 22px", animationDelay: "0s" }}
+              onClick={() => setShowForm(true)}
+            >
+              <span className="dash-card-badge badge-ready">READY</span>
+              <div
+                className="dash-card-icon"
+                style={{ background: "linear-gradient(135deg, #DBEAFE, #BFDBFE)" }}
+              >
+                <FileText size={28} color="#2563EB" strokeWidth={1.8} />
+              </div>
+              <span className="dash-card-label">हमीपत्र (Disclaimer)</span>
+              <span style={{ fontSize: 11, color: "hsl(var(--muted-foreground))", marginTop: 2 }}>
+                फॉर्म भरण्यासाठी क्लिक करा →
+              </span>
+            </button>
+          </div>
+        ) : (
 
         <div className="form-container">
           <div className="form-header" style={{ background: themeGradient }}>
@@ -112,6 +136,7 @@ const Hamipatra = () => {
             <p className="form-footer-note">Data Google Sheet मध्ये Save होईल आणि A4 format मध्ये Print होईल</p>
           </div>
         </div>
+        )}
       </div>
 
       {/* ===== A4 PRINT FORMAT ===== */}
