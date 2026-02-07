@@ -28,6 +28,29 @@
     --ring: 224 76% 48%;
     --radius: 12px;
   }
+
+  .dark {
+    --background: 224 30% 8%;
+    --foreground: 210 20% 92%;
+    --card: 224 25% 12%;
+    --card-foreground: 210 20% 92%;
+    --popover: 224 25% 12%;
+    --popover-foreground: 210 20% 92%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 224 20% 18%;
+    --secondary-foreground: 210 20% 92%;
+    --muted: 224 20% 18%;
+    --muted-foreground: 215 15% 55%;
+    --accent: 224 20% 18%;
+    --accent-foreground: 210 20% 92%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 210 20% 92%;
+    --border: 224 20% 20%;
+    --input: 224 20% 20%;
+    --ring: 217 91% 60%;
+    --radius: 12px;
+  }
 }
 
 @layer base {
@@ -69,6 +92,27 @@ html, body {
   padding: 14px 28px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
+}
+
+.theme-toggle {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.theme-toggle:hover {
+  background: rgba(255,255,255,0.25);
+  transform: scale(1.08);
 }
 
 .dash-brand {

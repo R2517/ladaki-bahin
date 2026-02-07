@@ -5,8 +5,9 @@ import {
   Search, LayoutGrid, Radio, Home,
   CreditCard, Fingerprint, FileSpreadsheet,
   Scale, Leaf, Award, GraduationCap, BadgeCheck,
+  Sun, Moon,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface FormCard {
   id: string;
@@ -207,6 +208,17 @@ const badgeStyles: Record<string, string> = {
 const Dashboard = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
+  const [dark, setDark] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("theme") === "dark";
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", dark);
+    localStorage.setItem("theme", dark ? "dark" : "light");
+  }, [dark]);
 
   const filtered = forms.filter((f) =>
     f.title.toLowerCase().includes(search.toLowerCase())
@@ -226,10 +238,16 @@ const Dashboard = () => {
               <span className="dash-brand-sub">सेतु सुविधा — महा ई-सेवा फॉर्म पोर्टल</span>
             </div>
           </div>
+          <button
+            className="theme-toggle"
+            onClick={() => setDark(!dark)}
+            aria-label="Toggle dark mode"
+          >
+            {dark ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
         </div>
       </nav>
 
-      {/* ===== Welcome Banner ===== */}
       <div className="dash-banner-wrap">
         <div className="dash-banner">
           <div className="banner-text">
