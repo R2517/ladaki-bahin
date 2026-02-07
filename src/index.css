@@ -624,9 +624,16 @@ html, body {
   cursor: pointer;
   margin-bottom: 14px;
   padding: 6px 2px;
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 8px;
 }
 
-.back-btn:hover { text-decoration: underline; }
+.back-btn:hover {
+  transform: translateX(-4px);
+  background: hsl(var(--primary) / 0.08);
+  box-shadow: 0 2px 8px hsl(var(--primary) / 0.12);
+  text-decoration: none;
+}
 
 .form-container {
   background: hsl(var(--card));
