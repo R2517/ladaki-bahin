@@ -115,6 +115,79 @@ html, body {
   transform: scale(1.08);
 }
 
+/* -- Color Palette Popup -- */
+.color-palette-popup {
+  position: absolute;
+  top: 48px;
+  left: 0;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 14px;
+  padding: 14px;
+  width: 260px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+  z-index: 100;
+  animation: card-enter 0.2s ease-out;
+}
+
+.color-palette-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  color: hsl(var(--foreground));
+  font-family: 'Noto Sans Devanagari', sans-serif;
+}
+
+.color-palette-close {
+  background: none;
+  border: none;
+  color: hsl(var(--muted-foreground));
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+}
+
+.color-palette-close:hover {
+  background: hsl(var(--secondary));
+}
+
+.color-palette-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+}
+
+.color-dot {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.color-dot:hover {
+  transform: scale(1.2);
+  border-color: rgba(255,255,255,0.5);
+}
+
+.color-dot.active {
+  border-color: #fff;
+  box-shadow: 0 0 0 2px hsl(var(--foreground) / 0.3);
+  transform: scale(1.15);
+}
+
+.color-dot-check {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+}
+
 .dash-brand {
   display: flex;
   align-items: center;
