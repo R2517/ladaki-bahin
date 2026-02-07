@@ -8,6 +8,7 @@ import Hamipatra from "./pages/Hamipatra";
 import SelfDeclaration from "./pages/SelfDeclaration";
 import Grievance from "./pages/Grievance";
 import NewApplication from "./pages/NewApplication";
+import CasteValidity from "./pages/CasteValidity";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/self-declaration" element={<SelfDeclaration />} />
           <Route path="/grievance" element={<Grievance />} />
           <Route path="/new-application" element={<NewApplication />} />
+          <Route path="/caste-validity" element={<CasteValidity />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
