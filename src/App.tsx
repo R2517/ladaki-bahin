@@ -9,6 +9,7 @@ import SelfDeclaration from "./pages/SelfDeclaration";
 import Grievance from "./pages/Grievance";
 import NewApplication from "./pages/NewApplication";
 import CasteValidity from "./pages/CasteValidity";
+import IncomeCert from "./pages/IncomeCert";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/grievance" element={<Grievance />} />
           <Route path="/new-application" element={<NewApplication />} />
           <Route path="/caste-validity" element={<CasteValidity />} />
+          <Route path="/income-cert" element={<IncomeCert />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
