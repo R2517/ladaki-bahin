@@ -118,7 +118,9 @@ const forms: FormCard[] = [
     iconBg: "linear-gradient(135deg, #FCE7F3, #FBCFE8)",
     iconColor: "#DB2777",
     path: "/income-cert",
-    ready: false,
+    ready: true,
+    badge: "READY",
+    badgeType: "ready",
   },
   {
     id: "revenue-notice",

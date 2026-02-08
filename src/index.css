@@ -1085,11 +1085,321 @@ html, body {
 .print-footer { margin-top: 30px; }
 .print-footer-row { display: flex; justify-content: space-between; }
 
+/* ============================
+   INCOME CERT FORM STYLES
+   ============================ */
+
+.inc-form-wrapper {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 12px 12px 20px;
+}
+
+.inc-section-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: hsl(var(--foreground));
+  font-family: 'Noto Sans Devanagari', sans-serif;
+  margin-bottom: 14px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid hsl(var(--primary) / 0.2);
+}
+
+.inc-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 180px;
+  gap: 20px;
+}
+
+@media (max-width: 650px) {
+  .inc-form-grid { grid-template-columns: 1fr; }
+}
+
+.inc-form-fields { min-width: 0; }
+
+.inc-select {
+  width: 100%;
+  padding: 11px 14px;
+  font-size: 14px;
+  font-family: 'Noto Sans Devanagari', sans-serif;
+  border: 1.5px solid hsl(var(--border));
+  border-radius: 12px;
+  background: hsl(var(--background));
+  outline: none;
+  box-sizing: border-box;
+  transition: all 0.25s;
+  color: hsl(var(--foreground));
+  cursor: pointer;
+}
+
+.inc-select:focus {
+  border-color: hsl(var(--primary));
+  box-shadow: 0 0 0 4px hsl(var(--primary) / 0.1);
+}
+
+.inc-radio-row {
+  display: flex;
+  gap: 20px;
+  padding: 8px 0;
+}
+
+.inc-radio-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-family: 'Noto Sans Devanagari', sans-serif;
+  color: hsl(var(--foreground));
+  cursor: pointer;
+}
+
+.inc-radio-label input[type="radio"] {
+  accent-color: hsl(var(--primary));
+  width: 16px;
+  height: 16px;
+}
+
+/* Document Upload */
+.inc-doc-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.inc-upload-box {
+  background: hsl(var(--secondary));
+  border: 1.5px dashed hsl(var(--border));
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+}
+
+.inc-upload-box label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: hsl(var(--muted-foreground));
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: 'Inter', sans-serif;
+}
+
+.inc-upload-btn {
+  width: 100%;
+  padding: 8px;
+  font-size: 12px;
+  font-family: 'Noto Sans Devanagari', sans-serif;
+  background: hsl(var(--primary) / 0.1);
+  color: hsl(var(--primary));
+  border: 1px solid hsl(var(--primary) / 0.3);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 600;
+}
+
+.inc-upload-btn:hover {
+  background: hsl(var(--primary) / 0.2);
+}
+
+.inc-upload-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.inc-upload-preview {
+  width: 100%;
+  max-height: 80px;
+  object-fit: contain;
+  margin-top: 8px;
+  border-radius: 6px;
+  border: 1px solid hsl(var(--border));
+}
+
+/* Income Table */
+.inc-income-table-wrap {
+  border: 1.5px solid hsl(var(--border));
+  border-radius: 12px;
+  overflow: hidden;
+  background: hsl(var(--background));
+}
+
+.inc-income-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  font-family: 'Noto Sans Devanagari', sans-serif;
+}
+
+.inc-income-table th {
+  background: hsl(var(--secondary));
+  padding: 10px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: hsl(var(--muted-foreground));
+  text-align: left;
+  font-family: 'Inter', sans-serif;
+}
+
+.inc-income-table td {
+  padding: 8px 10px;
+  border-top: 1px solid hsl(var(--border));
+}
+
+.inc-fy-cell {
+  font-weight: 600;
+  color: hsl(var(--primary));
+  white-space: nowrap;
+}
+
+.inc-table-input {
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 13px;
+  font-family: 'Noto Sans Devanagari', sans-serif;
+  border: 1px solid hsl(var(--border));
+  border-radius: 8px;
+  background: hsl(var(--card));
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+  color: hsl(var(--foreground));
+}
+
+.inc-table-input:focus {
+  border-color: hsl(var(--primary));
+}
+
+/* History Header */
+.inc-history-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.inc-history-search {
+  flex: 1;
+  position: relative;
+  min-width: 200px;
+}
+
+.inc-history-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.inc-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 9px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'Noto Sans Devanagari', sans-serif;
+  border: 1.5px solid hsl(var(--border));
+  border-radius: 10px;
+  background: hsl(var(--card));
+  color: hsl(var(--foreground));
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.inc-action-btn:hover {
+  background: hsl(var(--secondary));
+}
+
+.inc-action-btn-primary {
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  border-color: hsl(var(--primary));
+}
+
+.inc-action-btn-primary:hover {
+  opacity: 0.9;
+  background: hsl(var(--primary));
+}
+
+/* Print Format Selector */
+.inc-print-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 100vh;
+  background: #f5f5f5;
+  padding: 20px 12px;
+  z-index: 1000;
+  border-right: 2px solid #000;
+}
+
+.inc-format-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inc-format-title {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  font-family: 'Noto Sans Devanagari', sans-serif;
+}
+
+.inc-format-btn {
+  display: block;
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 11px;
+  font-family: 'Noto Sans Devanagari', sans-serif;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s;
+}
+
+.inc-format-btn:hover { background: #e8e8e8; }
+
+.inc-format-btn.active {
+  background: #1a1a1a;
+  color: #fff;
+  border-color: #1a1a1a;
+}
+
+/* Print Table */
+.inc-print-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin: 8px 0;
+}
+
+.inc-print-table th,
+.inc-print-table td {
+  border: 1px solid #000;
+  padding: 6px 10px;
+}
+
+.inc-print-table th {
+  background: #f0f0f0;
+  font-weight: 700;
+  font-size: 11px;
+}
+
 @media print {
   html, body { background: #fff !important; margin: 0 !important; padding: 0 !important; font-size: 13px; }
-  .no-print { display: none !important; }
+  .no-print, .no-print-content { display: none !important; }
   .print-only { display: block !important; }
   .a4-page { width: 100%; padding: 20mm 20mm 20mm 25mm; border: 2px solid #000; box-sizing: border-box; }
+  .inc-print-page { page-break-after: always; }
+  .inc-print-sidebar { display: none !important; }
   @page { size: A4 portrait; margin: 0; }
 
   /* Hide all toast/sonner notifications in print */
