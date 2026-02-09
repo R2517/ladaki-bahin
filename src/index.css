@@ -284,29 +284,37 @@ html, body {
 /* Nav Tabs */
 .dash-nav-tabs {
   display: flex;
-  gap: 0;
-  padding: 0 24px;
-  background: rgba(0,0,0,0.15);
+  justify-content: center;
+  gap: 12px;
+  padding: 10px 24px;
+  background: rgba(0,0,0,0.12);
 }
 .dash-nav-tab {
-  padding: 10px 22px;
-  font-size: 14px;
+  padding: 9px 22px;
+  font-size: 13px;
   font-weight: 600;
-  color: rgba(255,255,255,0.7);
-  background: transparent;
-  border: none;
-  border-bottom: 3px solid transparent;
+  color: rgba(255,255,255,0.75);
+  background: rgba(255,255,255,0.08);
+  border: 1.5px solid rgba(255,255,255,0.15);
+  border-radius: 10px;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.18s;
   letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
 }
 .dash-nav-tab:hover {
   color: #fff;
-  background: rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.16);
+  border-color: rgba(255,255,255,0.3);
+  transform: translateY(-1px);
 }
 .dash-nav-tab.active {
   color: #fff;
-  border-bottom-color: #fff;
+  background: rgba(255,255,255,0.2);
+  border-color: rgba(255,255,255,0.45);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
 .dash-banner-wrap {
