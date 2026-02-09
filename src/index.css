@@ -1915,30 +1915,128 @@ html, body {
   background: hsl(25 50% 25%);
 }
 
-.bk-tabs {
+/* Profile View */
+.bk-profile {
   display: flex;
-  gap: 8px;
-  margin-bottom: 18px;
+  flex-direction: column;
+  gap: 20px;
 }
-.bk-tab {
-  padding: 10px 24px;
-  font-size: 14px;
-  font-weight: 700;
-  border: 1.5px solid hsl(var(--border));
-  border-radius: 10px;
+.bk-profile-card {
   background: hsl(var(--card));
+  border: 1.5px solid hsl(var(--border));
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+.bk-profile-header {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid hsl(var(--border));
+}
+.bk-profile-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: hsl(var(--primary) / 0.12);
+  color: hsl(var(--primary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.bk-profile-name {
+  font-size: 20px;
+  font-weight: 800;
   color: hsl(var(--foreground));
+  margin-bottom: 6px;
+}
+.bk-profile-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 13px;
+  color: hsl(var(--muted-foreground));
+  margin-bottom: 8px;
+}
+.bk-profile-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.bk-dates-section, .bk-schemes-section {
+  background: hsl(var(--card));
+  border: 1.5px solid hsl(var(--border));
+  border-radius: 14px;
+  padding: 20px;
+}
+.bk-section-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: hsl(var(--foreground));
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.bk-dates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+}
+.bk-date-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.bk-date-field label {
+  font-size: 12px;
+  font-weight: 600;
+  color: hsl(var(--muted-foreground));
+}
+.bk-date-field input {
+  padding: 8px 12px;
+  border: 1.5px solid hsl(var(--border));
+  border-radius: 8px;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-size: 13px;
+}
+.bk-date-field input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.bk-schemes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.bk-alert-name-chip {
+  background: hsl(25 90% 88%);
+  padding: 2px 10px;
+  border-radius: 6px;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: background 0.15s;
 }
-.bk-tab:hover {
-  border-color: hsl(var(--primary));
-  background: hsl(var(--primary) / 0.05);
+.bk-alert-name-chip:hover {
+  background: hsl(25 90% 78%);
 }
-.bk-tab.active {
-  background: hsl(var(--primary));
-  color: hsl(var(--primary-foreground));
-  border-color: hsl(var(--primary));
+.dark .bk-alert-name-chip {
+  background: hsl(25 50% 25%);
+}
+.dark .bk-alert-name-chip:hover {
+  background: hsl(25 50% 35%);
+}
+
+.bk-customer-row:hover {
+  background: hsl(var(--primary) / 0.04) !important;
 }
 
 .bk-reg-badge {
@@ -1967,6 +2065,6 @@ html, body {
 }
 
 @media (max-width: 600px) {
-  .bk-tabs { flex-direction: column; }
-  .bk-tab { text-align: center; }
+  .bk-profile-header { flex-direction: column; align-items: center; text-align: center; }
+  .bk-dates-grid { grid-template-columns: 1fr; }
 }

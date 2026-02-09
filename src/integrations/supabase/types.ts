@@ -16,11 +16,13 @@ export type Database = {
     Tables: {
       bandkam_registrations: {
         Row: {
+          aadhar_number: string | null
           activation_date: string | null
           amount: number
           applicant_name: string
           appointment_date: string | null
           created_at: string
+          district: string | null
           dob: string | null
           expiry_date: string | null
           form_date: string
@@ -31,13 +33,17 @@ export type Database = {
           received_amount: number
           registration_type: string
           status: string
+          taluka: string | null
+          village: string | null
         }
         Insert: {
+          aadhar_number?: string | null
           activation_date?: string | null
           amount?: number
           applicant_name: string
           appointment_date?: string | null
           created_at?: string
+          district?: string | null
           dob?: string | null
           expiry_date?: string | null
           form_date?: string
@@ -48,13 +54,17 @@ export type Database = {
           received_amount?: number
           registration_type?: string
           status?: string
+          taluka?: string | null
+          village?: string | null
         }
         Update: {
+          aadhar_number?: string | null
           activation_date?: string | null
           amount?: number
           applicant_name?: string
           appointment_date?: string | null
           created_at?: string
+          district?: string | null
           dob?: string | null
           expiry_date?: string | null
           form_date?: string
@@ -65,6 +75,8 @@ export type Database = {
           received_amount?: number
           registration_type?: string
           status?: string
+          taluka?: string | null
+          village?: string | null
         }
         Relationships: []
       }
