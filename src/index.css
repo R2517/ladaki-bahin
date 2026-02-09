@@ -1373,7 +1373,44 @@ html, body {
   border-color: #1a1a1a;
 }
 
-/* Print Table */
+/* On-screen format picker */
+.inc-format-picker {
+  margin-top: 20px;
+  padding: 16px;
+  border: 1px solid hsl(var(--border));
+  border-radius: 8px;
+  background: hsl(var(--muted) / 0.3);
+}
+.inc-format-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+@media (max-width: 540px) {
+  .inc-format-options { grid-template-columns: 1fr; }
+}
+.inc-format-option {
+  padding: 10px 14px;
+  border: 2px solid hsl(var(--border));
+  border-radius: 8px;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.inc-format-option:hover {
+  border-color: hsl(var(--primary));
+  background: hsl(var(--primary) / 0.05);
+}
+.inc-format-option.active {
+  border-color: hsl(var(--primary));
+  background: hsl(var(--primary) / 0.1);
+  font-weight: 600;
+}
+
+
 .inc-print-table {
   width: 100%;
   border-collapse: collapse;

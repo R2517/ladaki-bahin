@@ -422,6 +422,28 @@ const IncomeCert = () => {
                   <input type="text" value={aadhaar} onChange={(e) => setAadhaar(e.target.value.replace(/\D/g, "").slice(0, 12))} maxLength={12} inputMode="numeric" placeholder="12 अंकी आधार क्रमांक" />
                 </div>
 
+                {/* Print Format Selector */}
+                <div className="inc-format-picker">
+                  <label className="inc-section-title" style={{ marginBottom: 8 }}>📄 Print Format निवडा</label>
+                  <div className="inc-format-options">
+                    {[
+                      { id: 1, label: "फॉर्मॅट 1 — ३ वर्षे (नवीन)" },
+                      { id: 2, label: "फॉर्मॅट 2 — १ वर्ष (नवीन)" },
+                      { id: 3, label: "फॉर्मॅट 3 — जुना" },
+                      { id: 4, label: "भूमीहीन प्रमाणपत्र" },
+                    ].map((f) => (
+                      <button
+                        key={f.id}
+                        type="button"
+                        className={`inc-format-option ${printFormat === f.id ? "active" : ""}`}
+                        onClick={() => setPrintFormat(f.id)}
+                      >
+                        {printFormat === f.id ? "✅ " : "⬜ "}{f.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 <button className="submit-btn" style={{ background: themeGradient }} onClick={handleSaveAndPrint} disabled={saving}>
                   {saving ? "Saving..." : "💾 Save & Print / Save as PDF"}
                 </button>
