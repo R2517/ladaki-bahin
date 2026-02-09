@@ -14,6 +14,122 @@ export type Database = {
   }
   public: {
     Tables: {
+      bandkam_registrations: {
+        Row: {
+          activation_date: string | null
+          amount: number
+          applicant_name: string
+          appointment_date: string | null
+          created_at: string
+          dob: string | null
+          expiry_date: string | null
+          form_date: string
+          id: string
+          mobile_number: string | null
+          payment_mode: string | null
+          payment_status: string
+          received_amount: number
+          registration_type: string
+          status: string
+        }
+        Insert: {
+          activation_date?: string | null
+          amount?: number
+          applicant_name: string
+          appointment_date?: string | null
+          created_at?: string
+          dob?: string | null
+          expiry_date?: string | null
+          form_date?: string
+          id?: string
+          mobile_number?: string | null
+          payment_mode?: string | null
+          payment_status?: string
+          received_amount?: number
+          registration_type?: string
+          status?: string
+        }
+        Update: {
+          activation_date?: string | null
+          amount?: number
+          applicant_name?: string
+          appointment_date?: string | null
+          created_at?: string
+          dob?: string | null
+          expiry_date?: string | null
+          form_date?: string
+          id?: string
+          mobile_number?: string | null
+          payment_mode?: string | null
+          payment_status?: string
+          received_amount?: number
+          registration_type?: string
+          status?: string
+        }
+        Relationships: []
+      }
+      bandkam_schemes: {
+        Row: {
+          amount: number
+          applicant_name: string
+          commission_amount: number
+          commission_percent: number
+          created_at: string
+          id: string
+          payment_mode: string | null
+          payment_status: string
+          received_amount: number
+          registration_id: string | null
+          scheme_type: string
+          scholarship_category: string | null
+          status: string
+          student_name: string | null
+          year: string | null
+        }
+        Insert: {
+          amount?: number
+          applicant_name: string
+          commission_amount?: number
+          commission_percent?: number
+          created_at?: string
+          id?: string
+          payment_mode?: string | null
+          payment_status?: string
+          received_amount?: number
+          registration_id?: string | null
+          scheme_type: string
+          scholarship_category?: string | null
+          status?: string
+          student_name?: string | null
+          year?: string | null
+        }
+        Update: {
+          amount?: number
+          applicant_name?: string
+          commission_amount?: number
+          commission_percent?: number
+          created_at?: string
+          id?: string
+          payment_mode?: string | null
+          payment_status?: string
+          received_amount?: number
+          registration_id?: string | null
+          scheme_type?: string
+          scholarship_category?: string | null
+          status?: string
+          student_name?: string | null
+          year?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bandkam_schemes_registration_id_fkey"
+            columns: ["registration_id"]
+            isOneToOne: false
+            referencedRelation: "bandkam_registrations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       form_submissions: {
         Row: {
           applicant_name: string
