@@ -28,6 +28,7 @@ export type Database = {
           form_date: string
           id: string
           mobile_number: string | null
+          online_date: string | null
           payment_mode: string | null
           payment_status: string
           received_amount: number
@@ -49,6 +50,7 @@ export type Database = {
           form_date?: string
           id?: string
           mobile_number?: string | null
+          online_date?: string | null
           payment_mode?: string | null
           payment_status?: string
           received_amount?: number
@@ -70,6 +72,7 @@ export type Database = {
           form_date?: string
           id?: string
           mobile_number?: string | null
+          online_date?: string | null
           payment_mode?: string | null
           payment_status?: string
           received_amount?: number
@@ -84,9 +87,13 @@ export type Database = {
         Row: {
           amount: number
           applicant_name: string
+          apply_date: string | null
+          appointment_date: string | null
+          beneficiary_name: string | null
           commission_amount: number
           commission_percent: number
           created_at: string
+          delivery_date: string | null
           id: string
           payment_mode: string | null
           payment_status: string
@@ -101,9 +108,13 @@ export type Database = {
         Insert: {
           amount?: number
           applicant_name: string
+          apply_date?: string | null
+          appointment_date?: string | null
+          beneficiary_name?: string | null
           commission_amount?: number
           commission_percent?: number
           created_at?: string
+          delivery_date?: string | null
           id?: string
           payment_mode?: string | null
           payment_status?: string
@@ -118,9 +129,13 @@ export type Database = {
         Update: {
           amount?: number
           applicant_name?: string
+          apply_date?: string | null
+          appointment_date?: string | null
+          beneficiary_name?: string | null
           commission_amount?: number
           commission_percent?: number
           created_at?: string
+          delivery_date?: string | null
           id?: string
           payment_mode?: string | null
           payment_status?: string

@@ -20,6 +20,7 @@ interface Registration {
   district: string | null;
   dob: string | null;
   form_date: string;
+  online_date: string | null;
   appointment_date: string | null;
   activation_date: string | null;
   expiry_date: string | null;
@@ -38,6 +39,7 @@ interface Scheme {
   scheme_type: string;
   scholarship_category: string | null;
   student_name: string | null;
+  beneficiary_name: string | null;
   year: string | null;
   amount: number;
   commission_percent: number;
@@ -46,6 +48,9 @@ interface Scheme {
   payment_status: string;
   payment_mode: string | null;
   status: string;
+  apply_date: string | null;
+  appointment_date: string | null;
+  delivery_date: string | null;
   created_at: string;
 }
 
@@ -89,13 +94,17 @@ const emptySchemeForm = {
   scheme_type: "essential_kit",
   scholarship_category: "",
   student_name: "",
+  beneficiary_name: "",
   year: new Date().getFullYear().toString(),
   amount: "",
   commission_percent: "",
   received_amount: "",
   payment_status: "unpaid",
   payment_mode: "cash",
-  status: "applied",
+  status: "pending",
+  apply_date: "",
+  appointment_date: "",
+  delivery_date: "",
 };
 
 // ---- Helpers ----
@@ -133,11 +142,15 @@ const regStatusBadge = (status: string, expiryDate: string | null) => {
 };
 
 const schemeStatusLabel = (s: string) => {
+  if (s === "applied") return "Applied 📋";
   if (s === "approved") return "Approved ✅";
   if (s === "received") return "Received 📦";
+  if (s === "delivered") return "Delivered ✅";
   if (s === "rejected") return "Rejected ❌";
-  return "Applied 📋";
+  return "Pending ⏳";
 };
+
+const isKitType = (type: string) => type === "essential_kit" || type === "safety_kit";
 
 // ============ COMPONENT ============
 const BandkamKamgar = () => {
@@ -155,13 +168,16 @@ const BandkamKamgar = () => {
   const [regSearch, setRegSearch] = useState("");
 
   // --- Profile state ---
-  const [profileDates, setProfileDates] = useState({ appointment_date: "", activation_date: "" });
+  const [profileDates, setProfileDates] = useState({ online_date: "", appointment_date: "", activation_date: "" });
   const [schemes, setSchemes] = useState<Scheme[]>([]);
   const [schemeLoading, setSchemeLoading] = useState(false);
   const [showSchemeForm, setShowSchemeForm] = useState(false);
   const [schemeForm, setSchemeForm] = useState(emptySchemeForm);
   const [schemeEditId, setSchemeEditId] = useState<string | null>(null);
-  const [schemeEditData, setSchemeEditData] = useState({ received_amount: "", payment_status: "", payment_mode: "", status: "" });
+  const [schemeEditData, setSchemeEditData] = useState({
+    received_amount: "", payment_status: "", payment_mode: "", status: "",
+    apply_date: "", appointment_date: "", delivery_date: "",
+  });
 
   // ---- Fetchers ----
   const fetchRegs = useCallback(async () => {
@@ -195,11 +211,6 @@ const BandkamKamgar = () => {
     [regs]
   );
 
-  const expiredRegs = useMemo(() =>
-    regs.filter((r) => r.expiry_date && daysUntil(r.expiry_date) < 0 && r.status !== "expired"),
-    [regs]
-  );
-
   // ---- Registration CRUD ----
   const handleRegChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setRegForm((p) => ({ ...p, [e.target.name]: e.target.value }));
@@ -213,8 +224,6 @@ const BandkamKamgar = () => {
     if (regForm.mobile_number && !/^\d{10}$/.test(regForm.mobile_number)) { toast.error("Mobile 10 अंकी असावा"); return; }
     if (regForm.aadhar_number && !/^\d{12}$/.test(regForm.aadhar_number)) { toast.error("Aadhar 12 अंकी असावा"); return; }
 
-    const isAlreadyActivated = regForm.registration_type === "already_activated";
-
     const { error } = await supabase.from("bandkam_registrations").insert({
       registration_type: regForm.registration_type,
       applicant_name: regForm.applicant_name.trim(),
@@ -225,6 +234,7 @@ const BandkamKamgar = () => {
       district: regForm.district || null,
       dob: regForm.dob || null,
       form_date: today,
+      online_date: null,
       appointment_date: null,
       activation_date: null,
       expiry_date: null,
@@ -243,7 +253,6 @@ const BandkamKamgar = () => {
 
   const deleteReg = async (id: string) => {
     if (!confirm("हा Customer रेकॉर्ड हटवायचा? सर्व Schemes पण हटतील!")) return;
-    // Delete schemes first
     await supabase.from("bandkam_schemes").delete().eq("registration_id", id);
     const { error } = await supabase.from("bandkam_registrations").delete().eq("id", id);
     if (error) { toast.error("Delete Error"); return; }
@@ -256,6 +265,7 @@ const BandkamKamgar = () => {
   const openProfile = (reg: Registration) => {
     setSelectedCustomer(reg);
     setProfileDates({
+      online_date: reg.online_date || "",
       appointment_date: reg.appointment_date || "",
       activation_date: reg.activation_date || "",
     });
@@ -274,6 +284,7 @@ const BandkamKamgar = () => {
     }
 
     const { error } = await supabase.from("bandkam_registrations").update({
+      online_date: profileDates.online_date || null,
       appointment_date: profileDates.appointment_date || null,
       activation_date: activationDate,
       expiry_date: expiryDate,
@@ -282,7 +293,6 @@ const BandkamKamgar = () => {
 
     if (error) { toast.error("Update Error"); return; }
     toast.success("Dates Updated! ✅");
-    // Refresh
     const { data } = await supabase.from("bandkam_registrations").select("*").eq("id", selectedCustomer.id).single();
     if (data) {
       setSelectedCustomer(data as Registration);
@@ -295,9 +305,19 @@ const BandkamKamgar = () => {
     const { name, value } = e.target;
     setSchemeForm((p) => {
       const next = { ...p, [name]: value };
-      if (name === "scheme_type" && value !== "scholarship") {
-        next.scholarship_category = "";
-        next.student_name = "";
+      if (name === "scheme_type") {
+        if (value !== "scholarship") {
+          next.scholarship_category = "";
+          next.student_name = "";
+        }
+        if (isKitType(value)) {
+          next.beneficiary_name = "";
+          next.appointment_date = "";
+          next.status = "pending";
+        } else {
+          next.delivery_date = "";
+          next.status = "pending";
+        }
       }
       return next;
     });
@@ -315,6 +335,7 @@ const BandkamKamgar = () => {
     const amt = parseFloat(schemeForm.amount) || 0;
     const pct = parseFloat(schemeForm.commission_percent) || 0;
     const commAmt = Math.round((amt * pct) / 100);
+    const kit = isKitType(schemeForm.scheme_type);
 
     const { error } = await supabase.from("bandkam_schemes").insert({
       registration_id: selectedCustomer.id,
@@ -322,6 +343,7 @@ const BandkamKamgar = () => {
       scheme_type: schemeForm.scheme_type,
       scholarship_category: schemeForm.scheme_type === "scholarship" ? schemeForm.scholarship_category || null : null,
       student_name: schemeForm.student_name.trim() || null,
+      beneficiary_name: !kit ? schemeForm.beneficiary_name.trim() || null : null,
       year: schemeForm.year || null,
       amount: amt,
       commission_percent: pct,
@@ -330,6 +352,9 @@ const BandkamKamgar = () => {
       payment_status: schemeForm.payment_status,
       payment_mode: schemeForm.payment_mode,
       status: schemeForm.status,
+      apply_date: schemeForm.apply_date || null,
+      appointment_date: !kit ? schemeForm.appointment_date || null : null,
+      delivery_date: kit ? schemeForm.delivery_date || null : null,
     });
     if (error) { toast.error("Save Error"); console.error(error); return; }
     toast.success("Scheme Entry Save! ✅");
@@ -353,15 +378,24 @@ const BandkamKamgar = () => {
       payment_status: s.payment_status,
       payment_mode: s.payment_mode || "cash",
       status: s.status,
+      apply_date: s.apply_date || "",
+      appointment_date: s.appointment_date || "",
+      delivery_date: s.delivery_date || "",
     });
   };
 
   const saveSchemeEdit = async (id: string) => {
+    const scheme = schemes.find(s => s.id === id);
+    const kit = scheme ? isKitType(scheme.scheme_type) : false;
+
     const { error } = await supabase.from("bandkam_schemes").update({
       received_amount: parseFloat(schemeEditData.received_amount) || 0,
       payment_status: schemeEditData.payment_status,
       payment_mode: schemeEditData.payment_mode,
       status: schemeEditData.status,
+      apply_date: schemeEditData.apply_date || null,
+      appointment_date: !kit ? schemeEditData.appointment_date || null : null,
+      delivery_date: kit ? schemeEditData.delivery_date || null : null,
     }).eq("id", id);
     if (error) { toast.error("Update Error"); return; }
     toast.success("Updated!");
@@ -585,11 +619,15 @@ const BandkamKamgar = () => {
                 <h3 className="bk-section-title"><Calendar size={16} /> Date Management</h3>
                 <div className="bk-dates-grid">
                   <div className="bk-date-field">
-                    <label>📅 File Received</label>
+                    <label>📅 File Received Date</label>
                     <input type="date" value={selectedCustomer.form_date} disabled />
                   </div>
                   <div className="bk-date-field">
-                    <label>📅 Appointment Date (Online/Thumb)</label>
+                    <label>🌐 Online Date</label>
+                    <input type="date" value={profileDates.online_date} onChange={(e) => setProfileDates((p) => ({ ...p, online_date: e.target.value }))} />
+                  </div>
+                  <div className="bk-date-field">
+                    <label>📅 Appointment Date (Thumb)</label>
                     <input type="date" value={profileDates.appointment_date} onChange={(e) => setProfileDates((p) => ({ ...p, appointment_date: e.target.value }))} />
                   </div>
                   <div className="bk-date-field">
@@ -626,6 +664,8 @@ const BandkamKamgar = () => {
                         {SCHEME_TYPES.map((t) => <option key={t.value} value={t.value}>{t.icon} {t.label}</option>)}
                       </select>
                     </div>
+
+                    {/* Scholarship-specific fields */}
                     {schemeForm.scheme_type === "scholarship" && (
                       <>
                         <div className="pan-field">
@@ -641,6 +681,35 @@ const BandkamKamgar = () => {
                         </div>
                       </>
                     )}
+
+                    {/* Non-kit schemes: beneficiary name & appointment date */}
+                    {!isKitType(schemeForm.scheme_type) && (
+                      <>
+                        <div className="pan-field">
+                          <label>लाभार्थी नाव (Beneficiary)</label>
+                          <input name="beneficiary_name" value={schemeForm.beneficiary_name} onChange={handleSchemeChange} placeholder="Beneficiary Name" maxLength={100} />
+                        </div>
+                        <div className="pan-field">
+                          <label>📅 Appointment Date</label>
+                          <input name="appointment_date" type="date" value={schemeForm.appointment_date} onChange={handleSchemeChange} />
+                        </div>
+                      </>
+                    )}
+
+                    {/* Common: Apply Date */}
+                    <div className="pan-field">
+                      <label>📅 Apply Date</label>
+                      <input name="apply_date" type="date" value={schemeForm.apply_date} onChange={handleSchemeChange} />
+                    </div>
+
+                    {/* Kit-specific: Delivery Date */}
+                    {isKitType(schemeForm.scheme_type) && (
+                      <div className="pan-field">
+                        <label>📦 Delivery Date</label>
+                        <input name="delivery_date" type="date" value={schemeForm.delivery_date} onChange={handleSchemeChange} />
+                      </div>
+                    )}
+
                     <div className="pan-field">
                       <label>Year</label>
                       <input name="year" value={schemeForm.year} onChange={handleSchemeChange} placeholder="2026" maxLength={4} />
@@ -664,10 +733,17 @@ const BandkamKamgar = () => {
                     <div className="pan-field">
                       <label>Status</label>
                       <select name="status" value={schemeForm.status} onChange={handleSchemeChange}>
-                        <option value="applied">Applied</option>
-                        <option value="approved">Approved</option>
-                        <option value="received">Received / लाभ मिळाला</option>
-                        <option value="rejected">Rejected</option>
+                        <option value="pending">Pending ⏳</option>
+                        <option value="applied">Applied 📋</option>
+                        {isKitType(schemeForm.scheme_type) ? (
+                          <option value="delivered">Delivered ✅</option>
+                        ) : (
+                          <>
+                            <option value="approved">Approved ✅</option>
+                            <option value="received">Received 📦</option>
+                          </>
+                        )}
+                        <option value="rejected">Rejected ❌</option>
                       </select>
                     </div>
                     <div className="pan-field">
@@ -695,12 +771,11 @@ const BandkamKamgar = () => {
                         <tr>
                           <th>#</th>
                           <th>Type</th>
-                          <th>Category</th>
-                          <th>Student</th>
-                          <th>Year</th>
+                          <th>Details</th>
+                          <th>Apply Date</th>
+                          <th>Appt/Delivery</th>
                           <th>Amount</th>
-                          <th>Comm%</th>
-                          <th>Commission</th>
+                          <th>Comm</th>
                           <th>Received</th>
                           <th>Payment</th>
                           <th>Status</th>
@@ -711,17 +786,44 @@ const BandkamKamgar = () => {
                         {schemes.map((s, i) => {
                           const isEditing = schemeEditId === s.id;
                           const st = SCHEME_TYPES.find((t) => t.value === s.scheme_type);
-                          const catLabel = SCHOLARSHIP_CATS.find((c) => c.value === s.scholarship_category)?.label || s.scholarship_category || "—";
+                          const kit = isKitType(s.scheme_type);
+                          const catLabel = SCHOLARSHIP_CATS.find((c) => c.value === s.scholarship_category)?.label || s.scholarship_category;
+                          
+                          // Details column content
+                          let details = "—";
+                          if (s.scheme_type === "scholarship" && catLabel) {
+                            details = `${catLabel}${s.student_name ? ` • ${s.student_name}` : ""}`;
+                          } else if (!kit && s.beneficiary_name) {
+                            details = s.beneficiary_name;
+                          }
+
                           return (
                             <tr key={s.id} className={isEditing ? "pan-row-editing" : ""}>
                               <td>{i + 1}</td>
                               <td><span className="pan-type-badge">{st?.icon} {st?.label || s.scheme_type}</span></td>
-                              <td>{s.scheme_type === "scholarship" ? catLabel : "—"}</td>
-                              <td>{s.student_name || "—"}</td>
-                              <td>{s.year || "—"}</td>
+                              <td>{details}</td>
+                              <td>
+                                {isEditing ? (
+                                  <input type="date" className="pan-inline-input" value={schemeEditData.apply_date} onChange={(e) => setSchemeEditData((p) => ({ ...p, apply_date: e.target.value }))} />
+                                ) : (
+                                  s.apply_date ? new Date(s.apply_date).toLocaleDateString("en-IN") : "—"
+                                )}
+                              </td>
+                              <td>
+                                {isEditing ? (
+                                  kit ? (
+                                    <input type="date" className="pan-inline-input" value={schemeEditData.delivery_date} onChange={(e) => setSchemeEditData((p) => ({ ...p, delivery_date: e.target.value }))} />
+                                  ) : (
+                                    <input type="date" className="pan-inline-input" value={schemeEditData.appointment_date} onChange={(e) => setSchemeEditData((p) => ({ ...p, appointment_date: e.target.value }))} />
+                                  )
+                                ) : (
+                                  kit
+                                    ? (s.delivery_date ? new Date(s.delivery_date).toLocaleDateString("en-IN") : "—")
+                                    : (s.appointment_date ? new Date(s.appointment_date).toLocaleDateString("en-IN") : "—")
+                                )}
+                              </td>
                               <td>₹{Number(s.amount).toFixed(0)}</td>
-                              <td>{s.commission_percent}%</td>
-                              <td>₹{Number(s.commission_amount).toFixed(0)}</td>
+                              <td>₹{Number(s.commission_amount).toFixed(0)} ({s.commission_percent}%)</td>
                               <td>
                                 {isEditing ? (
                                   <input type="number" className="pan-inline-input" value={schemeEditData.received_amount} onChange={(e) => setSchemeEditData((p) => ({ ...p, received_amount: e.target.value }))} min="0" />
@@ -743,9 +845,16 @@ const BandkamKamgar = () => {
                               <td>
                                 {isEditing ? (
                                   <select className="pan-inline-select" value={schemeEditData.status} onChange={(e) => setSchemeEditData((p) => ({ ...p, status: e.target.value }))}>
+                                    <option value="pending">Pending</option>
                                     <option value="applied">Applied</option>
-                                    <option value="approved">Approved</option>
-                                    <option value="received">Received</option>
+                                    {kit ? (
+                                      <option value="delivered">Delivered</option>
+                                    ) : (
+                                      <>
+                                        <option value="approved">Approved</option>
+                                        <option value="received">Received</option>
+                                      </>
+                                    )}
                                     <option value="rejected">Rejected</option>
                                   </select>
                                 ) : (
