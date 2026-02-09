@@ -38,6 +38,48 @@ export type Database = {
         }
         Relationships: []
       }
+      pan_card_applications: {
+        Row: {
+          amount: number
+          applicant_name: string
+          application_number: string
+          application_type: string
+          created_at: string
+          dob: string | null
+          id: string
+          mobile_number: string | null
+          payment_mode: string | null
+          payment_status: string
+          received_amount: number
+        }
+        Insert: {
+          amount?: number
+          applicant_name: string
+          application_number: string
+          application_type?: string
+          created_at?: string
+          dob?: string | null
+          id?: string
+          mobile_number?: string | null
+          payment_mode?: string | null
+          payment_status?: string
+          received_amount?: number
+        }
+        Update: {
+          amount?: number
+          applicant_name?: string
+          application_number?: string
+          application_type?: string
+          created_at?: string
+          dob?: string | null
+          id?: string
+          mobile_number?: string | null
+          payment_mode?: string | null
+          payment_status?: string
+          received_amount?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

@@ -45,7 +45,7 @@ const Management = () => {
           <button
             key={s.id}
             className="mgmt-card"
-            onClick={() => alert("हा विभाग लवकरच उपलब्ध होईल — Coming Soon")}
+            onClick={() => s.id === "pan-card" ? navigate("/pan-card") : alert("हा विभाग लवकरच उपलब्ध होईल — Coming Soon")}
           >
             <div className="mgmt-card-icon" style={{ background: s.iconBg }}>
               <s.icon size={30} color={s.iconColor} strokeWidth={1.8} />

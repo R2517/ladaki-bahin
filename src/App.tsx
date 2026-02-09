@@ -12,6 +12,7 @@ import CasteValidity from "./pages/CasteValidity";
 import IncomeCert from "./pages/IncomeCert";
 import Billing from "./pages/Billing";
 import Management from "./pages/Management";
+import PanCard from "./pages/PanCard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
           <Route path="/income-cert" element={<IncomeCert />} />
           <Route path="/billing" element={<Billing />} />
           <Route path="/management" element={<Management />} />
+          <Route path="/pan-card" element={<PanCard />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
