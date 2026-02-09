@@ -9,6 +9,9 @@ import {
   Trash2,
   CreditCard,
   IndianRupee,
+  Pencil,
+  Check,
+  X,
 } from "lucide-react";
 
 interface PanApp {
@@ -44,6 +47,12 @@ const PanCard = () => {
   const [form, setForm] = useState(emptyForm);
   const [showForm, setShowForm] = useState(false);
   const [search, setSearch] = useState("");
+  const [editId, setEditId] = useState<string | null>(null);
+  const [editData, setEditData] = useState({
+    received_amount: "",
+    payment_status: "",
+    payment_mode: "",
+  });
 
   const fetchRows = useCallback(async () => {
     setLoading(true);
@@ -118,6 +127,36 @@ const PanCard = () => {
     setRows((prev) => prev.filter((r) => r.id !== id));
   };
 
+  const startEdit = (r: PanApp) => {
+    setEditId(r.id);
+    setEditData({
+      received_amount: String(r.received_amount),
+      payment_status: r.payment_status,
+      payment_mode: r.payment_mode || "cash",
+    });
+  };
+
+  const cancelEdit = () => setEditId(null);
+
+  const saveEdit = async (id: string) => {
+    const { error } = await supabase
+      .from("pan_card_applications")
+      .update({
+        received_amount: parseFloat(editData.received_amount) || 0,
+        payment_status: editData.payment_status,
+        payment_mode: editData.payment_mode,
+      })
+      .eq("id", id);
+    if (error) {
+      console.error(error);
+      toast.error("Update करताना Error आला");
+      return;
+    }
+    toast.success("Record updated!");
+    setEditId(null);
+    fetchRows();
+  };
+
   const filtered = rows.filter(
     (r) =>
       r.applicant_name.toLowerCase().includes(search.toLowerCase()) ||
@@ -182,114 +221,52 @@ const PanCard = () => {
           <form className="pan-form" onSubmit={handleSubmit}>
             <h3 className="pan-form-title">📝 नवीन PAN Entry</h3>
             <div className="pan-form-grid">
-              {/* Type */}
               <div className="pan-field">
                 <label>प्रकार (Type)</label>
-                <select
-                  name="application_type"
-                  value={form.application_type}
-                  onChange={handleChange}
-                >
+                <select name="application_type" value={form.application_type} onChange={handleChange}>
                   <option value="new">New PAN Card</option>
                   <option value="correction">PAN Correction</option>
                 </select>
               </div>
-              {/* Date */}
               <div className="pan-field">
                 <label>Date</label>
                 <input type="date" value={today} disabled />
               </div>
-              {/* App Number */}
               <div className="pan-field">
                 <label>Application Number *</label>
-                <input
-                  name="application_number"
-                  value={form.application_number}
-                  onChange={handleChange}
-                  placeholder="Application No."
-                  maxLength={50}
-                />
+                <input name="application_number" value={form.application_number} onChange={handleChange} placeholder="Application No." maxLength={50} />
               </div>
-              {/* Name */}
               <div className="pan-field">
                 <label>अर्जदाराचे नाव (Name) *</label>
-                <input
-                  name="applicant_name"
-                  value={form.applicant_name}
-                  onChange={handleChange}
-                  placeholder="Full Name"
-                  maxLength={100}
-                />
+                <input name="applicant_name" value={form.applicant_name} onChange={handleChange} placeholder="Full Name" maxLength={100} />
               </div>
-              {/* DOB */}
               <div className="pan-field">
                 <label>जन्मतारीख (DOB)</label>
-                <input
-                  type="date"
-                  name="dob"
-                  value={form.dob}
-                  onChange={handleChange}
-                />
+                <input type="date" name="dob" value={form.dob} onChange={handleChange} />
               </div>
-              {/* Mobile */}
               <div className="pan-field">
                 <label>मोबाईल (Mobile)</label>
-                <input
-                  name="mobile_number"
-                  value={form.mobile_number}
-                  onChange={handleChange}
-                  placeholder="10 digit mobile"
-                  maxLength={10}
-                  inputMode="numeric"
-                />
+                <input name="mobile_number" value={form.mobile_number} onChange={handleChange} placeholder="10 digit mobile" maxLength={10} inputMode="numeric" />
               </div>
-              {/* Amount */}
               <div className="pan-field">
                 <label>रक्कम (Amount) ₹</label>
-                <input
-                  name="amount"
-                  value={form.amount}
-                  onChange={handleChange}
-                  placeholder="0"
-                  type="number"
-                  min="0"
-                  step="0.01"
-                />
+                <input name="amount" value={form.amount} onChange={handleChange} placeholder="0" type="number" min="0" step="0.01" />
               </div>
-              {/* Received */}
               <div className="pan-field">
                 <label>प्राप्त रक्कम (Received) ₹</label>
-                <input
-                  name="received_amount"
-                  value={form.received_amount}
-                  onChange={handleChange}
-                  placeholder="0"
-                  type="number"
-                  min="0"
-                  step="0.01"
-                />
+                <input name="received_amount" value={form.received_amount} onChange={handleChange} placeholder="0" type="number" min="0" step="0.01" />
               </div>
-              {/* Payment Status */}
               <div className="pan-field">
                 <label>पेमेंट स्थिती</label>
-                <select
-                  name="payment_status"
-                  value={form.payment_status}
-                  onChange={handleChange}
-                >
+                <select name="payment_status" value={form.payment_status} onChange={handleChange}>
                   <option value="unpaid">Unpaid</option>
                   <option value="paid">Paid</option>
                   <option value="partially_paid">Partially Paid</option>
                 </select>
               </div>
-              {/* Payment Mode */}
               <div className="pan-field">
                 <label>पेमेंट मोड</label>
-                <select
-                  name="payment_mode"
-                  value={form.payment_mode}
-                  onChange={handleChange}
-                >
+                <select name="payment_mode" value={form.payment_mode} onChange={handleChange}>
                   <option value="cash">Cash 💵</option>
                   <option value="upi">UPI 📱</option>
                 </select>
@@ -307,13 +284,9 @@ const PanCard = () => {
             📋 PAN Applications ({filtered.length})
           </h3>
           {loading ? (
-            <p style={{ textAlign: "center", padding: 32, opacity: 0.6 }}>
-              Loading...
-            </p>
+            <p style={{ textAlign: "center", padding: 32, opacity: 0.6 }}>Loading...</p>
           ) : filtered.length === 0 ? (
-            <p style={{ textAlign: "center", padding: 32, opacity: 0.6 }}>
-              कोणताही रेकॉर्ड नाही
-            </p>
+            <p style={{ textAlign: "center", padding: 32, opacity: 0.6 }}>कोणताही रेकॉर्ड नाही</p>
           ) : (
             <div className="pan-table-scroll">
               <table className="pan-table">
@@ -333,39 +306,100 @@ const PanCard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filtered.map((r, i) => (
-                    <tr key={r.id}>
-                      <td>{i + 1}</td>
-                      <td>
-                        {new Date(r.created_at).toLocaleDateString("en-IN")}
-                      </td>
-                      <td>
-                        <span className="pan-type-badge">
-                          {r.application_type === "new" ? "New" : "Correction"}
-                        </span>
-                      </td>
-                      <td className="pan-app-no">{r.application_number}</td>
-                      <td className="pan-name">{r.applicant_name}</td>
-                      <td>{r.mobile_number || "—"}</td>
-                      <td>₹{Number(r.amount).toFixed(0)}</td>
-                      <td>₹{Number(r.received_amount).toFixed(0)}</td>
-                      <td>
-                        <span className={`pan-status ${statusClass(r.payment_status)}`}>
-                          {statusLabel(r.payment_status)}
-                        </span>
-                      </td>
-                      <td>{r.payment_mode === "upi" ? "UPI" : "Cash"}</td>
-                      <td>
-                        <button
-                          className="pan-del-btn"
-                          onClick={() => handleDelete(r.id)}
-                          title="Delete"
-                        >
-                          <Trash2 size={15} />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+                  {filtered.map((r, i) => {
+                    const isEditing = editId === r.id;
+                    return (
+                      <tr key={r.id} className={isEditing ? "pan-row-editing" : ""}>
+                        <td>{i + 1}</td>
+                        <td>{new Date(r.created_at).toLocaleDateString("en-IN")}</td>
+                        <td>
+                          <span className="pan-type-badge">
+                            {r.application_type === "new" ? "New" : "Correction"}
+                          </span>
+                        </td>
+                        <td className="pan-app-no">{r.application_number}</td>
+                        <td className="pan-name">{r.applicant_name}</td>
+                        <td>{r.mobile_number || "—"}</td>
+                        <td>₹{Number(r.amount).toFixed(0)}</td>
+
+                        {/* Received - inline edit */}
+                        <td>
+                          {isEditing ? (
+                            <input
+                              type="number"
+                              className="pan-inline-input"
+                              value={editData.received_amount}
+                              onChange={(e) => setEditData((p) => ({ ...p, received_amount: e.target.value }))}
+                              min="0"
+                              step="0.01"
+                            />
+                          ) : (
+                            <>₹{Number(r.received_amount).toFixed(0)}</>
+                          )}
+                        </td>
+
+                        {/* Status - inline edit */}
+                        <td>
+                          {isEditing ? (
+                            <select
+                              className="pan-inline-select"
+                              value={editData.payment_status}
+                              onChange={(e) => setEditData((p) => ({ ...p, payment_status: e.target.value }))}
+                            >
+                              <option value="unpaid">Unpaid</option>
+                              <option value="paid">Paid</option>
+                              <option value="partially_paid">Partial</option>
+                            </select>
+                          ) : (
+                            <span className={`pan-status ${statusClass(r.payment_status)}`}>
+                              {statusLabel(r.payment_status)}
+                            </span>
+                          )}
+                        </td>
+
+                        {/* Mode - inline edit */}
+                        <td>
+                          {isEditing ? (
+                            <select
+                              className="pan-inline-select"
+                              value={editData.payment_mode}
+                              onChange={(e) => setEditData((p) => ({ ...p, payment_mode: e.target.value }))}
+                            >
+                              <option value="cash">Cash</option>
+                              <option value="upi">UPI</option>
+                            </select>
+                          ) : (
+                            <>{r.payment_mode === "upi" ? "UPI" : "Cash"}</>
+                          )}
+                        </td>
+
+                        {/* Actions */}
+                        <td>
+                          <div className="pan-action-btns">
+                            {isEditing ? (
+                              <>
+                                <button className="pan-save-btn" onClick={() => saveEdit(r.id)} title="Save">
+                                  <Check size={15} />
+                                </button>
+                                <button className="pan-cancel-btn" onClick={cancelEdit} title="Cancel">
+                                  <X size={15} />
+                                </button>
+                              </>
+                            ) : (
+                              <>
+                                <button className="pan-edit-btn" onClick={() => startEdit(r)} title="Edit">
+                                  <Pencil size={14} />
+                                </button>
+                                <button className="pan-del-btn" onClick={() => handleDelete(r.id)} title="Delete">
+                                  <Trash2 size={15} />
+                                </button>
+                              </>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
