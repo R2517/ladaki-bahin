@@ -1813,3 +1813,69 @@ html, body {
   .pan-search-wrap { max-width: 100%; }
   .pan-form-grid { grid-template-columns: 1fr; }
 }
+
+/* Inline editing */
+.pan-row-editing {
+  background: hsl(var(--primary) / 0.06) !important;
+}
+.pan-inline-input {
+  width: 80px;
+  padding: 5px 8px;
+  border: 1.5px solid hsl(var(--primary));
+  border-radius: 6px;
+  font-size: 13px;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  outline: none;
+}
+.pan-inline-select {
+  padding: 5px 6px;
+  border: 1.5px solid hsl(var(--primary));
+  border-radius: 6px;
+  font-size: 12px;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  outline: none;
+  cursor: pointer;
+}
+.pan-action-btns {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.pan-edit-btn {
+  background: none;
+  border: none;
+  color: hsl(var(--primary));
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+.pan-edit-btn:hover {
+  background: hsl(var(--primary) / 0.1);
+}
+.pan-save-btn {
+  background: none;
+  border: none;
+  color: hsl(142 76% 36%);
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+.pan-save-btn:hover {
+  background: hsl(142 76% 94%);
+}
+.pan-cancel-btn {
+  background: none;
+  border: none;
+  color: hsl(var(--muted-foreground));
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+.pan-cancel-btn:hover {
+  background: hsl(var(--muted));
+}
