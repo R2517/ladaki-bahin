@@ -13,6 +13,7 @@ import IncomeCert from "./pages/IncomeCert";
 import Billing from "./pages/Billing";
 import Management from "./pages/Management";
 import PanCard from "./pages/PanCard";
+import VoterIdCard from "./pages/VoterIdCard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -34,6 +35,7 @@ const App = () => (
           <Route path="/billing" element={<Billing />} />
           <Route path="/management" element={<Management />} />
           <Route path="/pan-card" element={<PanCard />} />
+          <Route path="/voter-id" element={<VoterIdCard />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
