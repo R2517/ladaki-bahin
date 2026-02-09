@@ -48,9 +48,9 @@ const services: ServiceCard[] = [
     iconBg: "linear-gradient(135deg, #FEF3C7, #FDE68A)",
     iconColor: "#D97706",
     path: "/bandkam-kamgar",
-    ready: false,
-    badge: "COMING SOON",
-    badgeType: "new",
+    ready: true,
+    badge: "READY",
+    badgeType: "ready",
   },
 ];
 
