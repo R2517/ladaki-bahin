@@ -322,6 +322,12 @@ const Dashboard = () => {
             {dark ? <Sun size={18} /> : <Moon size={18} />}
           </button>
         </div>
+        {/* === Nav Tabs === */}
+        <div className="dash-nav-tabs">
+          <button className="dash-nav-tab active" onClick={() => navigate("/")}>सेतू सुविधा</button>
+          <button className="dash-nav-tab" onClick={() => navigate("/billing")}>बिलिंग</button>
+          <button className="dash-nav-tab" onClick={() => navigate("/management")}>Management</button>
+        </div>
       </nav>
 
       <div className="dash-banner-wrap">

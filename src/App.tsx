@@ -10,6 +10,8 @@ import Grievance from "./pages/Grievance";
 import NewApplication from "./pages/NewApplication";
 import CasteValidity from "./pages/CasteValidity";
 import IncomeCert from "./pages/IncomeCert";
+import Billing from "./pages/Billing";
+import Management from "./pages/Management";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +30,8 @@ const App = () => (
           <Route path="/new-application" element={<NewApplication />} />
           <Route path="/caste-validity" element={<CasteValidity />} />
           <Route path="/income-cert" element={<IncomeCert />} />
+          <Route path="/billing" element={<Billing />} />
+          <Route path="/management" element={<Management />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
