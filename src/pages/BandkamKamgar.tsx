@@ -571,6 +571,11 @@ const BandkamKamgar = () => {
           <>
             {/* Status Summary Cards */}
             <div className="bk-status-cards">
+              <div className={`bk-status-card bk-status-all ${statusFilter === "all" ? "bk-status-card-active" : ""}`} onClick={() => setStatusFilter("all")}>
+                <span className="bk-status-card-icon">📋</span>
+                <span className="bk-status-card-count">{regs.length}</span>
+                <span className="bk-status-card-label">All</span>
+              </div>
               <div className={`bk-status-card bk-status-pending ${statusFilter === "pending" ? "bk-status-card-active" : ""}`} onClick={() => setStatusFilter(statusFilter === "pending" ? "all" : "pending")}>
                 <span className="bk-status-card-icon">⏳</span>
                 <span className="bk-status-card-count">{statusCounts.pending}</span>

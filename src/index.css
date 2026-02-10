@@ -1446,6 +1446,13 @@ html, body {
   font-weight: 600;
 }
 
+/* All card */
+.bk-status-all {
+  background: hsl(var(--primary) / 0.1);
+  color: hsl(var(--primary));
+}
+.bk-status-all .bk-status-card-count { color: hsl(var(--primary)); font-weight: 700; }
+
 
 .inc-print-table {
   width: 100%;
@@ -1888,7 +1895,7 @@ html, body {
 /* Status Summary Cards */
 .bk-status-cards {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 12px;
   margin-bottom: 18px;
 }
