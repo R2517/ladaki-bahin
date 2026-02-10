@@ -90,6 +90,7 @@ const emptyRegForm = {
   payment_mode: "cash",
   safety_kit: "yes" as "yes" | "no",
   essential_kit: "yes" as "yes" | "no",
+  scholarship_cats: [] as string[],
 };
 
 const emptySchemeForm = {
@@ -220,6 +221,15 @@ const BandkamKamgar = () => {
     setRegForm((p) => ({ ...p, [e.target.name]: e.target.value }));
   };
 
+  const toggleScholarshipCat = (cat: string) => {
+    setRegForm((p) => ({
+      ...p,
+      scholarship_cats: p.scholarship_cats.includes(cat)
+        ? p.scholarship_cats.filter((c) => c !== cat)
+        : [...p.scholarship_cats, cat],
+    }));
+  };
+
   const today = new Date().toISOString().slice(0, 10);
 
   const handleRegSubmit = async (e: React.FormEvent) => {
@@ -287,8 +297,17 @@ const BandkamKamgar = () => {
         received_amount: 0, payment_status: "unpaid", payment_mode: "cash",
       });
     }
-    if (kitEntries.length > 0) {
-      await supabase.from("bandkam_schemes").insert(kitEntries);
+    // Auto-create scholarship entries for selected categories
+    const scholarshipEntries = regForm.scholarship_cats.map((cat) => ({
+      registration_id: inserted.id, applicant_name: customerName,
+      scheme_type: "scholarship", scholarship_category: cat, status: "pending",
+      amount: 0, commission_percent: 0, commission_amount: 0,
+      received_amount: 0, payment_status: "unpaid", payment_mode: "cash",
+    }));
+
+    const allAutoEntries = [...kitEntries, ...scholarshipEntries];
+    if (allAutoEntries.length > 0) {
+      await supabase.from("bandkam_schemes").insert(allAutoEntries);
     }
 
     toast.success("Customer Entry Save झाली! ✅");
@@ -619,6 +638,32 @@ const BandkamKamgar = () => {
                       <option value="yes">हो (Yes - Pending)</option>
                       <option value="no">नाही - Already घेतली</option>
                     </select>
+                  </div>
+                  <div className="pan-field" style={{ gridColumn: "1 / -1" }}>
+                    <label>🎓 शिष्यवृत्ती (Scholarship) — कोणत्या साठी Apply करायचे?</label>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginTop: "6px" }}>
+                      {SCHOLARSHIP_CATS.map((cat) => (
+                        <label
+                          key={cat.value}
+                          style={{
+                            display: "flex", alignItems: "center", gap: "6px",
+                            padding: "6px 12px", borderRadius: "8px", cursor: "pointer",
+                            border: regForm.scholarship_cats.includes(cat.value) ? "2px solid hsl(var(--primary))" : "1px solid hsl(var(--border))",
+                            background: regForm.scholarship_cats.includes(cat.value) ? "hsl(var(--primary) / 0.1)" : "transparent",
+                            fontSize: "0.85rem", fontWeight: regForm.scholarship_cats.includes(cat.value) ? 600 : 400,
+                            transition: "all 0.15s",
+                          }}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={regForm.scholarship_cats.includes(cat.value)}
+                            onChange={() => toggleScholarshipCat(cat.value)}
+                            style={{ accentColor: "hsl(var(--primary))" }}
+                          />
+                          {cat.label}
+                        </label>
+                      ))}
+                    </div>
                   </div>
                 </div>
                 <button type="submit" className="pan-submit-btn"><IndianRupee size={16} /> Save Customer</button>
