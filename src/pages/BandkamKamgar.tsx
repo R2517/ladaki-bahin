@@ -208,7 +208,8 @@ const BandkamKamgar = () => {
     taluka: string[];
     village: string[];
     scheme_type: string[];
-  }>({ registration_type: [], payment_status: [], payment_mode: [], district: [], taluka: [], village: [], scheme_type: [] });
+    scheme_status: string[];
+  }>({ registration_type: [], payment_status: [], payment_mode: [], district: [], taluka: [], village: [], scheme_type: [], scheme_status: [] });
 
   const toggleFilter = (key: keyof typeof filters, value: string) => {
     setFilters((prev) => ({
@@ -217,7 +218,7 @@ const BandkamKamgar = () => {
     }));
   };
   const clearAllFilters = () => {
-    setFilters({ registration_type: [], payment_status: [], payment_mode: [], district: [], taluka: [], village: [], scheme_type: [] });
+    setFilters({ registration_type: [], payment_status: [], payment_mode: [], district: [], taluka: [], village: [], scheme_type: [], scheme_status: [] });
     setStatusFilter("all");
   };
   const activeFilterCount = Object.values(filters).reduce((sum, arr) => sum + arr.length, 0) + (statusFilter !== "all" ? 1 : 0);
@@ -275,22 +276,25 @@ const BandkamKamgar = () => {
   useEffect(() => { fetchRegs(); }, [fetchRegs]);
 
   // ---- All schemes for filtering ----
-  const [allSchemes, setAllSchemes] = useState<{ registration_id: string | null; scheme_type: string }[]>([]);
+  const [allSchemes, setAllSchemes] = useState<{ registration_id: string | null; scheme_type: string; status: string }[]>([]);
   const fetchAllSchemes = useCallback(async () => {
-    const { data } = await supabase.from("bandkam_schemes").select("registration_id, scheme_type");
+    const { data } = await supabase.from("bandkam_schemes").select("registration_id, scheme_type, status");
     if (data) setAllSchemes(data);
   }, []);
   useEffect(() => { fetchAllSchemes(); }, [fetchAllSchemes]);
 
   const regSchemeMap = useMemo(() => {
-    const map: Record<string, Set<string>> = {};
+    const typeMap: Record<string, Set<string>> = {};
+    const statusMap: Record<string, Set<string>> = {};
     allSchemes.forEach((s) => {
       if (s.registration_id) {
-        if (!map[s.registration_id]) map[s.registration_id] = new Set();
-        map[s.registration_id].add(s.scheme_type);
+        if (!typeMap[s.registration_id]) typeMap[s.registration_id] = new Set();
+        typeMap[s.registration_id].add(s.scheme_type);
+        if (!statusMap[s.registration_id]) statusMap[s.registration_id] = new Set();
+        statusMap[s.registration_id].add(s.status);
       }
     });
-    return map;
+    return { types: typeMap, statuses: statusMap };
   }, [allSchemes]);
 
   // ---- Status counts ----
@@ -641,8 +645,13 @@ const BandkamKamgar = () => {
     if (filters.village.length && !r.village) return false;
     // Scheme type filter
     if (filters.scheme_type.length) {
-      const regSchemes = regSchemeMap[r.id];
-      if (!regSchemes || !filters.scheme_type.some((st) => regSchemes.has(st))) return false;
+      const regTypes = regSchemeMap.types[r.id];
+      if (!regTypes || !filters.scheme_type.some((st) => regTypes.has(st))) return false;
+    }
+    // Scheme status filter
+    if (filters.scheme_status.length) {
+      const regStatuses = regSchemeMap.statuses[r.id];
+      if (!regStatuses || !filters.scheme_status.some((ss) => regStatuses.has(ss))) return false;
     }
     return true;
   });
@@ -739,6 +748,8 @@ const BandkamKamgar = () => {
                 <FilterGroup title="🏘️ Village (गाव)" options={filterOptions.village} selected={filters.village} onToggle={(v) => toggleFilter("village", v)} />
                 {/* Schemes & Kits */}
                 <FilterGroup title="📦 Schemes & Kits" options={["essential_kit", "safety_kit", "scholarship", "pregnancy", "marriage", "death"]} selected={filters.scheme_type} onToggle={(v) => toggleFilter("scheme_type", v)} labelMap={{ essential_kit: "📦 Essential Kit", safety_kit: "🦺 Safety Kit", scholarship: "🎓 Scholarship", pregnancy: "🤰 Pregnancy", marriage: "💒 Marriage", death: "🕯️ Death" }} />
+                {/* Scheme Status */}
+                <FilterGroup title="📊 Scheme Status" options={["pending", "applied", "approved", "received", "delivered", "rejected"]} selected={filters.scheme_status} onToggle={(v) => toggleFilter("scheme_status", v)} labelMap={{ pending: "⏳ Pending", applied: "📋 Applied", approved: "✅ Approved", received: "📦 Received", delivered: "✅ Delivered", rejected: "❌ Rejected" }} />
               </div>
             </div>
                   {regForm.registration_type !== "new" && (
