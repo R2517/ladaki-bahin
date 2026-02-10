@@ -162,7 +162,7 @@ const isKitType = (type: string) => type === "essential_kit" || type === "safety
 const FilterGroup = ({ title, options, selected, onToggle, labelMap }: {
   title: string; options: string[]; selected: string[]; onToggle: (v: string) => void; labelMap?: Record<string, string>;
 }) => {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   if (!options.length) return null;
   return (
     <div className="bk-filter-group">
@@ -745,12 +745,64 @@ const BandkamKamgar = () => {
                 <FilterGroup title="💰 Payment Status" options={filterOptions.payment_status} selected={filters.payment_status} onToggle={(v) => toggleFilter("payment_status", v)} labelMap={{ paid: "Paid ✅", partially_paid: "Partial ⚠️", unpaid: "Unpaid ❌" }} />
                 {/* Payment Mode */}
                 <FilterGroup title="🏦 Payment Mode" options={filterOptions.payment_mode} selected={filters.payment_mode} onToggle={(v) => toggleFilter("payment_mode", v)} labelMap={{ cash: "Cash", online: "Online", upi: "UPI", cheque: "Cheque" }} />
-                {/* District */}
-                <FilterGroup title="🏛️ District (जिल्हा)" options={filterOptions.district} selected={filters.district} onToggle={(v) => toggleFilter("district", v)} />
-                {/* Taluka */}
-                <FilterGroup title="📍 Taluka (तालुका)" options={filterOptions.taluka} selected={filters.taluka} onToggle={(v) => toggleFilter("taluka", v)} />
-                {/* Village */}
-                <FilterGroup title="🏘️ Village (गाव)" options={filterOptions.village} selected={filters.village} onToggle={(v) => toggleFilter("village", v)} />
+                {/* Location: District → Taluka → Village dropdowns */}
+                <div className="bk-filter-group">
+                  <div className="bk-filter-group-title" style={{ cursor: "default" }}>
+                    <span>📍 Location (स्थान)</span>
+                    {(filters.district.length + filters.taluka.length + filters.village.length) > 0 && (
+                      <span className="inline-flex items-center justify-center min-w-5 h-5 px-1.5 text-[10px] font-bold rounded-full bg-primary text-primary-foreground">
+                        {filters.district.length + filters.taluka.length + filters.village.length}
+                      </span>
+                    )}
+                  </div>
+                  <div className="bk-filter-group-options" style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    {/* District dropdown */}
+                    <div>
+                      <label className="text-xs font-medium text-muted-foreground mb-1 block">🏛️ जिल्हा (District)</label>
+                      <select
+                        className="w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                        value={filters.district[0] || ""}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setFilters(prev => ({ ...prev, district: val ? [val] : [], taluka: [], village: [] }));
+                        }}
+                      >
+                        <option value="">-- All --</option>
+                        {filterOptions.district.map(d => <option key={d} value={d}>{d}</option>)}
+                      </select>
+                    </div>
+                    {/* Taluka dropdown */}
+                    <div>
+                      <label className="text-xs font-medium text-muted-foreground mb-1 block">📍 तालुका (Taluka)</label>
+                      <select
+                        className="w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                        value={filters.taluka[0] || ""}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setFilters(prev => ({ ...prev, taluka: val ? [val] : [], village: [] }));
+                        }}
+                      >
+                        <option value="">-- All --</option>
+                        {filterOptions.taluka.map(t => <option key={t} value={t}>{t}</option>)}
+                      </select>
+                    </div>
+                    {/* Village dropdown */}
+                    <div>
+                      <label className="text-xs font-medium text-muted-foreground mb-1 block">🏘️ गाव (Village)</label>
+                      <select
+                        className="w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                        value={filters.village[0] || ""}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setFilters(prev => ({ ...prev, village: val ? [val] : [] }));
+                        }}
+                      >
+                        <option value="">-- All --</option>
+                        {filterOptions.village.map(v => <option key={v} value={v}>{v}</option>)}
+                      </select>
+                    </div>
+                  </div>
+                </div>
                 {/* Schemes & Kits */}
                 <FilterGroup title="📦 Schemes & Kits" options={["essential_kit", "safety_kit", "scholarship", "pregnancy", "marriage", "death"]} selected={filters.scheme_type} onToggle={(v) => toggleFilter("scheme_type", v)} labelMap={{ essential_kit: "📦 Essential Kit", safety_kit: "🦺 Safety Kit", scholarship: "🎓 Scholarship", pregnancy: "🤰 Pregnancy", marriage: "💒 Marriage", death: "🕯️ Death" }} />
                 {/* Scheme Status */}
