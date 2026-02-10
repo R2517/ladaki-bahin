@@ -1018,8 +1018,9 @@ const BandkamKamgar = () => {
                             details = s.beneficiary_name;
                           }
 
+                          const isPending = s.status === "pending";
                           return (
-                            <tr key={s.id} className={isEditing ? "pan-row-editing" : ""}>
+                            <tr key={s.id} className={`${isEditing ? "pan-row-editing" : ""} ${isPending ? "bk-scheme-pending-row" : ""}`}>
                               <td>{i + 1}</td>
                               <td><span className="pan-type-badge">{st?.icon} {st?.label || s.scheme_type}</span></td>
                               <td>
@@ -1083,7 +1084,9 @@ const BandkamKamgar = () => {
                                     <option value="rejected">Rejected</option>
                                   </select>
                                 ) : (
-                                  schemeStatusLabel(s.status)
+                                  <span className={`bk-scheme-status ${s.status === "pending" ? "bk-scheme-status-pending" : s.status === "delivered" || s.status === "received" || s.status === "approved" ? "bk-scheme-status-done" : ""}`}>
+                                    {schemeStatusLabel(s.status)}
+                                  </span>
                                 )}
                               </td>
                               <td>

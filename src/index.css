@@ -2067,6 +2067,55 @@ html, body {
   color: hsl(var(--muted-foreground));
 }
 
+/* Pending scheme row highlight */
+.bk-scheme-pending-row {
+  background: hsl(38 92% 95%) !important;
+  border-left: 4px solid hsl(38 92% 50%) !important;
+  animation: pulse-pending 2s ease-in-out infinite;
+}
+.dark .bk-scheme-pending-row {
+  background: hsl(38 50% 12%) !important;
+  border-left: 4px solid hsl(38 80% 50%) !important;
+}
+
+/* Pending scheme status badge */
+.bk-scheme-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.bk-scheme-status-pending {
+  background: hsl(38 92% 88%);
+  color: hsl(38 80% 25%);
+  border: 1.5px solid hsl(38 80% 60%);
+  animation: pulse-badge 1.5s ease-in-out infinite;
+}
+.dark .bk-scheme-status-pending {
+  background: hsl(38 50% 18%);
+  color: hsl(38 90% 70%);
+  border-color: hsl(38 70% 40%);
+}
+.bk-scheme-status-done {
+  background: hsl(142 76% 92%);
+  color: hsl(142 76% 28%);
+  border: 1.5px solid hsl(142 60% 50%);
+}
+.dark .bk-scheme-status-done {
+  background: hsl(142 40% 14%);
+  color: hsl(142 70% 60%);
+  border-color: hsl(142 50% 35%);
+}
+
+@keyframes pulse-pending {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+
 @media (max-width: 600px) {
   .bk-profile-header { flex-direction: column; align-items: center; text-align: center; }
   .bk-dates-grid { grid-template-columns: 1fr; }
