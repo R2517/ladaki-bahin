@@ -6,6 +6,7 @@ import {
   ArrowLeft, Plus, Search, Trash2, HardHat, IndianRupee,
   Pencil, Check, X, AlertTriangle, Calendar, RefreshCw,
   User, ChevronLeft, Package, GraduationCap, Baby, Heart, Skull,
+  Filter, ChevronDown, ChevronUp, XCircle,
 } from "lucide-react";
 
 // ---- Types ----
@@ -157,6 +158,32 @@ const schemeStatusLabel = (s: string) => {
 
 const isKitType = (type: string) => type === "essential_kit" || type === "safety_kit";
 
+// ---- FilterGroup sub-component ----
+const FilterGroup = ({ title, options, selected, onToggle, labelMap }: {
+  title: string; options: string[]; selected: string[]; onToggle: (v: string) => void; labelMap?: Record<string, string>;
+}) => {
+  const [open, setOpen] = useState(true);
+  if (!options.length) return null;
+  return (
+    <div className="bk-filter-group">
+      <button className="bk-filter-group-title" onClick={() => setOpen((p) => !p)}>
+        <span>{title}</span>
+        {open ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+      </button>
+      {open && (
+        <div className="bk-filter-group-options">
+          {options.map((opt) => (
+            <label key={opt} className={`bk-filter-option ${selected.includes(opt) ? "bk-filter-option-selected" : ""}`}>
+              <input type="checkbox" checked={selected.includes(opt)} onChange={() => onToggle(opt)} />
+              <span>{labelMap?.[opt] || opt}</span>
+            </label>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
 // ============ COMPONENT ============
 const BandkamKamgar = () => {
   const navigate = useNavigate();
@@ -172,6 +199,39 @@ const BandkamKamgar = () => {
   const [showRegForm, setShowRegForm] = useState(false);
   const [regSearch, setRegSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | "pending" | "active" | "expiring" | "expired">("all");
+  const [showFilterSidebar, setShowFilterSidebar] = useState(false);
+  const [filters, setFilters] = useState<{
+    registration_type: string[];
+    payment_status: string[];
+    payment_mode: string[];
+    district: string[];
+    taluka: string[];
+    village: string[];
+  }>({ registration_type: [], payment_status: [], payment_mode: [], district: [], taluka: [], village: [] });
+
+  const toggleFilter = (key: keyof typeof filters, value: string) => {
+    setFilters((prev) => ({
+      ...prev,
+      [key]: prev[key].includes(value) ? prev[key].filter((v) => v !== value) : [...prev[key], value],
+    }));
+  };
+  const clearAllFilters = () => {
+    setFilters({ registration_type: [], payment_status: [], payment_mode: [], district: [], taluka: [], village: [] });
+    setStatusFilter("all");
+  };
+  const activeFilterCount = Object.values(filters).reduce((sum, arr) => sum + arr.length, 0) + (statusFilter !== "all" ? 1 : 0);
+
+  const filterOptions = useMemo(() => {
+    const unique = (arr: (string | null | undefined)[]) => [...new Set(arr.filter(Boolean) as string[])].sort();
+    return {
+      registration_type: unique(regs.map((r) => r.registration_type)),
+      payment_status: unique(regs.map((r) => r.payment_status)),
+      payment_mode: unique(regs.map((r) => r.payment_mode)),
+      district: unique(regs.map((r) => r.district)),
+      taluka: unique(regs.map((r) => r.taluka)),
+      village: unique(regs.map((r) => r.village)),
+    };
+  }, [regs]);
 
   // --- Profile state ---
   const [profileDates, setProfileDates] = useState({ form_date: "", online_date: "", appointment_date: "", activation_date: "", application_number: "" });
@@ -542,11 +602,22 @@ const BandkamKamgar = () => {
       (r.mobile_number && r.mobile_number.includes(regSearch)) ||
       (r.village && r.village.toLowerCase().includes(regSearch.toLowerCase()));
     if (!matchSearch) return false;
-    if (statusFilter === "all") return true;
-    if (statusFilter === "expired") return r.expiry_date && daysUntil(r.expiry_date) < 0;
-    if (statusFilter === "expiring") return r.expiry_date && daysUntil(r.expiry_date) >= 0 && daysUntil(r.expiry_date) <= 7;
-    if (statusFilter === "active") return r.status === "active" && !(r.expiry_date && daysUntil(r.expiry_date) < 0);
-    if (statusFilter === "pending") return r.status === "pending";
+    // Status card filter
+    if (statusFilter === "expired" && !(r.expiry_date && daysUntil(r.expiry_date) < 0)) return false;
+    if (statusFilter === "expiring" && !(r.expiry_date && daysUntil(r.expiry_date) >= 0 && daysUntil(r.expiry_date) <= 7)) return false;
+    if (statusFilter === "active" && !(r.status === "active" && !(r.expiry_date && daysUntil(r.expiry_date) < 0))) return false;
+    if (statusFilter === "pending" && r.status !== "pending") return false;
+    // Sidebar filters (multi-select)
+    if (filters.registration_type.length && !filters.registration_type.includes(r.registration_type)) return false;
+    if (filters.payment_status.length && !filters.payment_status.includes(r.payment_status)) return false;
+    if (filters.payment_mode.length && r.payment_mode && !filters.payment_mode.includes(r.payment_mode)) return false;
+    if (filters.payment_mode.length && !r.payment_mode) return false;
+    if (filters.district.length && r.district && !filters.district.includes(r.district)) return false;
+    if (filters.district.length && !r.district) return false;
+    if (filters.taluka.length && r.taluka && !filters.taluka.includes(r.taluka)) return false;
+    if (filters.taluka.length && !r.taluka) return false;
+    if (filters.village.length && r.village && !filters.village.includes(r.village)) return false;
+    if (filters.village.length && !r.village) return false;
     return true;
   });
 
@@ -603,11 +674,45 @@ const BandkamKamgar = () => {
               <button className="pan-add-btn" onClick={() => setShowRegForm((p) => !p)}>
                 <Plus size={16} /> {showRegForm ? "बंद करा" : "नवीन Customer"}
               </button>
+              <button className={`bk-filter-toggle-btn ${activeFilterCount > 0 ? "bk-filter-active" : ""}`} onClick={() => setShowFilterSidebar((p) => !p)}>
+                <Filter size={16} /> Filter {activeFilterCount > 0 && <span className="bk-filter-badge">{activeFilterCount}</span>}
+              </button>
               <div className="pan-search-wrap">
                 <Search size={15} />
                 <input type="text" placeholder="Search name / mobile / village..." value={regSearch} onChange={(e) => setRegSearch(e.target.value)} className="pan-search" />
               </div>
-                  </div>
+            </div>
+
+            {/* Filter Sidebar */}
+            {showFilterSidebar && <div className="bk-filter-overlay" onClick={() => setShowFilterSidebar(false)} />}
+            <div className={`bk-filter-sidebar ${showFilterSidebar ? "bk-filter-sidebar-open" : ""}`}>
+              <div className="bk-filter-sidebar-header">
+                <h3><Filter size={18} /> Filters</h3>
+                <div style={{ display: "flex", gap: 8 }}>
+                  {activeFilterCount > 0 && (
+                    <button className="bk-filter-clear-btn" onClick={clearAllFilters}>
+                      <XCircle size={14} /> Clear All
+                    </button>
+                  )}
+                  <button className="bk-filter-close-btn" onClick={() => setShowFilterSidebar(false)}><X size={18} /></button>
+                </div>
+              </div>
+
+              <div className="bk-filter-sidebar-body">
+                {/* Registration Type */}
+                <FilterGroup title="📋 Registration Type" options={filterOptions.registration_type} selected={filters.registration_type} onToggle={(v) => toggleFilter("registration_type", v)} labelMap={{ new: "New", renewal: "Renewal", activated: "Activated" }} />
+                {/* Payment Status */}
+                <FilterGroup title="💰 Payment Status" options={filterOptions.payment_status} selected={filters.payment_status} onToggle={(v) => toggleFilter("payment_status", v)} labelMap={{ paid: "Paid ✅", partially_paid: "Partial ⚠️", unpaid: "Unpaid ❌" }} />
+                {/* Payment Mode */}
+                <FilterGroup title="🏦 Payment Mode" options={filterOptions.payment_mode} selected={filters.payment_mode} onToggle={(v) => toggleFilter("payment_mode", v)} labelMap={{ cash: "Cash", online: "Online", upi: "UPI", cheque: "Cheque" }} />
+                {/* District */}
+                <FilterGroup title="🏛️ District (जिल्हा)" options={filterOptions.district} selected={filters.district} onToggle={(v) => toggleFilter("district", v)} />
+                {/* Taluka */}
+                <FilterGroup title="📍 Taluka (तालुका)" options={filterOptions.taluka} selected={filters.taluka} onToggle={(v) => toggleFilter("taluka", v)} />
+                {/* Village */}
+                <FilterGroup title="🏘️ Village (गाव)" options={filterOptions.village} selected={filters.village} onToggle={(v) => toggleFilter("village", v)} />
+              </div>
+            </div>
                   {regForm.registration_type !== "new" && (
                     <div className="pan-field">
                       <label>📋 Application Number (MH...) *</label>
