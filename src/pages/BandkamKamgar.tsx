@@ -24,6 +24,7 @@ interface Registration {
   appointment_date: string | null;
   activation_date: string | null;
   expiry_date: string | null;
+  application_number: string | null;
   status: string;
   amount: number;
   received_amount: number;
@@ -91,6 +92,7 @@ const emptyRegForm = {
   safety_kit: "yes" as "yes" | "no",
   essential_kit: "yes" as "yes" | "no",
   scholarship_cats: [] as string[],
+  application_number: "",
 };
 
 const emptySchemeForm = {
@@ -171,7 +173,7 @@ const BandkamKamgar = () => {
   const [regSearch, setRegSearch] = useState("");
 
   // --- Profile state ---
-  const [profileDates, setProfileDates] = useState({ form_date: "", online_date: "", appointment_date: "", activation_date: "" });
+  const [profileDates, setProfileDates] = useState({ form_date: "", online_date: "", appointment_date: "", activation_date: "", application_number: "" });
   const [profilePayment, setProfilePayment] = useState({ amount: "", received_amount: "", payment_status: "", payment_mode: "" });
   const [editingRegDetails, setEditingRegDetails] = useState(false);
   const [schemes, setSchemes] = useState<Scheme[]>([]);
@@ -240,6 +242,8 @@ const BandkamKamgar = () => {
     if (!regForm.applicant_name.trim()) { toast.error("नाव आवश्यक आहे"); return; }
     if (regForm.mobile_number && !/^\d{10}$/.test(regForm.mobile_number)) { toast.error("Mobile 10 अंकी असावा"); return; }
     if (regForm.aadhar_number && !/^\d{12}$/.test(regForm.aadhar_number)) { toast.error("Aadhar 12 अंकी असावा"); return; }
+    const isNew = regForm.registration_type === "new";
+    if (!isNew && !regForm.application_number.trim()) { toast.error("Application Number आवश्यक आहे (MH...)"); return; }
 
     const { data: inserted, error } = await supabase.from("bandkam_registrations").insert({
       registration_type: regForm.registration_type,
@@ -260,6 +264,7 @@ const BandkamKamgar = () => {
       received_amount: parseFloat(regForm.received_amount) || 0,
       payment_status: regForm.payment_status,
       payment_mode: regForm.payment_mode,
+      application_number: isNew ? null : regForm.application_number.trim() || null,
     }).select().single();
     if (error || !inserted) { toast.error("Save Error"); console.error(error); return; }
 
@@ -337,6 +342,7 @@ const BandkamKamgar = () => {
       online_date: reg.online_date || "",
       appointment_date: reg.appointment_date || "",
       activation_date: reg.activation_date || "",
+      application_number: reg.application_number || "",
     });
     setProfilePayment({
       amount: String(reg.amount),
@@ -353,6 +359,10 @@ const BandkamKamgar = () => {
   const saveProfileDates = async () => {
     if (!selectedCustomer) return;
     const activationDate = profileDates.activation_date || null;
+    if (activationDate && !profileDates.application_number.trim()) {
+      toast.error("Activation साठी Application Number (MH...) आवश्यक आहे!");
+      return;
+    }
     const expiryDate = activationDate ? addYears(activationDate, 1) : null;
     let status = "pending";
     if (activationDate) {
@@ -365,6 +375,7 @@ const BandkamKamgar = () => {
       appointment_date: profileDates.appointment_date || null,
       activation_date: activationDate,
       expiry_date: expiryDate,
+      application_number: profileDates.application_number.trim() || null,
       status,
     }).eq("id", selectedCustomer.id);
 
@@ -566,7 +577,13 @@ const BandkamKamgar = () => {
                 <Search size={15} />
                 <input type="text" placeholder="Search name / mobile / village..." value={regSearch} onChange={(e) => setRegSearch(e.target.value)} className="pan-search" />
               </div>
-            </div>
+                  </div>
+                  {regForm.registration_type !== "new" && (
+                    <div className="pan-field">
+                      <label>📋 Application Number (MH...) *</label>
+                      <input name="application_number" value={regForm.application_number} onChange={handleRegChange} placeholder="MH..." maxLength={30} />
+                    </div>
+                  )}
 
             {/* Customer Entry Form */}
             {showRegForm && (
@@ -829,6 +846,10 @@ const BandkamKamgar = () => {
                   <div className="bk-date-field">
                     <label>📅 Appointment Date (Thumb)</label>
                     <input type="date" value={profileDates.appointment_date} onChange={(e) => setProfileDates((p) => ({ ...p, appointment_date: e.target.value }))} />
+                  </div>
+                  <div className="bk-date-field">
+                    <label>📋 Application Number (MH...)</label>
+                    <input type="text" value={profileDates.application_number} onChange={(e) => setProfileDates((p) => ({ ...p, application_number: e.target.value }))} placeholder="MH..." maxLength={30} />
                   </div>
                   <div className="bk-date-field">
                     <label>✅ Activation Date</label>

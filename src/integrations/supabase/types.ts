@@ -20,6 +20,7 @@ export type Database = {
           activation_date: string | null
           amount: number
           applicant_name: string
+          application_number: string | null
           appointment_date: string | null
           created_at: string
           district: string | null
@@ -42,6 +43,7 @@ export type Database = {
           activation_date?: string | null
           amount?: number
           applicant_name: string
+          application_number?: string | null
           appointment_date?: string | null
           created_at?: string
           district?: string | null
@@ -64,6 +66,7 @@ export type Database = {
           activation_date?: string | null
           amount?: number
           applicant_name?: string
+          application_number?: string | null
           appointment_date?: string | null
           created_at?: string
           district?: string | null

@@ -1,0 +1,1 @@
+ALTER TABLE public.bandkam_registrations ADD COLUMN application_number text DEFAULT NULL;
