@@ -281,25 +281,32 @@ const BandkamKamgar = () => {
   useEffect(() => { fetchRegs(); }, [fetchRegs]);
 
   // ---- All schemes for filtering ----
-  const [allSchemes, setAllSchemes] = useState<{ registration_id: string | null; scheme_type: string; status: string }[]>([]);
+  const [allSchemes, setAllSchemes] = useState<{ registration_id: string | null; scheme_type: string; status: string; amount: number; received_amount: number; payment_status: string }[]>([]);
   const fetchAllSchemes = useCallback(async () => {
-    const { data } = await supabase.from("bandkam_schemes").select("registration_id, scheme_type, status");
+    const { data } = await supabase.from("bandkam_schemes").select("registration_id, scheme_type, status, amount, received_amount, payment_status");
     if (data) setAllSchemes(data);
   }, []);
+
+  // Popup states
+  const [namePopupReg, setNamePopupReg] = useState<string | null>(null);
+  const [schemePopupReg, setSchemePopupReg] = useState<string | null>(null);
   useEffect(() => { fetchAllSchemes(); }, [fetchAllSchemes]);
 
   const regSchemeMap = useMemo(() => {
     const typeMap: Record<string, Set<string>> = {};
     const statusMap: Record<string, Set<string>> = {};
+    const detailMap: Record<string, typeof allSchemes> = {};
     allSchemes.forEach((s) => {
       if (s.registration_id) {
         if (!typeMap[s.registration_id]) typeMap[s.registration_id] = new Set();
         typeMap[s.registration_id].add(s.scheme_type);
         if (!statusMap[s.registration_id]) statusMap[s.registration_id] = new Set();
         statusMap[s.registration_id].add(s.status);
+        if (!detailMap[s.registration_id]) detailMap[s.registration_id] = [];
+        detailMap[s.registration_id].push(s);
       }
     });
-    return { types: typeMap, statuses: statusMap };
+    return { types: typeMap, statuses: statusMap, details: detailMap };
   }, [allSchemes]);
 
   // ---- Status counts ----
@@ -936,12 +943,10 @@ const BandkamKamgar = () => {
                         <th>#</th>
                         <th>Type</th>
                         <th>Name</th>
+                        <th>Aadhar</th>
                         <th>Mobile</th>
+                        <th>Schemes / Kits</th>
                         <th>Village</th>
-                        <th>Status</th>
-                        <th>Amount</th>
-                        <th>Received</th>
-                        <th>Payment</th>
                         <th>Expiry</th>
                         <th></th>
                       </tr>
@@ -949,25 +954,125 @@ const BandkamKamgar = () => {
                     <tbody>
                       {filteredRegs.map((r, i) => {
                         const badge = regStatusBadge(r.status, r.expiry_date);
+                        const customerSchemes = regSchemeMap.details[r.id] || [];
+                        const unpaidAmt = Number(r.amount) - Number(r.received_amount);
                         return (
-                          <tr key={r.id} className="bk-customer-row" onClick={() => openProfile(r)} style={{ cursor: "pointer" }}>
+                          <tr key={r.id} className="bk-customer-row">
                             <td>{i + 1}</td>
                             <td>
                               <span className="pan-type-badge">
                                 {r.registration_type === "new" ? "New" : r.registration_type === "renewal" ? "Renewal" : "Activated"}
                               </span>
                             </td>
-                            <td className="pan-name" style={{ fontWeight: 600 }}>{r.applicant_name}</td>
+                            {/* Name - clickable with popup */}
+                            <td style={{ position: "relative" }}>
+                              <button
+                                className="bk-name-link"
+                                onClick={(e) => { e.stopPropagation(); setNamePopupReg(namePopupReg === r.id ? null : r.id); setSchemePopupReg(null); }}
+                              >
+                                {r.applicant_name}
+                              </button>
+                              {r.payment_status !== "paid" && unpaidAmt > 0 && (
+                                <span className="bk-unpaid-tag">₹{unpaidAmt.toFixed(0)} बाकी</span>
+                              )}
+                              {/* Name Quick Info Popup */}
+                              {namePopupReg === r.id && (
+                                <div className="bk-popup bk-name-popup" onClick={(e) => e.stopPropagation()}>
+                                  <button className="bk-popup-close" onClick={() => setNamePopupReg(null)}><X size={14} /></button>
+                                  <div className="bk-popup-header">
+                                    <strong>{r.applicant_name}</strong>
+                                    <span className={`bk-reg-badge ${badge.cls}`} style={{ fontSize: "0.7rem" }}>{badge.label}</span>
+                                  </div>
+                                  <div className="bk-popup-grid">
+                                    <div className="bk-popup-item">
+                                      <span className="bk-popup-label">📅 File Date</span>
+                                      <span>{r.form_date ? new Date(r.form_date).toLocaleDateString("en-IN") : "—"}</span>
+                                    </div>
+                                    <div className="bk-popup-item">
+                                      <span className="bk-popup-label">🌐 Online</span>
+                                      <span>{r.online_date ? new Date(r.online_date).toLocaleDateString("en-IN") : "—"}</span>
+                                    </div>
+                                    <div className="bk-popup-item">
+                                      <span className="bk-popup-label">📅 Appointment</span>
+                                      <span>{r.appointment_date ? new Date(r.appointment_date).toLocaleDateString("en-IN") : "—"}</span>
+                                    </div>
+                                    <div className="bk-popup-item">
+                                      <span className="bk-popup-label">✅ Activation</span>
+                                      <span>{r.activation_date ? new Date(r.activation_date).toLocaleDateString("en-IN") : "—"}</span>
+                                    </div>
+                                    <div className="bk-popup-item">
+                                      <span className="bk-popup-label">📋 App No.</span>
+                                      <span>{r.application_number || "—"}</span>
+                                    </div>
+                                    <div className="bk-popup-item">
+                                      <span className="bk-popup-label">💰 Payment</span>
+                                      <span className={statusClass(r.payment_status)}>{statusLabel(r.payment_status)}</span>
+                                    </div>
+                                    {r.payment_status !== "paid" && unpaidAmt > 0 && (
+                                      <div className="bk-popup-item">
+                                        <span className="bk-popup-label">⚠️ बाकी Amount</span>
+                                        <span style={{ color: "hsl(var(--destructive))", fontWeight: 700 }}>₹{unpaidAmt.toFixed(0)}</span>
+                                      </div>
+                                    )}
+                                  </div>
+                                  <button className="bk-popup-profile-btn" onClick={() => { setNamePopupReg(null); openProfile(r); }}>
+                                    <User size={14} /> Full Profile →
+                                  </button>
+                                </div>
+                              )}
+                            </td>
+                            <td style={{ fontSize: "0.8rem", letterSpacing: "0.5px" }}>{r.aadhar_number || "—"}</td>
                             <td>{r.mobile_number || "—"}</td>
+                            {/* Schemes - clickable badges with popup */}
+                            <td style={{ position: "relative" }}>
+                              {customerSchemes.length > 0 ? (
+                                <button
+                                  className="bk-scheme-badges-btn"
+                                  onClick={(e) => { e.stopPropagation(); setSchemePopupReg(schemePopupReg === r.id ? null : r.id); setNamePopupReg(null); }}
+                                >
+                                  {[...new Set(customerSchemes.map(s => s.scheme_type))].map(type => {
+                                    const st = SCHEME_TYPES.find(t => t.value === type);
+                                    const hasUnpaid = customerSchemes.some(s => s.scheme_type === type && s.payment_status !== "paid");
+                                    return (
+                                      <span key={type} className={`bk-scheme-chip ${hasUnpaid ? "bk-scheme-chip-unpaid" : "bk-scheme-chip-ok"}`}>
+                                        {st?.icon} {st?.label?.split(" ")[0] || type}
+                                      </span>
+                                    );
+                                  })}
+                                </button>
+                              ) : <span style={{ opacity: 0.4 }}>—</span>}
+                              {/* Schemes Popup */}
+                              {schemePopupReg === r.id && customerSchemes.length > 0 && (
+                                <div className="bk-popup bk-scheme-popup" onClick={(e) => e.stopPropagation()}>
+                                  <button className="bk-popup-close" onClick={() => setSchemePopupReg(null)}><X size={14} /></button>
+                                  <div className="bk-popup-header" style={{ marginBottom: 8 }}>
+                                    <strong>🎁 Schemes & Kits</strong>
+                                  </div>
+                                  {customerSchemes.map((s, idx) => {
+                                    const st = SCHEME_TYPES.find(t => t.value === s.scheme_type);
+                                    const unpaid = s.payment_status !== "paid" && Number(s.amount) - Number(s.received_amount) > 0;
+                                    return (
+                                      <div key={idx} className="bk-popup-scheme-row">
+                                        <span className="bk-popup-scheme-name">{st?.icon} {st?.label || s.scheme_type}</span>
+                                        <span className={`bk-popup-scheme-status bk-popup-status-${s.status}`}>{schemeStatusLabel(s.status)}</span>
+                                        {unpaid ? (
+                                          <span className="bk-popup-scheme-unpaid">₹{(Number(s.amount) - Number(s.received_amount)).toFixed(0)} बाकी</span>
+                                        ) : s.payment_status === "paid" ? null : null}
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              )}
+                            </td>
                             <td>{r.village || "—"}</td>
-                            <td><span className={`bk-reg-badge ${badge.cls}`}>{badge.label}</span></td>
-                            <td>₹{Number(r.amount).toFixed(0)}</td>
-                            <td>₹{Number(r.received_amount).toFixed(0)}</td>
-                            <td><span className={`pan-status ${statusClass(r.payment_status)}`}>{statusLabel(r.payment_status)}</span></td>
-                            <td>{r.expiry_date ? new Date(r.expiry_date).toLocaleDateString("en-IN") : "—"}</td>
+                            <td>
+                              <span className={`bk-reg-badge ${badge.cls}`} style={{ fontSize: "0.75rem" }}>
+                                {r.expiry_date ? new Date(r.expiry_date).toLocaleDateString("en-IN") : "—"}
+                                {badge.cls === "bk-badge-expiring" && ` (${daysUntil(r.expiry_date!)}d)`}
+                              </span>
+                            </td>
                             <td>
                               <div className="pan-action-btns" onClick={(e) => e.stopPropagation()}>
-                                <button className="pan-edit-btn" onClick={() => openProfile(r)} title="Profile"><User size={14} /></button>
                                 <button className="pan-del-btn" onClick={() => deleteReg(r.id)} title="Delete"><Trash2 size={15} /></button>
                               </div>
                             </td>
