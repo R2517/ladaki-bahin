@@ -2436,13 +2436,21 @@ html, body {
   border-radius: 4px;
   font-weight: 600;
 }
-.bk-popup-status-pending, .bk-popup-status-applied {
+.bk-popup-status-applied {
   background: hsl(38 92% 92%);
   color: hsl(38 80% 35%);
 }
-.dark .bk-popup-status-pending, .dark .bk-popup-status-applied {
+.dark .bk-popup-status-applied {
   background: hsl(38 50% 16%);
   color: hsl(38 90% 70%);
+}
+.bk-popup-status-pending {
+  background: hsl(0 84% 95%);
+  color: hsl(0 84% 45%);
+}
+.dark .bk-popup-status-pending {
+  background: hsl(0 50% 18%);
+  color: hsl(0 80% 70%);
 }
 .bk-popup-status-approved, .bk-popup-status-delivered, .bk-popup-status-received {
   background: hsl(142 76% 92%);
