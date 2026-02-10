@@ -222,12 +222,15 @@ const BandkamKamgar = () => {
   };
 
   const toggleScholarshipCat = (cat: string) => {
-    setRegForm((p) => ({
-      ...p,
-      scholarship_cats: p.scholarship_cats.includes(cat)
-        ? p.scholarship_cats.filter((c) => c !== cat)
-        : [...p.scholarship_cats, cat],
-    }));
+    setRegForm((p) => {
+      const cats = p.scholarship_cats || [];
+      return {
+        ...p,
+        scholarship_cats: cats.includes(cat)
+          ? cats.filter((c) => c !== cat)
+          : [...cats, cat],
+      };
+    });
   };
 
   const today = new Date().toISOString().slice(0, 10);
@@ -648,15 +651,15 @@ const BandkamKamgar = () => {
                           style={{
                             display: "flex", alignItems: "center", gap: "6px",
                             padding: "6px 12px", borderRadius: "8px", cursor: "pointer",
-                            border: regForm.scholarship_cats.includes(cat.value) ? "2px solid hsl(var(--primary))" : "1px solid hsl(var(--border))",
-                            background: regForm.scholarship_cats.includes(cat.value) ? "hsl(var(--primary) / 0.1)" : "transparent",
-                            fontSize: "0.85rem", fontWeight: regForm.scholarship_cats.includes(cat.value) ? 600 : 400,
+                            border: (regForm.scholarship_cats || []).includes(cat.value) ? "2px solid hsl(var(--primary))" : "1px solid hsl(var(--border))",
+                            background: (regForm.scholarship_cats || []).includes(cat.value) ? "hsl(var(--primary) / 0.1)" : "transparent",
+                            fontSize: "0.85rem", fontWeight: (regForm.scholarship_cats || []).includes(cat.value) ? 600 : 400,
                             transition: "all 0.15s",
                           }}
                         >
                           <input
                             type="checkbox"
-                            checked={regForm.scholarship_cats.includes(cat.value)}
+                            checked={(regForm.scholarship_cats || []).includes(cat.value)}
                             onChange={() => toggleScholarshipCat(cat.value)}
                             style={{ accentColor: "hsl(var(--primary))" }}
                           />
