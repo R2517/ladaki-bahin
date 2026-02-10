@@ -168,7 +168,12 @@ const FilterGroup = ({ title, options, selected, onToggle, labelMap }: {
     <div className="bk-filter-group">
       <button className="bk-filter-group-title" onClick={() => setOpen((p) => !p)}>
         <span>{title}</span>
-        {open ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+        <span className="flex items-center gap-1">
+          {selected.length > 0 && (
+            <span className="inline-flex items-center justify-center min-w-5 h-5 px-1.5 text-[10px] font-bold rounded-full bg-primary text-primary-foreground">{selected.length}</span>
+          )}
+          {open ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+        </span>
       </button>
       {open && (
         <div className="bk-filter-group-options">
