@@ -207,7 +207,8 @@ const BandkamKamgar = () => {
     district: string[];
     taluka: string[];
     village: string[];
-  }>({ registration_type: [], payment_status: [], payment_mode: [], district: [], taluka: [], village: [] });
+    scheme_type: string[];
+  }>({ registration_type: [], payment_status: [], payment_mode: [], district: [], taluka: [], village: [], scheme_type: [] });
 
   const toggleFilter = (key: keyof typeof filters, value: string) => {
     setFilters((prev) => ({
@@ -216,7 +217,7 @@ const BandkamKamgar = () => {
     }));
   };
   const clearAllFilters = () => {
-    setFilters({ registration_type: [], payment_status: [], payment_mode: [], district: [], taluka: [], village: [] });
+    setFilters({ registration_type: [], payment_status: [], payment_mode: [], district: [], taluka: [], village: [], scheme_type: [] });
     setStatusFilter("all");
   };
   const activeFilterCount = Object.values(filters).reduce((sum, arr) => sum + arr.length, 0) + (statusFilter !== "all" ? 1 : 0);
@@ -272,6 +273,25 @@ const BandkamKamgar = () => {
   }, []);
 
   useEffect(() => { fetchRegs(); }, [fetchRegs]);
+
+  // ---- All schemes for filtering ----
+  const [allSchemes, setAllSchemes] = useState<{ registration_id: string | null; scheme_type: string }[]>([]);
+  const fetchAllSchemes = useCallback(async () => {
+    const { data } = await supabase.from("bandkam_schemes").select("registration_id, scheme_type");
+    if (data) setAllSchemes(data);
+  }, []);
+  useEffect(() => { fetchAllSchemes(); }, [fetchAllSchemes]);
+
+  const regSchemeMap = useMemo(() => {
+    const map: Record<string, Set<string>> = {};
+    allSchemes.forEach((s) => {
+      if (s.registration_id) {
+        if (!map[s.registration_id]) map[s.registration_id] = new Set();
+        map[s.registration_id].add(s.scheme_type);
+      }
+    });
+    return map;
+  }, [allSchemes]);
 
   // ---- Status counts ----
   const expiringRegs = useMemo(() =>
@@ -553,6 +573,7 @@ const BandkamKamgar = () => {
     setSchemeForm(emptySchemeForm);
     setShowSchemeForm(false);
     fetchSchemes(selectedCustomer.id);
+    fetchAllSchemes();
   };
 
   const deleteScheme = async (id: string) => {
@@ -594,7 +615,7 @@ const BandkamKamgar = () => {
     if (error) { toast.error("Update Error"); return; }
     toast.success("Updated!");
     setSchemeEditId(null);
-    if (selectedCustomer) fetchSchemes(selectedCustomer.id);
+    if (selectedCustomer) { fetchSchemes(selectedCustomer.id); fetchAllSchemes(); }
   };
 
   const filteredRegs = regs.filter((r) => {
@@ -618,6 +639,11 @@ const BandkamKamgar = () => {
     if (filters.taluka.length && !r.taluka) return false;
     if (filters.village.length && r.village && !filters.village.includes(r.village)) return false;
     if (filters.village.length && !r.village) return false;
+    // Scheme type filter
+    if (filters.scheme_type.length) {
+      const regSchemes = regSchemeMap[r.id];
+      if (!regSchemes || !filters.scheme_type.some((st) => regSchemes.has(st))) return false;
+    }
     return true;
   });
 
@@ -711,6 +737,8 @@ const BandkamKamgar = () => {
                 <FilterGroup title="📍 Taluka (तालुका)" options={filterOptions.taluka} selected={filters.taluka} onToggle={(v) => toggleFilter("taluka", v)} />
                 {/* Village */}
                 <FilterGroup title="🏘️ Village (गाव)" options={filterOptions.village} selected={filters.village} onToggle={(v) => toggleFilter("village", v)} />
+                {/* Schemes & Kits */}
+                <FilterGroup title="📦 Schemes & Kits" options={["essential_kit", "safety_kit", "scholarship", "pregnancy", "marriage", "death"]} selected={filters.scheme_type} onToggle={(v) => toggleFilter("scheme_type", v)} labelMap={{ essential_kit: "📦 Essential Kit", safety_kit: "🦺 Safety Kit", scholarship: "🎓 Scholarship", pregnancy: "🤰 Pregnancy", marriage: "💒 Marriage", death: "🕯️ Death" }} />
               </div>
             </div>
                   {regForm.registration_type !== "new" && (
