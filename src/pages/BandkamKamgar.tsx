@@ -171,6 +171,7 @@ const BandkamKamgar = () => {
   const [regForm, setRegForm] = useState(emptyRegForm);
   const [showRegForm, setShowRegForm] = useState(false);
   const [regSearch, setRegSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"all" | "pending" | "active" | "expiring" | "expired">("all");
 
   // --- Profile state ---
   const [profileDates, setProfileDates] = useState({ form_date: "", online_date: "", appointment_date: "", activation_date: "", application_number: "" });
@@ -212,11 +213,21 @@ const BandkamKamgar = () => {
 
   useEffect(() => { fetchRegs(); }, [fetchRegs]);
 
-  // ---- Expiry Alert ----
+  // ---- Status counts ----
   const expiringRegs = useMemo(() =>
     regs.filter((r) => r.expiry_date && daysUntil(r.expiry_date) >= 0 && daysUntil(r.expiry_date) <= 7),
     [regs]
   );
+  const statusCounts = useMemo(() => {
+    let pending = 0, active = 0, expiring = 0, expired = 0;
+    regs.forEach((r) => {
+      if (r.expiry_date && daysUntil(r.expiry_date) < 0) { expired++; return; }
+      if (r.expiry_date && daysUntil(r.expiry_date) <= 7 && daysUntil(r.expiry_date) >= 0) { expiring++; }
+      if (r.status === "active") active++;
+      else if (r.status === "pending") pending++;
+    });
+    return { pending, active, expiring, expired };
+  }, [regs]);
 
   // ---- Registration CRUD ----
   const handleRegChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -526,11 +537,18 @@ const BandkamKamgar = () => {
     if (selectedCustomer) fetchSchemes(selectedCustomer.id);
   };
 
-  const filteredRegs = regs.filter((r) =>
-    r.applicant_name.toLowerCase().includes(regSearch.toLowerCase()) ||
-    (r.mobile_number && r.mobile_number.includes(regSearch)) ||
-    (r.village && r.village.toLowerCase().includes(regSearch.toLowerCase()))
-  );
+  const filteredRegs = regs.filter((r) => {
+    const matchSearch = r.applicant_name.toLowerCase().includes(regSearch.toLowerCase()) ||
+      (r.mobile_number && r.mobile_number.includes(regSearch)) ||
+      (r.village && r.village.toLowerCase().includes(regSearch.toLowerCase()));
+    if (!matchSearch) return false;
+    if (statusFilter === "all") return true;
+    if (statusFilter === "expired") return r.expiry_date && daysUntil(r.expiry_date) < 0;
+    if (statusFilter === "expiring") return r.expiry_date && daysUntil(r.expiry_date) >= 0 && daysUntil(r.expiry_date) <= 7;
+    if (statusFilter === "active") return r.status === "active" && !(r.expiry_date && daysUntil(r.expiry_date) < 0);
+    if (statusFilter === "pending") return r.status === "pending";
+    return true;
+  });
 
   // ============ RENDER ============
   return (
@@ -551,22 +569,29 @@ const BandkamKamgar = () => {
         {/* ========== LIST VIEW ========== */}
         {view === "list" && (
           <>
-            {/* Expiry Alert */}
-            {expiringRegs.length > 0 && (
-              <div className="bk-alert-banner">
-                <AlertTriangle size={18} />
-                <div>
-                  <strong>⚠️ {expiringRegs.length} Customer(s) — Renewal in 7 days!</strong>
-                  <div className="bk-alert-names">
-                    {expiringRegs.map((r) => (
-                      <span key={r.id} className="bk-alert-name-chip" onClick={() => openProfile(r)} style={{ cursor: "pointer" }}>
-                        {r.applicant_name} — {r.expiry_date && new Date(r.expiry_date).toLocaleDateString("en-IN")}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+            {/* Status Summary Cards */}
+            <div className="bk-status-cards">
+              <div className={`bk-status-card bk-status-pending ${statusFilter === "pending" ? "bk-status-card-active" : ""}`} onClick={() => setStatusFilter(statusFilter === "pending" ? "all" : "pending")}>
+                <span className="bk-status-card-icon">⏳</span>
+                <span className="bk-status-card-count">{statusCounts.pending}</span>
+                <span className="bk-status-card-label">Pending</span>
               </div>
-            )}
+              <div className={`bk-status-card bk-status-active ${statusFilter === "active" ? "bk-status-card-active" : ""}`} onClick={() => setStatusFilter(statusFilter === "active" ? "all" : "active")}>
+                <span className="bk-status-card-icon">✅</span>
+                <span className="bk-status-card-count">{statusCounts.active}</span>
+                <span className="bk-status-card-label">Activated</span>
+              </div>
+              <div className={`bk-status-card bk-status-expiring ${statusFilter === "expiring" ? "bk-status-card-active" : ""}`} onClick={() => setStatusFilter(statusFilter === "expiring" ? "all" : "expiring")}>
+                <span className="bk-status-card-icon">⚠️</span>
+                <span className="bk-status-card-count">{statusCounts.expiring}</span>
+                <span className="bk-status-card-label">Expiring</span>
+              </div>
+              <div className={`bk-status-card bk-status-expired ${statusFilter === "expired" ? "bk-status-card-active" : ""}`} onClick={() => setStatusFilter(statusFilter === "expired" ? "all" : "expired")}>
+                <span className="bk-status-card-icon">❌</span>
+                <span className="bk-status-card-count">{statusCounts.expired}</span>
+                <span className="bk-status-card-label">Expired</span>
+              </div>
+            </div>
 
             {/* Top bar */}
             <div className="pan-topbar">
