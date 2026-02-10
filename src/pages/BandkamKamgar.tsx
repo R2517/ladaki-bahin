@@ -88,6 +88,8 @@ const emptyRegForm = {
   received_amount: "",
   payment_status: "unpaid",
   payment_mode: "cash",
+  safety_kit: "yes" as "yes" | "no",
+  essential_kit: "yes" as "yes" | "no",
 };
 
 const emptySchemeForm = {
@@ -226,7 +228,7 @@ const BandkamKamgar = () => {
     if (regForm.mobile_number && !/^\d{10}$/.test(regForm.mobile_number)) { toast.error("Mobile 10 अंकी असावा"); return; }
     if (regForm.aadhar_number && !/^\d{12}$/.test(regForm.aadhar_number)) { toast.error("Aadhar 12 अंकी असावा"); return; }
 
-    const { error } = await supabase.from("bandkam_registrations").insert({
+    const { data: inserted, error } = await supabase.from("bandkam_registrations").insert({
       registration_type: regForm.registration_type,
       applicant_name: regForm.applicant_name.trim(),
       mobile_number: regForm.mobile_number || null,
@@ -245,8 +247,50 @@ const BandkamKamgar = () => {
       received_amount: parseFloat(regForm.received_amount) || 0,
       payment_status: regForm.payment_status,
       payment_mode: regForm.payment_mode,
-    });
-    if (error) { toast.error("Save Error"); console.error(error); return; }
+    }).select().single();
+    if (error || !inserted) { toast.error("Save Error"); console.error(error); return; }
+
+    // Auto-create kit scheme entries
+    const kitEntries: Array<{
+      registration_id: string; applicant_name: string; scheme_type: string;
+      status: string; amount: number; commission_percent: number; commission_amount: number;
+      received_amount: number; payment_status: string; payment_mode: string;
+    }> = [];
+    const customerName = regForm.applicant_name.trim();
+    if (regForm.safety_kit === "yes") {
+      kitEntries.push({
+        registration_id: inserted.id, applicant_name: customerName,
+        scheme_type: "safety_kit", status: "pending",
+        amount: 0, commission_percent: 0, commission_amount: 0,
+        received_amount: 0, payment_status: "unpaid", payment_mode: "cash",
+      });
+    } else {
+      kitEntries.push({
+        registration_id: inserted.id, applicant_name: customerName,
+        scheme_type: "safety_kit", status: "delivered",
+        amount: 0, commission_percent: 0, commission_amount: 0,
+        received_amount: 0, payment_status: "unpaid", payment_mode: "cash",
+      });
+    }
+    if (regForm.essential_kit === "yes") {
+      kitEntries.push({
+        registration_id: inserted.id, applicant_name: customerName,
+        scheme_type: "essential_kit", status: "pending",
+        amount: 0, commission_percent: 0, commission_amount: 0,
+        received_amount: 0, payment_status: "unpaid", payment_mode: "cash",
+      });
+    } else {
+      kitEntries.push({
+        registration_id: inserted.id, applicant_name: customerName,
+        scheme_type: "essential_kit", status: "delivered",
+        amount: 0, commission_percent: 0, commission_amount: 0,
+        received_amount: 0, payment_status: "unpaid", payment_mode: "cash",
+      });
+    }
+    if (kitEntries.length > 0) {
+      await supabase.from("bandkam_schemes").insert(kitEntries);
+    }
+
     toast.success("Customer Entry Save झाली! ✅");
     setRegForm(emptyRegForm);
     setShowRegForm(false);
@@ -560,6 +604,20 @@ const BandkamKamgar = () => {
                     <select name="payment_mode" value={regForm.payment_mode} onChange={handleRegChange}>
                       <option value="cash">Cash 💵</option>
                       <option value="upi">UPI / Online 📱</option>
+                    </select>
+                  </div>
+                  <div className="pan-field">
+                    <label>🦺 Safety Kit Apply करायची आहे का?</label>
+                    <select name="safety_kit" value={regForm.safety_kit} onChange={handleRegChange}>
+                      <option value="yes">हो (Yes - Pending)</option>
+                      <option value="no">नाही - Already घेतली</option>
+                    </select>
+                  </div>
+                  <div className="pan-field">
+                    <label>📦 Essential Kit Apply करायची आहे का?</label>
+                    <select name="essential_kit" value={regForm.essential_kit} onChange={handleRegChange}>
+                      <option value="yes">हो (Yes - Pending)</option>
+                      <option value="no">नाही - Already घेतली</option>
                     </select>
                   </div>
                 </div>
