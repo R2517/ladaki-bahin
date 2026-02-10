@@ -168,7 +168,9 @@ const BandkamKamgar = () => {
   const [regSearch, setRegSearch] = useState("");
 
   // --- Profile state ---
-  const [profileDates, setProfileDates] = useState({ online_date: "", appointment_date: "", activation_date: "" });
+  const [profileDates, setProfileDates] = useState({ form_date: "", online_date: "", appointment_date: "", activation_date: "" });
+  const [profilePayment, setProfilePayment] = useState({ amount: "", received_amount: "", payment_status: "", payment_mode: "" });
+  const [editingRegDetails, setEditingRegDetails] = useState(false);
   const [schemes, setSchemes] = useState<Scheme[]>([]);
   const [schemeLoading, setSchemeLoading] = useState(false);
   const [showSchemeForm, setShowSchemeForm] = useState(false);
@@ -176,7 +178,7 @@ const BandkamKamgar = () => {
   const [schemeEditId, setSchemeEditId] = useState<string | null>(null);
   const [schemeEditData, setSchemeEditData] = useState({
     received_amount: "", payment_status: "", payment_mode: "", status: "",
-    apply_date: "", appointment_date: "", delivery_date: "",
+    apply_date: "", appointment_date: "", delivery_date: "", beneficiary_name: "",
   });
 
   // ---- Fetchers ----
@@ -265,10 +267,18 @@ const BandkamKamgar = () => {
   const openProfile = (reg: Registration) => {
     setSelectedCustomer(reg);
     setProfileDates({
+      form_date: reg.form_date || "",
       online_date: reg.online_date || "",
       appointment_date: reg.appointment_date || "",
       activation_date: reg.activation_date || "",
     });
+    setProfilePayment({
+      amount: String(reg.amount),
+      received_amount: String(reg.received_amount),
+      payment_status: reg.payment_status,
+      payment_mode: reg.payment_mode || "cash",
+    });
+    setEditingRegDetails(false);
     setView("profile");
     fetchSchemes(reg.id);
   };
@@ -284,6 +294,7 @@ const BandkamKamgar = () => {
     }
 
     const { error } = await supabase.from("bandkam_registrations").update({
+      form_date: profileDates.form_date || selectedCustomer.form_date,
       online_date: profileDates.online_date || null,
       appointment_date: profileDates.appointment_date || null,
       activation_date: activationDate,
@@ -296,6 +307,39 @@ const BandkamKamgar = () => {
     const { data } = await supabase.from("bandkam_registrations").select("*").eq("id", selectedCustomer.id).single();
     if (data) {
       setSelectedCustomer(data as Registration);
+      setRegs((p) => p.map((r) => r.id === data.id ? data as Registration : r));
+    }
+  };
+
+  // ---- Profile: Update Payment/Amount ----
+  const saveProfilePayment = async () => {
+    if (!selectedCustomer) return;
+    const amt = parseFloat(profilePayment.amount) || 0;
+    const recv = parseFloat(profilePayment.received_amount) || 0;
+    let payStatus = profilePayment.payment_status;
+    if (recv >= amt && amt > 0) payStatus = "paid";
+    else if (recv > 0) payStatus = "partially_paid";
+    else payStatus = "unpaid";
+
+    const { error } = await supabase.from("bandkam_registrations").update({
+      amount: amt,
+      received_amount: recv,
+      payment_status: payStatus,
+      payment_mode: profilePayment.payment_mode,
+    }).eq("id", selectedCustomer.id);
+
+    if (error) { toast.error("Update Error"); return; }
+    toast.success("Payment Updated! ✅");
+    setEditingRegDetails(false);
+    const { data } = await supabase.from("bandkam_registrations").select("*").eq("id", selectedCustomer.id).single();
+    if (data) {
+      setSelectedCustomer(data as Registration);
+      setProfilePayment({
+        amount: String(data.amount),
+        received_amount: String(data.received_amount),
+        payment_status: data.payment_status,
+        payment_mode: data.payment_mode || "cash",
+      });
       setRegs((p) => p.map((r) => r.id === data.id ? data as Registration : r));
     }
   };
@@ -381,6 +425,7 @@ const BandkamKamgar = () => {
       apply_date: s.apply_date || "",
       appointment_date: s.appointment_date || "",
       delivery_date: s.delivery_date || "",
+      beneficiary_name: s.beneficiary_name || "",
     });
   };
 
@@ -396,6 +441,7 @@ const BandkamKamgar = () => {
       apply_date: schemeEditData.apply_date || null,
       appointment_date: !kit ? schemeEditData.appointment_date || null : null,
       delivery_date: kit ? schemeEditData.delivery_date || null : null,
+      beneficiary_name: !kit ? schemeEditData.beneficiary_name.trim() || null : null,
     }).eq("id", id);
     if (error) { toast.error("Update Error"); return; }
     toast.success("Updated!");
@@ -614,13 +660,61 @@ const BandkamKamgar = () => {
                 </div>
               </div>
 
+              {/* Payment & Amount Details */}
+              <div className="bk-dates-section">
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <h3 className="bk-section-title"><IndianRupee size={16} /> Payment Details</h3>
+                  {!editingRegDetails ? (
+                    <button className="pan-edit-btn" onClick={() => setEditingRegDetails(true)} title="Edit"><Pencil size={14} /> Edit</button>
+                  ) : (
+                    <div className="pan-action-btns">
+                      <button className="pan-save-btn" onClick={saveProfilePayment}><Check size={14} /> Save</button>
+                      <button className="pan-cancel-btn" onClick={() => setEditingRegDetails(false)}><X size={14} /></button>
+                    </div>
+                  )}
+                </div>
+                <div className="bk-dates-grid">
+                  <div className="bk-date-field">
+                    <label>💰 रक्कम (Amount) ₹</label>
+                    {editingRegDetails ? (
+                      <input type="number" value={profilePayment.amount} onChange={(e) => setProfilePayment(p => ({ ...p, amount: e.target.value }))} min="0" />
+                    ) : (
+                      <input value={`₹${Number(selectedCustomer.amount).toFixed(0)}`} disabled />
+                    )}
+                  </div>
+                  <div className="bk-date-field">
+                    <label>💵 प्राप्त (Received) ₹</label>
+                    {editingRegDetails ? (
+                      <input type="number" value={profilePayment.received_amount} onChange={(e) => setProfilePayment(p => ({ ...p, received_amount: e.target.value }))} min="0" />
+                    ) : (
+                      <input value={`₹${Number(selectedCustomer.received_amount).toFixed(0)}`} disabled />
+                    )}
+                  </div>
+                  <div className="bk-date-field">
+                    <label>⏳ बाकी (Pending) ₹</label>
+                    <input value={`₹${Math.max(0, (parseFloat(editingRegDetails ? profilePayment.amount : String(selectedCustomer.amount)) || 0) - (parseFloat(editingRegDetails ? profilePayment.received_amount : String(selectedCustomer.received_amount)) || 0))}`} disabled />
+                  </div>
+                  <div className="bk-date-field">
+                    <label>💳 पेमेंट मोड</label>
+                    {editingRegDetails ? (
+                      <select value={profilePayment.payment_mode} onChange={(e) => setProfilePayment(p => ({ ...p, payment_mode: e.target.value }))}>
+                        <option value="cash">Cash 💵</option>
+                        <option value="upi">UPI / Online 📱</option>
+                      </select>
+                    ) : (
+                      <input value={selectedCustomer.payment_mode === "upi" ? "UPI / Online 📱" : "Cash 💵"} disabled />
+                    )}
+                  </div>
+                </div>
+              </div>
+
               {/* Date Management */}
               <div className="bk-dates-section">
                 <h3 className="bk-section-title"><Calendar size={16} /> Date Management</h3>
                 <div className="bk-dates-grid">
                   <div className="bk-date-field">
                     <label>📅 File Received Date</label>
-                    <input type="date" value={selectedCustomer.form_date} disabled />
+                    <input type="date" value={profileDates.form_date} onChange={(e) => setProfileDates((p) => ({ ...p, form_date: e.target.value }))} />
                   </div>
                   <div className="bk-date-field">
                     <label>🌐 Online Date</label>
@@ -801,7 +895,11 @@ const BandkamKamgar = () => {
                             <tr key={s.id} className={isEditing ? "pan-row-editing" : ""}>
                               <td>{i + 1}</td>
                               <td><span className="pan-type-badge">{st?.icon} {st?.label || s.scheme_type}</span></td>
-                              <td>{details}</td>
+                              <td>
+                                {isEditing && !kit && s.scheme_type !== "scholarship" ? (
+                                  <input type="text" className="pan-inline-input" value={schemeEditData.beneficiary_name} onChange={(e) => setSchemeEditData((p) => ({ ...p, beneficiary_name: e.target.value }))} placeholder="Beneficiary" />
+                                ) : details}
+                              </td>
                               <td>
                                 {isEditing ? (
                                   <input type="date" className="pan-inline-input" value={schemeEditData.apply_date} onChange={(e) => setSchemeEditData((p) => ({ ...p, apply_date: e.target.value }))} />
