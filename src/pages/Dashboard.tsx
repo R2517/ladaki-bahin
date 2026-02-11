@@ -362,17 +362,17 @@ const Dashboard = () => {
           <span className="ticker-label">📢 नवीन:</span>
           <div className="ticker-scroll">
             <div className="ticker-content">
-              <span className="ticker-item">⭐ लाडकी बहिण योजना हमीपत्र फॉर्म आता उपलब्ध!</span>
+              <span className="ticker-item">⭐ SETU Suvidha — सर्व सरकारी फॉर्म एकाच ठिकाणी! setusuvidha.com</span>
               <span className="ticker-sep">•</span>
-              <span className="ticker-item">📋 स्वयंघोषणा पत्र, तक्रार नोंदणी फॉर्म लवकरच येत आहे</span>
+              <span className="ticker-item">📋 हमीपत्र, स्वयंघोषणा, तक्रार नोंदणी फॉर्म उपलब्ध!</span>
               <span className="ticker-sep">•</span>
-              <span className="ticker-item">💾 Google Sheet मध्ये data auto-save</span>
+              <span className="ticker-item">🔧 राजपत्र, उत्पन्न दाखला, PAN Card सेवा उपलब्ध</span>
               <span className="ticker-sep">•</span>
               <span className="ticker-item">🖨️ Save & Print एका क्लिकवर</span>
               <span className="ticker-sep">•</span>
-              <span className="ticker-item">⭐ लाडकी बहिण योजना हमीपत्र फॉर्म आता उपलब्ध!</span>
+              <span className="ticker-item">⭐ SETU Suvidha — सर्व सरकारी फॉर्म एकाच ठिकाणी! setusuvidha.com</span>
               <span className="ticker-sep">•</span>
-              <span className="ticker-item">📋 स्वयंघोषणा पत्र, तक्रार नोंदणी फॉर्म लवकरच येत आहे</span>
+              <span className="ticker-item">📋 हमीपत्र, स्वयंघोषणा, तक्रार नोंदणी फॉर्म उपलब्ध!</span>
             </div>
           </div>
         </div>
