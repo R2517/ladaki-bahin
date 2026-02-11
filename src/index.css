@@ -2523,3 +2523,136 @@ html, body {
   line-height: 1.5;
   margin-top: 4px;
 }
+
+/* ===== Rajpatra Form Styles ===== */
+.rp-form-card {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 12px;
+  padding: 0 0 24px 0;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+.rp-form-header {
+  background: linear-gradient(135deg, hsl(340 80% 55%), hsl(350 85% 60%));
+  color: #fff;
+  padding: 14px 20px;
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.rp-form-header-eng {
+  background: linear-gradient(135deg, hsl(220 75% 50%), hsl(230 80% 55%));
+}
+.rp-form-note {
+  text-align: right;
+  padding: 8px 20px 0;
+  font-size: 13px;
+  color: hsl(340 80% 50%);
+  font-weight: 600;
+}
+.rp-section {
+  margin: 12px 16px;
+  padding: 16px;
+  border-radius: 10px;
+  border: 1px solid hsl(var(--border));
+}
+.rp-section-old {
+  background: hsl(340 40% 97%);
+}
+.dark .rp-section-old {
+  background: hsl(340 20% 14%);
+}
+.rp-section-new {
+  background: hsl(142 40% 96%);
+  border-color: hsl(142 50% 80%);
+}
+.dark .rp-section-new {
+  background: hsl(142 20% 14%);
+  border-color: hsl(142 30% 25%);
+}
+.rp-section-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: hsl(var(--foreground));
+  margin-bottom: 12px;
+}
+.rp-row-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.rp-row-4 {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 12px;
+  padding: 0 16px;
+  margin-top: 12px;
+}
+@media (max-width: 768px) {
+  .rp-row-3 { grid-template-columns: 1fr; }
+  .rp-row-4 { grid-template-columns: 1fr; }
+}
+.rp-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 16px;
+}
+.rp-section .rp-field {
+  padding: 0;
+}
+.rp-field label {
+  font-size: 12px;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+}
+.rp-req {
+  color: hsl(0 84% 50%);
+}
+.rp-field input, .rp-field select, .rp-field textarea {
+  padding: 8px 10px;
+  border: 1px solid hsl(var(--border));
+  border-radius: 6px;
+  font-size: 13px;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  width: 100%;
+}
+.rp-field input:focus, .rp-field select:focus, .rp-field textarea:focus {
+  outline: none;
+  border-color: hsl(var(--primary));
+  box-shadow: 0 0 0 2px hsl(var(--primary) / 0.15);
+}
+.rp-input-new {
+  border-color: hsl(142 50% 60%) !important;
+}
+.rp-preview-name {
+  font-size: 13px;
+  margin-top: 8px;
+  color: hsl(142 60% 35%);
+}
+.dark .rp-preview-name {
+  color: hsl(142 60% 65%);
+}
+.rp-submit-btn {
+  padding: 12px 40px;
+  background: linear-gradient(135deg, hsl(340 80% 50%), hsl(350 85% 55%));
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.rp-submit-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px hsl(340 80% 50% / 0.3);
+}
+.rp-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
