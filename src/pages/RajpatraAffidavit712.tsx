@@ -30,6 +30,11 @@ const RajpatraAffidavit712 = () => {
   const [district, setDistrict] = useState("");
   const [surveyNo, setSurveyNo] = useState("");
   const [mobile, setMobile] = useState("");
+  const [sameAddress, setSameAddress] = useState(true);
+  const [mauja, setMauja] = useState("");
+  const [addrVillage, setAddrVillage] = useState("");
+  const [addrTaluka, setAddrTaluka] = useState("");
+  const [addrDistrict, setAddrDistrict] = useState("");
 
   const { submissions, loading, addSubmission, deleteSubmission } = useFormSubmissions("राजपत्र-७/१२");
 
@@ -47,19 +52,29 @@ const RajpatraAffidavit712 = () => {
     if (!district) { toast.error("जिल्हा निवडा"); return false; }
     if (!surveyNo.trim()) { toast.error("सर्व्हे / गट नंबर भरा"); return false; }
     if (!mobile.trim() || !/^\d{10}$/.test(mobile)) { toast.error("मोबाईल क्र. 10 अंकी असावा"); return false; }
+    if (!sameAddress) {
+      if (!addrVillage.trim()) { toast.error("राहण्याचे गाव भरा"); return false; }
+      if (!addrTaluka.trim()) { toast.error("राहण्याचा तालुका भरा"); return false; }
+      if (!addrDistrict) { toast.error("राहण्याचा जिल्हा निवडा"); return false; }
+    }
     return true;
   };
 
   const resetForm = () => {
     setOldName(""); setNewName(""); setAge(""); setOccupation("");
     setVillage(""); setTaluka(""); setDistrict(""); setSurveyNo(""); setMobile("");
+    setSameAddress(true); setMauja(""); setAddrVillage(""); setAddrTaluka(""); setAddrDistrict("");
   };
 
   const handleSaveAndPrint = async () => {
     if (!validate()) return;
     setSaving(true);
     try {
-      const formData = { oldName, newName, age, occupation, village, taluka, district, surveyNo, mobile, date: getTodayDate() };
+      const finalMauja = mauja.trim() || village;
+      const finalAddrVillage = sameAddress ? village : addrVillage;
+      const finalAddrTaluka = sameAddress ? taluka : addrTaluka;
+      const finalAddrDistrict = sameAddress ? district : addrDistrict;
+      const formData = { oldName, newName, age, occupation, village, taluka, district, surveyNo, mobile, date: getTodayDate(), mauja: finalMauja, addrVillage: finalAddrVillage, addrTaluka: finalAddrTaluka, addrDistrict: finalAddrDistrict };
       const saved = await addSubmission(newName, formData);
       if (!saved) { setSaving(false); return; }
       setPrintData(formData);
@@ -152,7 +167,7 @@ const RajpatraAffidavit712 = () => {
             <p className="rp712-body">माझ्या शेतजमिनीचे तपशील पुढीलप्रमाणे आहेत –</p>
 
             <ul className="rp712-list">
-              <li><b>गाव :</b> {printData.village}</li>
+              <li><b>मौजे :</b> {printData.mauja || printData.village}</li>
               <li><b>तालुका :</b> {printData.taluka}</li>
               <li><b>जिल्हा :</b> {printData.district}</li>
               <li><b>सर्व्हे नंबर / गट नंबर :</b> {printData.surveyNo}</li>
@@ -221,9 +236,9 @@ const RajpatraAffidavit712 = () => {
               <span><b>व्यवसाय :</b> {printData.occupation || "—"}</span>
             </div>
             <div className="rp712-info-row">
-              <span><b>रा. :</b> {printData.village}</span>
-              <span><b>तालुका :</b> {printData.taluka}</span>
-              <span><b>जिल्हा :</b> {printData.district}</span>
+              <span><b>रा. :</b> {printData.addrVillage || printData.village}</span>
+              <span><b>तालुका :</b> {printData.addrTaluka || printData.taluka}</span>
+              <span><b>जिल्हा :</b> {printData.addrDistrict || printData.district}</span>
               <span><b>राज्य :</b> महाराष्ट्र</span>
             </div>
 
@@ -350,11 +365,11 @@ const RajpatraAffidavit712 = () => {
             </div>
           </div>
 
-          {/* Location */}
+          {/* Location - 7/12 Land Details */}
           <div className="rp-row-3" style={{ marginTop: 12 }}>
             <div className="rp-field">
-              <label>गाव <span className="rp-req">*</span></label>
-              <input value={village} onChange={e => setVillage(e.target.value)} placeholder="गाव" />
+              <label>मौजे (7/12 वरील गाव) <span className="rp-req">*</span></label>
+              <input value={village} onChange={e => setVillage(e.target.value)} placeholder="7/12 वरील मौजे/गाव" />
             </div>
             <div className="rp-field">
               <label>तालुका <span className="rp-req">*</span></label>
@@ -368,6 +383,37 @@ const RajpatraAffidavit712 = () => {
               </select>
             </div>
           </div>
+
+          {/* Address Toggle */}
+          <div style={{ margin: "14px 0 6px", display: "flex", alignItems: "center", gap: 10, fontSize: 14 }}>
+            <label style={{ fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}>
+              <input type="checkbox" checked={sameAddress} onChange={e => setSameAddress(e.target.checked)} style={{ width: 18, height: 18, accentColor: "hsl(142 60% 40%)" }} />
+              7/12 वरील मौजे आणि राहण्याचा पत्ता सारखाच आहे
+            </label>
+          </div>
+
+          {!sameAddress && (
+            <div className="rp-section" style={{ marginTop: 8, border: "1px dashed hsl(142 60% 40%)", borderRadius: 8, padding: 12 }}>
+              <h4 className="rp-section-title" style={{ fontSize: 14, marginBottom: 8 }}>🏠 राहण्याचा पत्ता (वेगळा असल्यास)</h4>
+              <div className="rp-row-3">
+                <div className="rp-field">
+                  <label>गाव / शहर <span className="rp-req">*</span></label>
+                  <input value={addrVillage} onChange={e => setAddrVillage(e.target.value)} placeholder="राहण्याचे गाव/शहर" />
+                </div>
+                <div className="rp-field">
+                  <label>तालुका <span className="rp-req">*</span></label>
+                  <input value={addrTaluka} onChange={e => setAddrTaluka(e.target.value)} placeholder="तालुका" />
+                </div>
+                <div className="rp-field">
+                  <label>जिल्हा <span className="rp-req">*</span></label>
+                  <select value={addrDistrict} onChange={e => setAddrDistrict(e.target.value)}>
+                    <option value="">--निवडा--</option>
+                    {DISTRICTS.map(d => <option key={d} value={d}>{d}</option>)}
+                  </select>
+                </div>
+              </div>
+            </div>
+          )}
 
           <div style={{ textAlign: "center", marginTop: 20, paddingBottom: 4 }}>
             <button className="rp-submit-btn" style={{ background: "linear-gradient(135deg, hsl(142 60% 40%), hsl(152 65% 45%))" }} onClick={handleSaveAndPrint} disabled={saving}>
