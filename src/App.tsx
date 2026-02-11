@@ -16,6 +16,8 @@ import PanCard from "./pages/PanCard";
 import VoterIdCard from "./pages/VoterIdCard";
 import BandkamKamgar from "./pages/BandkamKamgar";
 import RajPatra from "./pages/RajPatra";
+import RajpatraMarathi from "./pages/RajpatraMarathi";
+import RajpatraEnglish from "./pages/RajpatraEnglish";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -40,6 +42,8 @@ const App = () => (
           <Route path="/voter-id" element={<VoterIdCard />} />
           <Route path="/bandkam-kamgar" element={<BandkamKamgar />} />
           <Route path="/rajpatra" element={<RajPatra />} />
+          <Route path="/rajpatra-marathi" element={<RajpatraMarathi />} />
+          <Route path="/rajpatra-english" element={<RajpatraEnglish />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
