@@ -385,7 +385,7 @@ const RajpatraAffidavit712 = () => {
           </div>
 
           {/* Address Toggle */}
-          <div style={{ margin: "14px 0 6px", display: "flex", alignItems: "center", gap: 10, fontSize: 14 }}>
+          <div style={{ margin: "14px 0 6px", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, fontSize: 14 }}>
             <label style={{ fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}>
               <input type="checkbox" checked={sameAddress} onChange={e => setSameAddress(e.target.checked)} style={{ width: 18, height: 18, accentColor: "hsl(142 60% 40%)" }} />
               7/12 वरील मौजे आणि राहण्याचा पत्ता सारखाच आहे
