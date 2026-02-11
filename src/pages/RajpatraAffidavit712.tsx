@@ -78,46 +78,55 @@ const RajpatraAffidavit712 = () => {
       <div className="rajpatra-print-page">
         <style>{`
           @media print {
-            @page { size: A4 portrait; margin: 15mm 18mm 15mm 20mm; }
+            @page { size: A4 portrait; margin: 10mm; }
             body * { visibility: hidden !important; }
             .rajpatra-print-page, .rajpatra-print-page * { visibility: visible !important; }
             .rajpatra-print-page { position: absolute; left: 0; top: 0; width: 100%; }
             .no-print { display: none !important; }
             .rp712-box {
-              border: 2px solid #000 !important; margin: 0 !important;
-              padding: 28px 32px !important; page-break-after: always;
-              width: 100% !important; max-width: 100% !important;
-              min-height: calc(297mm - 30mm) !important;
+              border: 2.5px solid #000 !important; 
+              margin: 0 auto !important;
+              padding: 20px 24px !important; 
+              page-break-after: always;
+              page-break-inside: avoid;
+              width: 92% !important; 
+              max-width: 92% !important;
+              height: calc(297mm - 20mm - 4px) !important;
+              min-height: unset !important;
+              max-height: calc(297mm - 20mm - 4px) !important;
               display: flex !important; flex-direction: column !important;
+              overflow: hidden !important;
+              box-sizing: border-box !important;
             }
             .rp712-box:last-of-type { page-break-after: auto; }
-            .rp712-footer { margin-top: auto !important; padding-top: 20px; }
+            .rp712-content { flex: 1 !important; overflow: hidden !important; }
+            .rp712-footer { margin-top: auto !important; padding-top: 12px; flex-shrink: 0 !important; }
           }
           .rp712-box {
-            max-width: 190mm; width: 190mm; margin: 24px auto; padding: 28px 32px;
+            max-width: 180mm; width: 180mm; margin: 24px auto; padding: 20px 24px;
             font-family: 'Noto Sans Devanagari', 'Mangal', serif;
-            border: 2px solid #000; background: #fff; color: #000; line-height: 2;
-            box-sizing: border-box; font-size: 14.5px; text-align: justify;
+            border: 2.5px solid #000; background: #fff; color: #000; line-height: 1.85;
+            box-sizing: border-box; font-size: 13.5px; text-align: justify;
             display: flex; flex-direction: column;
           }
           .rp712-box + .rp712-box { margin-top: 30px; }
           .rp712-content { flex: 1; }
-          .rp712-title { text-align: center; font-size: 30px; font-weight: 800; margin-bottom: 18px; letter-spacing: 2px; }
-          .rp712-sub { font-size: 13px; text-align: center; font-style: italic; margin-bottom: 16px; color: #333; }
-          .rp712-to { font-size: 14.5px; margin-bottom: 14px; line-height: 1.9; }
-          .rp712-to p { margin: 3px 0; }
-          .rp712-subject { font-size: 16px; font-weight: 800; margin: 16px 0 12px; }
-          .rp712-body { font-size: 14.5px; margin-bottom: 12px; line-height: 2; }
-          .rp712-list { margin: 10px 0 10px 28px; font-size: 14.5px; line-height: 2; }
-          .rp712-list li { margin: 4px 0; }
-          .rp712-ol { margin: 10px 0 10px 28px; font-size: 14.5px; line-height: 2; }
-          .rp712-ol li { margin: 4px 0; }
-          .rp712-footer { display: flex; justify-content: space-between; margin-top: auto; padding-top: 24px; font-size: 14.5px; }
-          .rp712-footer p { margin: 3px 0; }
+          .rp712-title { text-align: center; font-size: 26px; font-weight: 800; margin-bottom: 12px; letter-spacing: 2px; }
+          .rp712-sub { font-size: 12px; text-align: center; font-style: italic; margin-bottom: 10px; color: #333; }
+          .rp712-to { font-size: 13.5px; margin-bottom: 10px; line-height: 1.8; }
+          .rp712-to p { margin: 2px 0; }
+          .rp712-subject { font-size: 15px; font-weight: 800; margin: 10px 0 8px; }
+          .rp712-body { font-size: 13.5px; margin-bottom: 8px; line-height: 1.85; }
+          .rp712-list { margin: 6px 0 6px 24px; font-size: 13.5px; line-height: 1.85; }
+          .rp712-list li { margin: 2px 0; }
+          .rp712-ol { margin: 6px 0 6px 24px; font-size: 13.5px; line-height: 1.85; }
+          .rp712-ol li { margin: 2px 0; }
+          .rp712-footer { display: flex; justify-content: space-between; margin-top: auto; padding-top: 16px; font-size: 13.5px; }
+          .rp712-footer p { margin: 2px 0; }
           .rp712-bold { font-weight: 700; }
-          .rp712-info-row { display: flex; gap: 28px; flex-wrap: wrap; font-size: 14.5px; margin: 8px 0; line-height: 2; }
+          .rp712-info-row { display: flex; gap: 20px; flex-wrap: wrap; font-size: 13.5px; margin: 5px 0; line-height: 1.85; }
           .rp712-info-row span { white-space: nowrap; }
-          .rp712-section-title { text-align: center; font-size: 20px; font-weight: 800; margin: 20px 0 14px; padding: 8px 0; border-top: 2px solid #000; border-bottom: 2px solid #000; }
+          .rp712-section-title { text-align: center; font-size: 18px; font-weight: 800; margin: 14px 0 10px; padding: 6px 0; border-top: 2px solid #000; border-bottom: 2px solid #000; }
         `}</style>
 
         {/* ===== PAGE 1: अर्ज ===== */}
