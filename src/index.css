@@ -2474,3 +2474,52 @@ html, body {
   font-weight: 700;
   white-space: nowrap;
 }
+
+/* ===== Rajpatra Dashboard Cards ===== */
+.rajpatra-cards-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 20px !important;
+  max-width: 900px;
+  margin: 0 auto;
+}
+@media (max-width: 768px) {
+  .rajpatra-cards-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+.rajpatra-card {
+  min-height: 220px !important;
+  padding: 28px 20px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 10px !important;
+  border-radius: 16px !important;
+  border: 2px solid hsl(var(--border)) !important;
+  transition: transform 0.22s, box-shadow 0.22s, border-color 0.22s !important;
+}
+.rajpatra-card:hover {
+  transform: translateY(-6px) scale(1.03) !important;
+  box-shadow: 0 12px 36px -8px hsl(var(--primary) / 0.18) !important;
+  border-color: hsl(var(--primary) / 0.5) !important;
+}
+.rajpatra-card-icon {
+  width: 64px !important;
+  height: 64px !important;
+  border-radius: 16px !important;
+}
+.rajpatra-card-subtitle {
+  font-size: 12px;
+  font-weight: 600;
+  color: hsl(var(--primary));
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.rajpatra-card-desc {
+  font-size: 12px;
+  color: hsl(var(--muted-foreground));
+  text-align: center;
+  line-height: 1.5;
+  margin-top: 4px;
+}

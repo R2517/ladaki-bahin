@@ -15,6 +15,7 @@ import Management from "./pages/Management";
 import PanCard from "./pages/PanCard";
 import VoterIdCard from "./pages/VoterIdCard";
 import BandkamKamgar from "./pages/BandkamKamgar";
+import RajPatra from "./pages/RajPatra";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,6 +39,7 @@ const App = () => (
           <Route path="/pan-card" element={<PanCard />} />
           <Route path="/voter-id" element={<VoterIdCard />} />
           <Route path="/bandkam-kamgar" element={<BandkamKamgar />} />
+          <Route path="/rajpatra" element={<RajPatra />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

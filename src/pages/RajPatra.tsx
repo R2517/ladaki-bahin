@@ -1,7 +1,7 @@
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
-  CreditCard, UserCheck, HardHat, Landmark,
-  Sun, Moon, Palette, X, LayoutGrid, Search, Radio,
+  Landmark, Sun, Moon, Palette, X, LayoutGrid, Search, Radio,
+  FileText, Globe, MapPin,
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { COLOR_THEMES } from "@/lib/themes";
@@ -9,6 +9,7 @@ import { COLOR_THEMES } from "@/lib/themes";
 interface ServiceCard {
   id: string;
   title: string;
+  subtitle: string;
   icon: React.ElementType;
   iconBg: string;
   iconColor: string;
@@ -16,41 +17,48 @@ interface ServiceCard {
   ready: boolean;
   badge?: string;
   badgeType?: "ready" | "new" | "hot" | "fast";
+  description: string;
 }
 
 const services: ServiceCard[] = [
   {
-    id: "pan-card",
-    title: "पॅन कार्ड (PAN Card)",
-    icon: CreditCard,
-    iconBg: "linear-gradient(135deg, #E0E7FF, #C7D2FE)",
-    iconColor: "#4338CA",
-    path: "/pan-card",
+    id: "rajpatra-marathi",
+    title: "राजपत्र मराठी",
+    subtitle: "Rajpatra Marathi",
+    icon: FileText,
+    iconBg: "linear-gradient(135deg, #FEF3C7, #FDE68A)",
+    iconColor: "#B45309",
+    path: "/rajpatra-marathi",
     ready: true,
     badge: "READY",
     badgeType: "ready",
+    description: "मराठी भाषेतील राजपत्र नोटीस तयार करा व प्रिंट करा",
   },
   {
-    id: "voter-id",
-    title: "मतदार ओळखपत्र (Voter ID)",
-    icon: UserCheck,
+    id: "rajpatra-english",
+    title: "राजपत्र इंग्रजी",
+    subtitle: "Rajpatra English",
+    icon: Globe,
     iconBg: "linear-gradient(135deg, #DBEAFE, #93C5FD)",
     iconColor: "#1D4ED8",
-    path: "/voter-id",
+    path: "/rajpatra-english",
     ready: true,
     badge: "READY",
     badgeType: "ready",
+    description: "English Gazette Notice — create and print official gazette notifications",
   },
   {
-    id: "bandkam-kamgar",
-    title: "बांधकाम कामगार (Bandkam Kamgar)",
-    icon: HardHat,
-    iconBg: "linear-gradient(135deg, #FEF3C7, #FDE68A)",
-    iconColor: "#D97706",
-    path: "/bandkam-kamgar",
+    id: "rajpatra-affidavit-712",
+    title: "राजपत्र ७/१२ शपथपत्र",
+    subtitle: "Affidavit of 7/12",
+    icon: MapPin,
+    iconBg: "linear-gradient(135deg, #D1FAE5, #A7F3D0)",
+    iconColor: "#059669",
+    path: "/rajpatra-affidavit-712",
     ready: true,
     badge: "READY",
     badgeType: "ready",
+    description: "७/१२ उतारा बदलासाठी राजपत्र शपथपत्र (Affidavit) तयार करा",
   },
 ];
 
@@ -61,9 +69,8 @@ const badgeStyles: Record<string, string> = {
   fast: "badge-fast",
 };
 
-const Management = () => {
+const RajPatra = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const [search, setSearch] = useState("");
   const [dark, setDark] = useState(() => {
     if (typeof window !== "undefined") return localStorage.getItem("theme") === "dark";
@@ -88,12 +95,9 @@ const Management = () => {
 
   useEffect(() => {
     const root = document.documentElement;
-    root.style.setProperty("--primary", currentTheme.primary);
-    root.style.setProperty("--ring", currentTheme.primary);
-    if (dark) {
-      root.style.setProperty("--primary", currentTheme.darkPrimary);
-      root.style.setProperty("--ring", currentTheme.darkPrimary);
-    }
+    const p = dark ? currentTheme.darkPrimary : currentTheme.primary;
+    root.style.setProperty("--primary", p);
+    root.style.setProperty("--ring", p);
     localStorage.setItem("colorTheme", String(themeIdx));
   }, [themeIdx, dark, currentTheme]);
 
@@ -108,7 +112,7 @@ const Management = () => {
   }, [showPalette]);
 
   const filtered = services.filter((s) =>
-    s.title.toLowerCase().includes(search.toLowerCase())
+    (s.title + s.subtitle).toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -170,8 +174,8 @@ const Management = () => {
         <div className="dash-nav-tabs">
           <button className="dash-nav-tab" onClick={() => navigate("/")}>🏠 सेतू सुविधा</button>
           <button className="dash-nav-tab" onClick={() => navigate("/billing")}>💰 बिलिंग</button>
-          <button className="dash-nav-tab active" onClick={() => navigate("/management")}>⚙️ Management</button>
-          <button className="dash-nav-tab" onClick={() => navigate("/rajpatra")}>📜 राजपत्र</button>
+          <button className="dash-nav-tab" onClick={() => navigate("/management")}>⚙️ Management</button>
+          <button className="dash-nav-tab active" onClick={() => navigate("/rajpatra")}>📜 राजपत्र</button>
         </div>
       </nav>
 
@@ -179,9 +183,9 @@ const Management = () => {
       <div className="dash-banner-wrap">
         <div className="dash-banner" style={{ background: currentTheme.nav }}>
           <div className="banner-text">
-            <h2 className="dash-welcome-title">⚙️ Management</h2>
+            <h2 className="dash-welcome-title">📜 राजपत्र सेवा</h2>
             <p className="dash-welcome-sub">
-              व्यवस्थापन सेवा — PAN Card, Voter ID आणि इतर सेवांचे CRM व्यवस्थापन करा.
+              राजपत्र (Gazette) नोटीस — मराठी, इंग्रजी आणि ७/१२ शपथपत्र तयार करा.
             </p>
           </div>
           <div className="banner-stats">
@@ -206,17 +210,17 @@ const Management = () => {
           <span className="ticker-label">📢 नवीन:</span>
           <div className="ticker-scroll">
             <div className="ticker-content">
-              <span className="ticker-item">⭐ PAN Card CRM आता उपलब्ध!</span>
+              <span className="ticker-item">⭐ राजपत्र मराठी नोटीस फॉर्म आता उपलब्ध!</span>
               <span className="ticker-sep">•</span>
-              <span className="ticker-item">📋 Voter ID Card CRM आता उपलब्ध!</span>
+              <span className="ticker-item">📋 राजपत्र इंग्रजी नोटीस फॉर्म आता उपलब्ध!</span>
               <span className="ticker-sep">•</span>
-              <span className="ticker-item">🔧 बांधकाम कामगार सेवा लवकरच येत आहे</span>
+              <span className="ticker-item">📝 ७/१२ शपथपत्र (Affidavit) फॉर्म आता उपलब्ध!</span>
               <span className="ticker-sep">•</span>
-              <span className="ticker-item">💼 सर्व entries inline edit करता येतात</span>
+              <span className="ticker-item">🖨️ Save & Print एका क्लिकवर</span>
               <span className="ticker-sep">•</span>
-              <span className="ticker-item">⭐ PAN Card CRM आता उपलब्ध!</span>
+              <span className="ticker-item">⭐ राजपत्र मराठी नोटीस फॉर्म आता उपलब्ध!</span>
               <span className="ticker-sep">•</span>
-              <span className="ticker-item">📋 Voter ID Card CRM आता उपलब्ध!</span>
+              <span className="ticker-item">📋 राजपत्र इंग्रजी नोटीस फॉर्म आता उपलब्ध!</span>
             </div>
           </div>
         </div>
@@ -227,7 +231,7 @@ const Management = () => {
         <div className="dash-section-header">
           <div className="dash-section-title-row">
             <LayoutGrid size={18} />
-            <h3 className="dash-section-title">व्यवस्थापन सेवा</h3>
+            <h3 className="dash-section-title">राजपत्र सेवा</h3>
           </div>
           <div className="dash-search-box">
             <Search size={16} className="dash-search-icon" />
@@ -241,12 +245,12 @@ const Management = () => {
           </div>
         </div>
 
-        <div className="dash-cards-grid">
+        <div className="dash-cards-grid rajpatra-cards-grid">
           {filtered.map((s, i) => (
             <button
               key={s.id}
-              className="dash-card"
-              style={{ animationDelay: `${i * 0.04}s` }}
+              className="dash-card rajpatra-card"
+              style={{ animationDelay: `${i * 0.06}s` }}
               onClick={() => {
                 if (s.ready) {
                   navigate(s.path);
@@ -260,10 +264,12 @@ const Management = () => {
                   {s.badge}
                 </span>
               )}
-              <div className="dash-card-icon" style={{ background: s.iconBg }}>
-                <s.icon size={26} color={s.iconColor} strokeWidth={1.8} />
+              <div className="dash-card-icon rajpatra-card-icon" style={{ background: s.iconBg }}>
+                <s.icon size={32} color={s.iconColor} strokeWidth={1.6} />
               </div>
-              <span className="dash-card-label">{s.title}</span>
+              <span className="dash-card-label" style={{ fontSize: 15, fontWeight: 700 }}>{s.title}</span>
+              <span className="rajpatra-card-subtitle">{s.subtitle}</span>
+              <span className="rajpatra-card-desc">{s.description}</span>
             </button>
           ))}
         </div>
@@ -281,4 +287,4 @@ const Management = () => {
   );
 };
 
-export default Management;
+export default RajPatra;
