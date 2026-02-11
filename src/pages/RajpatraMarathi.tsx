@@ -109,79 +109,111 @@ const RajpatraMarathi = () => {
             .rajpatra-print-page { position: absolute; left: 0; top: 0; width: 210mm; }
             .no-print { display: none !important; }
           }
+          .rp-print-box {
+            max-width: 750px; margin: 0 auto; padding: 36px 44px;
+            font-family: 'Noto Sans Devanagari', serif;
+            border: 3px double #222; background: #fff; color: #000; line-height: 2;
+            position: relative;
+          }
+          .rp-print-box::before {
+            content: ''; position: absolute; inset: 6px;
+            border: 1px solid #bbb; pointer-events: none; border-radius: 2px;
+          }
+          .rp-print-header { text-align: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid #333; }
+          .rp-print-header h1 { font-size: 20px; font-weight: 800; letter-spacing: 2px; margin: 0; }
+          .rp-print-header h2 { font-size: 14px; font-weight: 700; margin: 4px 0 0; }
+          .rp-print-header h3 { font-size: 18px; font-weight: 800; margin: 12px 0 0; letter-spacing: 1px; }
+          .rp-print-header h4 { font-size: 16px; font-weight: 700; margin: 2px 0 0; text-decoration: underline; }
+          .rp-print-notice { font-size: 12px; font-style: italic; margin-bottom: 16px; padding: 10px 14px; background: #f9f9f9; border-left: 3px solid #999; }
+          .rp-print-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+          .rp-print-table th { border: 2px solid #333; padding: 8px 12px; font-size: 13px; background: #f0f0f0; font-weight: 700; text-align: center; }
+          .rp-print-table td { border: 2px solid #333; padding: 8px 12px; font-size: 14px; text-align: center; }
+          .rp-print-table td b { font-size: 15px; }
+          .rp-print-sig-row { display: flex; justify-content: space-between; margin: 28px 0; font-size: 13px; }
+          .rp-print-to { margin: 28px 0; font-size: 13px; }
+          .rp-print-to p { margin: 2px 0; }
+          .rp-print-reason { font-size: 14px; margin: 20px 0; padding: 8px 14px; border: 1px dashed #666; background: #fafafa; }
+          .rp-print-signature { text-align: right; margin-top: 60px; font-size: 14px; }
+          .rp-print-address { margin-top: 36px; font-size: 13px; border-top: 2px solid #333; padding-top: 14px; }
+          .rp-print-address p { margin: 3px 0; }
+          .rp-print-address b { font-size: 14px; }
         `}</style>
-        <div className="rajpatra-print-container" style={{
-          maxWidth: 750, margin: "0 auto", padding: "30px 40px", fontFamily: "'Noto Sans Devanagari', serif'",
-          border: "2px solid #000", background: "#fff", color: "#000", lineHeight: 1.8,
-        }}>
-          <div style={{ textAlign: "center", marginBottom: 20 }}>
-            <p style={{ fontSize: 16, fontWeight: 700 }}>महाराष्ट्र शासन</p>
-            <p style={{ fontSize: 14, fontWeight: 700 }}>शासन मुद्रण, लेखनसामग्री व प्रकाशन संचालनालय</p>
-            <p style={{ fontSize: 16, fontWeight: 700, marginTop: 8 }}>नाव बदलण्याचा नमुना</p>
-            <p style={{ fontSize: 15, fontWeight: 700 }}>नोटीस</p>
+        <div className="rp-print-box">
+          <div className="rp-print-header">
+            <h1>महाराष्ट्र शासन</h1>
+            <h2>शासन मुद्रण, लेखनसामग्री व प्रकाशन संचालनालय</h2>
+            <h3>नाव बदलण्याचा नमुना</h3>
+            <h4>नोटीस</h4>
           </div>
 
-          <p style={{ fontSize: 12, fontStyle: "italic", marginBottom: 12 }}>
+          <div className="rp-print-notice">
             <b>विशेष सूचना :-</b> हा नमुना भरण्यापूर्वी मागील बाजूस दिलेल्या सूचना काळजीपूर्वक अनुसरल्या पाहिजेत. खाली छापलेल्या प्रत्येक
             मोकळ्या जागी फक्त एकच शब्द लिहिला पाहिजे. कोणतीही पडताळणी न करता अर्जदारांनी अर्जात सदर केलेल्या माहितीवर
             आधारित सदर जाहिरात असल्यामुळे जाहिरातीत असलेल्या मजकुराबावतच्या सत्यवेदिपयी शासन कुठलीव जबाबदारी
-            स्वीकारणार नाही.खालील नोटीस फक्त मराठीतच लिहावी.
+            स्वीकारणार नाही. खालील नोटीस फक्त मराठीतच लिहावी.
+          </div>
+
+          <p style={{ fontSize: 14, marginBottom: 10 }}>
+            यारूपन असे जाहीर करण्यात येत आहे की, <b>खाली सही करणाऱ्याने / करणारीने</b> आपले जुने नाव –
           </p>
 
-          <p style={{ fontSize: 13, marginBottom: 8 }}>
-            यारूपन असे जाहीर करण्यात येत आहे की, <b>खाली सही करणाऱ्याने /करणारीने</b> आपले जुने नाव –
-          </p>
-
-          <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: 12 }}>
+          <table className="rp-print-table">
             <thead>
               <tr>
-                <th style={thStyle}>जुने नाव</th>
-                <th style={thStyle}>नाव</th>
-                <th style={thStyle}>वडिलांचे/पतीचे नाव</th>
-                <th style={thStyle}>आडनाव</th>
+                <th style={{ width: "18%" }}></th>
+                <th>नाव</th>
+                <th>वडिलांचे / पतीचे नाव</th>
+                <th>आडनाव</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td style={tdStyle}>बदलून</td>
-                <td style={tdStyle}><b>{printData.oldFirstName}</b></td>
-                <td style={tdStyle}><b>{printData.oldFatherName}</b></td>
-                <td style={tdStyle}><b>{printData.oldSurname}</b></td>
+                <td><b>जुने नाव</b></td>
+                <td><b>{printData.oldFirstName}</b></td>
+                <td><b>{printData.oldFatherName}</b></td>
+                <td><b>{printData.oldSurname}</b></td>
               </tr>
               <tr>
-                <td style={tdStyle}>नवीन नाव</td>
-                <td style={tdStyle}><b>{printData.newFirstName}</b></td>
-                <td style={tdStyle}><b>{printData.newFatherName}</b></td>
-                <td style={tdStyle}><b>{printData.newSurname}</b></td>
+                <td><b>नवीन नाव</b></td>
+                <td><b>{printData.newFirstName}</b></td>
+                <td><b>{printData.newFatherName}</b></td>
+                <td><b>{printData.newSurname}</b></td>
               </tr>
             </tbody>
           </table>
 
-          <p style={{ fontSize: 13 }}>हे नवीन नाव धारण केले आहे.</p>
+          <p style={{ fontSize: 14, fontWeight: 600 }}>हे नवीन नाव धारण केले आहे.</p>
 
-          <p style={{ fontSize: 13, margin: "16px 0" }}>आई / वडिलांची अथवा पालकाची सही ....................</p>
-          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13 }}>
-            <span>( फक्त अल्पवयीन इसमाच्या बाबतीत )</span>
-            <span>जुन्या नावाप्रमाणे सही व तारीख</span>
+          <div className="rp-print-sig-row">
+            <div>
+              <p>आई / वडिलांची अथवा पालकाची सही ....................</p>
+              <p style={{ fontSize: 11 }}>( फक्त अल्पवयीन इसमाच्या बाबतीत )</p>
+            </div>
+            <div style={{ textAlign: "right" }}>
+              <p>.............................................</p>
+              <p>जुन्या नावाप्रमाणे सही व तारीख</p>
+            </div>
           </div>
 
-          <div style={{ margin: "24px 0" }}>
-            <p style={{ fontSize: 13 }}>प्रति</p>
-            <p style={{ fontSize: 13, marginLeft: 20 }}><b>संचालक,</b></p>
-            <p style={{ fontSize: 12, marginLeft: 40 }}>
-              शासन मुद्रण, लेखनसामग्री व प्रकाशन संचालनालय, महाराष्ट्र राज्य, नेताजी सुभाष रोड, मुंबई ४०००००४, यांस-
+          <div className="rp-print-to">
+            <p>प्रति</p>
+            <p style={{ marginLeft: 24 }}><b>संचालक,</b></p>
+            <p style={{ marginLeft: 40, fontSize: 12 }}>
+              शासन मुद्रण, लेखनसामग्री व प्रकाशन संचालनालय, महाराष्ट्र राज्य, नेताजी सुभाष रोड, मुंबई ४०००००४, यांस—
               महाराष्ट्र शासन राजपत्र, भाग दोन याच्या पुढील अंकात वरील नोटीस प्रसिद्ध करावी.
             </p>
           </div>
 
-          <p style={{ fontSize: 13 }}>नाव बदलण्याचे कारण: <b>{printData.reason}</b></p>
-
-          <div style={{ textAlign: "right", marginTop: 50, fontSize: 13 }}>
-            <p>आपला/आपली विश्वासू,</p>
-            <p>अर्जदाराची सही––––––––––––––––</p>
+          <div className="rp-print-reason">
+            नाव बदलण्याचे कारण: <b>{printData.reason}</b>
           </div>
 
-          <div style={{ marginTop: 30, fontSize: 13, borderTop: "1px solid #000", paddingTop: 12 }}>
+          <div className="rp-print-signature">
+            <p>आपला / आपली विश्वासू,</p>
+            <p style={{ marginTop: 30 }}>अर्जदाराची सही ––––––––––––––––</p>
+          </div>
+
+          <div className="rp-print-address">
             <p><b>पत्रव्यवहाराचा पत्ता:</b></p>
             <p>अर्जदाराचे नवीन नाव : <b>{printData.newFullName}</b></p>
             <p>संपूर्ण पत्ता : <b>{printData.fullAddress || printData.address}</b></p>
@@ -190,7 +222,11 @@ const RajpatraMarathi = () => {
             {printData.aadhaar && <p>आधार क्र : <b>{printData.aadhaar}</b></p>}
           </div>
         </div>
-        <div className="no-print" style={{ textAlign: "center", marginTop: 16 }}>
+        <div className="no-print" style={{ textAlign: "center", marginTop: 20, display: "flex", gap: 12, justifyContent: "center" }}>
+          <button onClick={() => { window.print(); }} style={{
+            padding: "10px 28px", background: "#16a34a", color: "#fff",
+            border: "none", borderRadius: 8, cursor: "pointer", fontSize: 14, fontWeight: 600,
+          }}>🖨️ पुन्हा प्रिंट करा</button>
           <button onClick={() => setPrintData(null)} style={{
             padding: "10px 28px", background: "hsl(var(--primary))", color: "#fff",
             border: "none", borderRadius: 8, cursor: "pointer", fontSize: 14, fontWeight: 600,
