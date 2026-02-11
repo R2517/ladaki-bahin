@@ -107,61 +107,67 @@ const RajpatraMarathi = () => {
             .rajpatra-print-page, .rajpatra-print-page * { visibility: visible !important; }
             .rajpatra-print-page { position: absolute; left: 0; top: 0; width: 210mm; }
             .no-print { display: none !important; }
-            .rp-print-box { border: none !important; padding: 20mm 20mm 15mm 25mm !important; max-width: 210mm !important; box-sizing: border-box !important; }
-            .rp-print-box::before { display: none !important; }
+            .rp-print-box { border: 2px solid #000 !important; margin: 15mm auto !important; }
           }
           .rp-print-box {
-            max-width: 210mm; width: 210mm; margin: 0 auto; padding: 20mm 20mm 15mm 25mm;
+            max-width: 170mm; width: 170mm; margin: 20px auto; padding: 28px 32px;
             font-family: 'Noto Sans Devanagari', serif;
-            border: 3px double #222; background: #fff; color: #000; line-height: 1.7;
-            position: relative; box-sizing: border-box;
+            border: 2px solid #000; background: #fff; color: #000; line-height: 1.6;
+            box-sizing: border-box;
           }
-          .rp-print-box::before {
-            content: ''; position: absolute; inset: 6px;
-            border: 1px solid #bbb; pointer-events: none; border-radius: 2px;
-          }
-          .rp-print-header { text-align: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid #333; }
-          .rp-print-header h1 { font-size: 17px; font-weight: 800; letter-spacing: 2px; margin: 0; }
-          .rp-print-header h2 { font-size: 12px; font-weight: 700; margin: 2px 0 0; }
-          .rp-print-header h3 { font-size: 15px; font-weight: 800; margin: 8px 0 0; letter-spacing: 1px; }
-          .rp-print-header h4 { font-size: 14px; font-weight: 700; margin: 2px 0 0; text-decoration: underline; }
-          .rp-print-notice { font-size: 10px; font-style: italic; margin-bottom: 10px; padding: 8px 10px; background: #f9f9f9; border-left: 3px solid #999; line-height: 1.5; }
-          .rp-print-table { width: 100%; border-collapse: collapse; margin: 10px 0; }
-          .rp-print-table th { border: 2px solid #333; padding: 5px 8px; font-size: 11px; background: #f0f0f0; font-weight: 700; text-align: center; }
-          .rp-print-table td { border: 2px solid #333; padding: 5px 8px; font-size: 12px; text-align: center; }
-          .rp-print-table td b { font-size: 13px; }
-          .rp-print-sig-row { display: flex; justify-content: space-between; margin: 16px 0; font-size: 11px; }
-          .rp-print-to { margin: 16px 0; font-size: 11px; }
-          .rp-print-to p { margin: 2px 0; }
-          .rp-print-reason { font-size: 12px; margin: 12px 0; padding: 6px 10px; border: 1px dashed #666; background: #fafafa; }
-          .rp-print-signature { text-align: right; margin-top: 36px; font-size: 12px; }
-          .rp-print-address { margin-top: 20px; font-size: 11px; border-top: 2px solid #333; padding-top: 10px; }
-          .rp-print-address p { margin: 2px 0; }
-          .rp-print-address b { font-size: 12px; }
+          .rp-print-logo-header { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 10px; }
+          .rp-print-logo-header img { width: 56px; height: 56px; object-fit: contain; }
+          .rp-print-header-text { text-align: center; }
+          .rp-print-header-text h1 { font-size: 16px; font-weight: 800; letter-spacing: 1px; margin: 0; }
+          .rp-print-header-text h2 { font-size: 11px; font-weight: 700; margin: 2px 0 0; }
+          .rp-print-title-row { text-align: center; margin: 10px 0 8px; padding-bottom: 8px; border-bottom: 1.5px solid #333; }
+          .rp-print-title-row h3 { font-size: 14px; font-weight: 800; margin: 0; }
+          .rp-print-title-row h4 { font-size: 13px; font-weight: 700; margin: 2px 0 0; text-decoration: underline; }
+          .rp-print-notice { font-size: 9.5px; margin-bottom: 8px; padding: 6px 8px; border-left: 2px solid #666; line-height: 1.45; text-align: justify; }
+          .rp-print-body-text { font-size: 11px; margin-bottom: 6px; text-align: justify; line-height: 1.5; }
+          .rp-print-table { width: 100%; border-collapse: collapse; margin: 8px 0; }
+          .rp-print-table th { border: 1.5px solid #333; padding: 4px 6px; font-size: 10px; background: #f4f4f4; font-weight: 700; text-align: center; }
+          .rp-print-table td { border: 1.5px solid #333; padding: 4px 6px; font-size: 11px; text-align: center; }
+          .rp-print-table td b { font-size: 12px; }
+          .rp-print-sig-row { display: flex; justify-content: space-between; margin: 14px 0; font-size: 10px; }
+          .rp-print-to { margin: 12px 0; font-size: 10px; line-height: 1.5; }
+          .rp-print-to p { margin: 1px 0; }
+          .rp-print-reason { font-size: 11px; margin: 10px 0; padding: 5px 8px; border: 1px dashed #666; }
+          .rp-print-signature { text-align: right; margin-top: 28px; font-size: 11px; }
+          .rp-print-address { margin-top: 16px; font-size: 10px; border-top: 1.5px solid #333; padding-top: 8px; line-height: 1.5; }
+          .rp-print-address p { margin: 1px 0; }
+          .rp-print-address b { font-size: 11px; }
         `}</style>
         <div className="rp-print-box">
-          <div className="rp-print-header">
-            <h1>महाराष्ट्र शासन</h1>
-            <h2>शासन मुद्रण, लेखनसामग्री व प्रकाशन संचालनालय</h2>
+          {/* Logo + Header */}
+          <div className="rp-print-logo-header">
+            <img src="/images/maharashtra-logo.jpg" alt="महाराष्ट्र शासन" />
+            <div className="rp-print-header-text">
+              <h1>महाराष्ट्र शासन</h1>
+              <h2>शासन मुद्रण, लेखनसामग्री व प्रकाशन संचालनालय</h2>
+            </div>
+          </div>
+          <div className="rp-print-title-row">
             <h3>नाव बदलण्याचा नमुना</h3>
             <h4>नोटीस</h4>
           </div>
 
           <div className="rp-print-notice">
-            <b>विशेष सूचना :-</b> हा नमुना भरण्यापूर्वी मागील बाजूस दिलेल्या सूचना काळजीपूर्वक अनुसरल्या पाहिजेत. खाली छापलेल्या प्रत्येक
-            मोकळ्या जागी फक्त एकच शब्द लिहिला पाहिजे. कोणतीही पडताळणी न करता अर्जदारांनी अर्जात सदर केलेल्या माहितीवर
-            आधारित सदर जाहिरात असल्यामुळे जाहिरातीत असलेल्या मजकुराबावतच्या सत्यवेदिपयी शासन कुठलीव जबाबदारी
-            स्वीकारणार नाही. खालील नोटीस फक्त मराठीतच लिहावी.
+            <b>विशेष सूचना :–</b> हा नमुना भरण्यापूर्वी मागील बाजूस दिलेल्या सूचना काळजीपूर्वक अनुसरल्या पाहिजेत.
+            खाली छापलेल्या प्रत्येक मोकळ्या जागी फक्त एकच शब्द लिहिला पाहिजे.
+            कोणतीही पडताळणी न करता अर्जदारांनी अर्जात सदर केलेल्या माहितीवर आधारित सदर जाहिरात असल्यामुळे
+            जाहिरातीत असलेल्या मजकुराबाबतच्या सत्यवेदिपयी शासन कुठलीही जबाबदारी स्वीकारणार नाही.
+            खालील नोटीस फक्त मराठीतच लिहावी.
           </div>
 
-          <p style={{ fontSize: 14, marginBottom: 10 }}>
-            यारूपन असे जाहीर करण्यात येत आहे की, <b>खाली सही करणाऱ्याने / करणारीने</b> आपले जुने नाव –
+          <p className="rp-print-body-text">
+            यारूपाने असे जाहीर करण्यात येत आहे की, <b>खाली सही करणाऱ्याने / करणारीने</b> आपले जुने नाव –
           </p>
 
           <table className="rp-print-table">
             <thead>
               <tr>
-                <th style={{ width: "18%" }}></th>
+                <th style={{ width: "16%" }}></th>
                 <th>नाव</th>
                 <th>वडिलांचे / पतीचे नाव</th>
                 <th>आडनाव</th>
@@ -183,12 +189,12 @@ const RajpatraMarathi = () => {
             </tbody>
           </table>
 
-          <p style={{ fontSize: 14, fontWeight: 600 }}>हे नवीन नाव धारण केले आहे.</p>
+          <p className="rp-print-body-text" style={{ fontWeight: 600 }}>हे नवीन नाव धारण केले आहे.</p>
 
           <div className="rp-print-sig-row">
             <div>
               <p>आई / वडिलांची अथवा पालकाची सही ....................</p>
-              <p style={{ fontSize: 11 }}>( फक्त अल्पवयीन इसमाच्या बाबतीत )</p>
+              <p>( फक्त अल्पवयीन इसमाच्या बाबतीत )</p>
             </div>
             <div style={{ textAlign: "right" }}>
               <p>.............................................</p>
@@ -198,29 +204,29 @@ const RajpatraMarathi = () => {
 
           <div className="rp-print-to">
             <p>प्रति</p>
-            <p style={{ marginLeft: 24 }}><b>संचालक,</b></p>
-            <p style={{ marginLeft: 40, fontSize: 12 }}>
-              शासन मुद्रण, लेखनसामग्री व प्रकाशन संचालनालय, महाराष्ट्र राज्य, नेताजी सुभाष रोड, मुंबई ४०००००४, यांस—
+            <p style={{ marginLeft: 20 }}><b>संचालक,</b></p>
+            <p style={{ marginLeft: 36 }}>
+              शासन मुद्रण, लेखनसामग्री व प्रकाशन संचालनालय, महाराष्ट्र राज्य, नेताजी सुभाष रोड, मुंबई ४०००००४, यांस–
               महाराष्ट्र शासन राजपत्र, भाग दोन याच्या पुढील अंकात वरील नोटीस प्रसिद्ध करावी.
             </p>
           </div>
 
           <div className="rp-print-reason">
-            नाव बदलण्याचे कारण: <b>{printData.reason}</b>
+            नाव बदलण्याचे कारण : <b>{printData.reason}</b>
           </div>
 
           <div className="rp-print-signature">
             <p>आपला / आपली विश्वासू,</p>
-            <p style={{ marginTop: 30 }}>अर्जदाराची सही ––––––––––––––––</p>
+            <p style={{ marginTop: 24 }}>अर्जदाराची सही ––––––––––––––––</p>
           </div>
 
           <div className="rp-print-address">
-            <p><b>पत्रव्यवहाराचा पत्ता:</b></p>
+            <p><b>पत्रव्यवहाराचा पत्ता :</b></p>
             <p>अर्जदाराचे नवीन नाव : <b>{printData.newFullName}</b></p>
             <p>संपूर्ण पत्ता : <b>{printData.fullAddress || printData.address}</b></p>
             <p>पिन क्र. : <b>{printData.pincode}</b></p>
-            <p>दूरध्वनी क्र : <b>{printData.mobile}</b></p>
-            {printData.aadhaar && <p>आधार क्र : <b>{printData.aadhaar}</b></p>}
+            <p>दूरध्वनी क्र. : <b>{printData.mobile}</b></p>
+            {printData.aadhaar && <p>आधार क्र. : <b>{printData.aadhaar}</b></p>}
           </div>
         </div>
         <div className="no-print" style={{ textAlign: "center", marginTop: 20, display: "flex", gap: 12, justifyContent: "center" }}>
