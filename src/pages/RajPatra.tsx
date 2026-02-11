@@ -175,7 +175,6 @@ const RajPatra = () => {
           <button className="dash-nav-tab" onClick={() => navigate("/")}>🏠 सेतू सुविधा</button>
           <button className="dash-nav-tab" onClick={() => navigate("/billing")}>💰 बिलिंग</button>
           <button className="dash-nav-tab" onClick={() => navigate("/management")}>⚙️ Management</button>
-          <button className="dash-nav-tab active" onClick={() => navigate("/rajpatra")}>📜 राजपत्र</button>
         </div>
       </nav>
 
