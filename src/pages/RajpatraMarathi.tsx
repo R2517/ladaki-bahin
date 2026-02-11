@@ -141,7 +141,7 @@ const RajpatraMarathi = () => {
         <div className="rp-print-box">
           {/* Logo + Header */}
           <div className="rp-print-logo-header">
-            <img src="/images/maharashtra-logo.jpg" alt="महाराष्ट्र शासन" />
+            <img src="/images/maharashtra-logo.png" alt="महाराष्ट्र शासन" />
             <div className="rp-print-header-text">
               <h1>महाराष्ट्र शासन</h1>
               <h2>शासन मुद्रण, लेखनसामग्री व प्रकाशन संचालनालय</h2>
