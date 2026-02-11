@@ -21,7 +21,6 @@ const DISTRICTS = ["अमरावती", "नागपूर", "पुणे"
 const RajpatraMarathi = () => {
   const navigate = useNavigate();
   const themeGradient = getThemeGradient();
-  const [showForm, setShowForm] = useState(false);
   const [dark, setDark] = useState(() => localStorage.getItem("theme") === "dark");
   const [saving, setSaving] = useState(false);
   const [printData, setPrintData] = useState<Record<string, any> | null>(null);
@@ -238,34 +237,6 @@ const RajpatraMarathi = () => {
     );
   }
 
-  // ===== CARD VIEW (before form) =====
-  if (!showForm) {
-    return (
-      <div className="dash-root">
-        <nav className="dash-nav" style={{ background: themeGradient }}>
-          <div className="dash-nav-inner">
-            <div className="dash-brand">
-              <button onClick={() => navigate("/rajpatra")} className="theme-toggle"><ArrowLeft size={18} /></button>
-              <div className="dash-brand-icon"><Landmark size={22} color="#fff" /></div>
-              <div>
-                <span className="dash-brand-title">राजपत्र मराठी</span>
-                <span className="dash-brand-sub">Gazette Notice — Marathi</span>
-              </div>
-            </div>
-            <button className="theme-toggle" onClick={() => setDark(!dark)}>{dark ? <Sun size={18} /> : <Moon size={18} />}</button>
-          </div>
-        </nav>
-        <div className="dash-content" style={{ maxWidth: 480, margin: "40px auto" }}>
-          <button className="dash-card" onClick={() => setShowForm(true)} style={{ width: "100%", minHeight: 160 }}>
-            <div className="dash-card-icon" style={{ background: "linear-gradient(135deg, #FEF3C7, #FDE68A)" }}>
-              <FileText size={32} color="#B45309" strokeWidth={1.6} />
-            </div>
-            <span className="dash-card-label" style={{ fontSize: 16 }}>📝 नाव बदल (Gazette) अर्ज — मराठी</span>
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   // ===== FORM VIEW =====
   return (
@@ -273,7 +244,7 @@ const RajpatraMarathi = () => {
       <nav className="dash-nav" style={{ background: themeGradient }}>
         <div className="dash-nav-inner">
           <div className="dash-brand">
-            <button onClick={() => setShowForm(false)} className="theme-toggle"><ArrowLeft size={18} /></button>
+            <button onClick={() => navigate("/rajpatra")} className="theme-toggle"><ArrowLeft size={18} /></button>
             <div className="dash-brand-icon"><Landmark size={22} color="#fff" /></div>
             <div>
               <span className="dash-brand-title">राजपत्र मराठी</span>
