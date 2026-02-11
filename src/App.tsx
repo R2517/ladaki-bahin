@@ -18,6 +18,7 @@ import BandkamKamgar from "./pages/BandkamKamgar";
 import RajPatra from "./pages/RajPatra";
 import RajpatraMarathi from "./pages/RajpatraMarathi";
 import RajpatraEnglish from "./pages/RajpatraEnglish";
+import RajpatraAffidavit712 from "./pages/RajpatraAffidavit712";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -44,6 +45,7 @@ const App = () => (
           <Route path="/rajpatra" element={<RajPatra />} />
           <Route path="/rajpatra-marathi" element={<RajpatraMarathi />} />
           <Route path="/rajpatra-english" element={<RajpatraEnglish />} />
+          <Route path="/rajpatra-affidavit-712" element={<RajpatraAffidavit712 />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
