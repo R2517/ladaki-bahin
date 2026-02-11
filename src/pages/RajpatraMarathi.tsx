@@ -108,35 +108,37 @@ const RajpatraMarathi = () => {
             .rajpatra-print-page, .rajpatra-print-page * { visibility: visible !important; }
             .rajpatra-print-page { position: absolute; left: 0; top: 0; width: 210mm; }
             .no-print { display: none !important; }
+            .rp-print-box { border: none !important; padding: 20mm 20mm 15mm 25mm !important; max-width: 210mm !important; box-sizing: border-box !important; }
+            .rp-print-box::before { display: none !important; }
           }
           .rp-print-box {
-            max-width: 750px; margin: 0 auto; padding: 36px 44px;
+            max-width: 210mm; width: 210mm; margin: 0 auto; padding: 20mm 20mm 15mm 25mm;
             font-family: 'Noto Sans Devanagari', serif;
-            border: 3px double #222; background: #fff; color: #000; line-height: 2;
-            position: relative;
+            border: 3px double #222; background: #fff; color: #000; line-height: 1.7;
+            position: relative; box-sizing: border-box;
           }
           .rp-print-box::before {
             content: ''; position: absolute; inset: 6px;
             border: 1px solid #bbb; pointer-events: none; border-radius: 2px;
           }
-          .rp-print-header { text-align: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid #333; }
-          .rp-print-header h1 { font-size: 20px; font-weight: 800; letter-spacing: 2px; margin: 0; }
-          .rp-print-header h2 { font-size: 14px; font-weight: 700; margin: 4px 0 0; }
-          .rp-print-header h3 { font-size: 18px; font-weight: 800; margin: 12px 0 0; letter-spacing: 1px; }
-          .rp-print-header h4 { font-size: 16px; font-weight: 700; margin: 2px 0 0; text-decoration: underline; }
-          .rp-print-notice { font-size: 12px; font-style: italic; margin-bottom: 16px; padding: 10px 14px; background: #f9f9f9; border-left: 3px solid #999; }
-          .rp-print-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
-          .rp-print-table th { border: 2px solid #333; padding: 8px 12px; font-size: 13px; background: #f0f0f0; font-weight: 700; text-align: center; }
-          .rp-print-table td { border: 2px solid #333; padding: 8px 12px; font-size: 14px; text-align: center; }
-          .rp-print-table td b { font-size: 15px; }
-          .rp-print-sig-row { display: flex; justify-content: space-between; margin: 28px 0; font-size: 13px; }
-          .rp-print-to { margin: 28px 0; font-size: 13px; }
+          .rp-print-header { text-align: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid #333; }
+          .rp-print-header h1 { font-size: 17px; font-weight: 800; letter-spacing: 2px; margin: 0; }
+          .rp-print-header h2 { font-size: 12px; font-weight: 700; margin: 2px 0 0; }
+          .rp-print-header h3 { font-size: 15px; font-weight: 800; margin: 8px 0 0; letter-spacing: 1px; }
+          .rp-print-header h4 { font-size: 14px; font-weight: 700; margin: 2px 0 0; text-decoration: underline; }
+          .rp-print-notice { font-size: 10px; font-style: italic; margin-bottom: 10px; padding: 8px 10px; background: #f9f9f9; border-left: 3px solid #999; line-height: 1.5; }
+          .rp-print-table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+          .rp-print-table th { border: 2px solid #333; padding: 5px 8px; font-size: 11px; background: #f0f0f0; font-weight: 700; text-align: center; }
+          .rp-print-table td { border: 2px solid #333; padding: 5px 8px; font-size: 12px; text-align: center; }
+          .rp-print-table td b { font-size: 13px; }
+          .rp-print-sig-row { display: flex; justify-content: space-between; margin: 16px 0; font-size: 11px; }
+          .rp-print-to { margin: 16px 0; font-size: 11px; }
           .rp-print-to p { margin: 2px 0; }
-          .rp-print-reason { font-size: 14px; margin: 20px 0; padding: 8px 14px; border: 1px dashed #666; background: #fafafa; }
-          .rp-print-signature { text-align: right; margin-top: 60px; font-size: 14px; }
-          .rp-print-address { margin-top: 36px; font-size: 13px; border-top: 2px solid #333; padding-top: 14px; }
-          .rp-print-address p { margin: 3px 0; }
-          .rp-print-address b { font-size: 14px; }
+          .rp-print-reason { font-size: 12px; margin: 12px 0; padding: 6px 10px; border: 1px dashed #666; background: #fafafa; }
+          .rp-print-signature { text-align: right; margin-top: 36px; font-size: 12px; }
+          .rp-print-address { margin-top: 20px; font-size: 11px; border-top: 2px solid #333; padding-top: 10px; }
+          .rp-print-address p { margin: 2px 0; }
+          .rp-print-address b { font-size: 12px; }
         `}</style>
         <div className="rp-print-box">
           <div className="rp-print-header">
