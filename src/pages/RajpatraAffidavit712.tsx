@@ -78,96 +78,107 @@ const RajpatraAffidavit712 = () => {
       <div className="rajpatra-print-page">
         <style>{`
           @media print {
-            @page { size: A4 portrait; margin: 20mm 20mm 20mm 25mm; }
+            @page { size: A4 portrait; margin: 15mm 18mm 15mm 20mm; }
             body * { visibility: hidden !important; }
             .rajpatra-print-page, .rajpatra-print-page * { visibility: visible !important; }
             .rajpatra-print-page { position: absolute; left: 0; top: 0; width: 100%; }
             .no-print { display: none !important; }
-            .rp712-box { border: 2px solid #000 !important; margin: 0 auto !important; padding: 32px 36px !important; page-break-after: always; }
+            .rp712-box {
+              border: 2px solid #000 !important; margin: 0 !important;
+              padding: 28px 32px !important; page-break-after: always;
+              width: 100% !important; max-width: 100% !important;
+              min-height: calc(297mm - 30mm) !important;
+              display: flex !important; flex-direction: column !important;
+            }
             .rp712-box:last-of-type { page-break-after: auto; }
+            .rp712-footer { margin-top: auto !important; padding-top: 20px; }
           }
           .rp712-box {
-            max-width: 190mm; width: 190mm; margin: 24px auto; padding: 32px 36px;
+            max-width: 190mm; width: 190mm; margin: 24px auto; padding: 28px 32px;
             font-family: 'Noto Sans Devanagari', 'Mangal', serif;
-            border: 2px solid #000; background: #fff; color: #000; line-height: 1.9;
-            box-sizing: border-box; font-size: 14px; text-align: justify;
+            border: 2px solid #000; background: #fff; color: #000; line-height: 2;
+            box-sizing: border-box; font-size: 14.5px; text-align: justify;
+            display: flex; flex-direction: column;
           }
           .rp712-box + .rp712-box { margin-top: 30px; }
-          .rp712-title { text-align: center; font-size: 28px; font-weight: 800; margin-bottom: 16px; letter-spacing: 1px; }
+          .rp712-content { flex: 1; }
+          .rp712-title { text-align: center; font-size: 30px; font-weight: 800; margin-bottom: 18px; letter-spacing: 2px; }
           .rp712-sub { font-size: 13px; text-align: center; font-style: italic; margin-bottom: 16px; color: #333; }
-          .rp712-to { font-size: 14px; margin-bottom: 12px; line-height: 1.8; }
-          .rp712-to p { margin: 2px 0; }
-          .rp712-subject { font-size: 15px; font-weight: 800; margin: 14px 0 10px; }
-          .rp712-body { font-size: 14px; margin-bottom: 10px; line-height: 1.9; }
-          .rp712-list { margin: 8px 0 8px 28px; font-size: 14px; line-height: 1.8; }
+          .rp712-to { font-size: 14.5px; margin-bottom: 14px; line-height: 1.9; }
+          .rp712-to p { margin: 3px 0; }
+          .rp712-subject { font-size: 16px; font-weight: 800; margin: 16px 0 12px; }
+          .rp712-body { font-size: 14.5px; margin-bottom: 12px; line-height: 2; }
+          .rp712-list { margin: 10px 0 10px 28px; font-size: 14.5px; line-height: 2; }
           .rp712-list li { margin: 4px 0; }
-          .rp712-ol { margin: 8px 0 8px 28px; font-size: 14px; line-height: 1.8; }
+          .rp712-ol { margin: 10px 0 10px 28px; font-size: 14.5px; line-height: 2; }
           .rp712-ol li { margin: 4px 0; }
-          .rp712-footer { display: flex; justify-content: space-between; margin-top: 30px; font-size: 14px; }
+          .rp712-footer { display: flex; justify-content: space-between; margin-top: auto; padding-top: 24px; font-size: 14.5px; }
           .rp712-footer p { margin: 3px 0; }
           .rp712-bold { font-weight: 700; }
-          .rp712-info-row { display: flex; gap: 24px; flex-wrap: wrap; font-size: 14px; margin: 6px 0; line-height: 1.8; }
+          .rp712-info-row { display: flex; gap: 28px; flex-wrap: wrap; font-size: 14.5px; margin: 8px 0; line-height: 2; }
           .rp712-info-row span { white-space: nowrap; }
-          .rp712-section-title { text-align: center; font-size: 18px; font-weight: 800; margin: 18px 0 12px; padding: 6px 0; border-top: 2px solid #000; border-bottom: 2px solid #000; }
+          .rp712-section-title { text-align: center; font-size: 20px; font-weight: 800; margin: 20px 0 14px; padding: 8px 0; border-top: 2px solid #000; border-bottom: 2px solid #000; }
         `}</style>
 
         {/* ===== PAGE 1: अर्ज ===== */}
         <div className="rp712-box">
-          <div className="rp712-title">अर्ज</div>
+          <div className="rp712-content">
+            <div className="rp712-title">अर्ज</div>
 
-          <div className="rp712-to">
-            <p><b>प्रति,</b></p>
-            <p>मा. विद्यमान कार्यकारी दंडाधिकारी साहेब,</p>
-            <p>तहसील – <b>{printData.taluka}</b></p>
-            <p>जिल्हा – <b>{printData.district}</b></p>
+            <div className="rp712-to">
+              <p><b>प्रति,</b></p>
+              <p>मा. विद्यमान कार्यकारी दंडाधिकारी साहेब,</p>
+              <p>तहसील – <b>{printData.taluka}</b></p>
+              <p>जिल्हा – <b>{printData.district}</b></p>
+            </div>
+
+            <p className="rp712-subject">विषय : 7/12 उताऱ्यावर चुकीचे नाव दुरुस्त करण्याबाबत अर्ज</p>
+
+            <p className="rp712-body">महोदय,</p>
+
+            <p className="rp712-body">
+              मी खाली सही करणारा/करणारी, नम्रपणे अर्ज करतो/करते की, माझ्या शेतजमिनीच्या 7/12 उताऱ्यावर <b>नावामध्ये चूक झालेली आहे</b>. सदर चूक दुरुस्त करून <b>योग्य नाव नोंदविण्यात यावे</b>, ही नम्र विनंती आहे.
+            </p>
+
+            <p className="rp712-body">माझ्या शेतजमिनीचे तपशील पुढीलप्रमाणे आहेत –</p>
+
+            <ul className="rp712-list">
+              <li><b>गाव :</b> {printData.village}</li>
+              <li><b>तालुका :</b> {printData.taluka}</li>
+              <li><b>जिल्हा :</b> {printData.district}</li>
+              <li><b>सर्व्हे नंबर / गट नंबर :</b> {printData.surveyNo}</li>
+            </ul>
+
+            <p className="rp712-body">सदर 7/12 उताऱ्यावर माझे नाव खालीलप्रमाणे चुकीच्या स्वरूपात नोंदलेले आहे –</p>
+            <ul className="rp712-list" style={{ textAlign: "center", listStyle: "none", marginLeft: 0 }}>
+              <li><b>चुकीचे नाव (7/12 वरील) :</b> {printData.oldName}</li>
+            </ul>
+
+            <p className="rp712-body">परंतु माझे योग्य व खरे नाव खालीलप्रमाणे आहे –</p>
+            <ul className="rp712-list" style={{ textAlign: "center", listStyle: "none", marginLeft: 0 }}>
+              <li><b>योग्य नाव (दुरुस्त करावयाचे) :</b> {printData.newName}</li>
+            </ul>
+
+            <p className="rp712-body">
+              वरील नाव दुरुस्ती ही सादर केलेल्या <b>अधिकृत कागदपत्रांनुसार</b> करणे आवश्यक आहे. यासाठी मी माझ्या नावाचा <b>राजपत्र (Gazette Notification)</b> प्रकाशित केलेला असून, त्याची प्रत अर्जासोबत जोडलेली आहे.
+            </p>
+
+            <p className="rp712-body">सदर नाव दुरुस्ती करिता खालील कागदपत्रे अर्जासोबत सादर करीत आहे –</p>
+
+            <ol className="rp712-ol">
+              <li>नाव बदल / दुरुस्ती संबंधी <b>राजपत्राची प्रत</b></li>
+              <li>आधार कार्ड</li>
+              <li>पॅन कार्ड / इतर ओळखपत्र</li>
+              <li>7/12 उताऱ्याची प्रत</li>
+              <li>इतर संबंधित कागदपत्रे (असल्यास)</li>
+            </ol>
+
+            <p className="rp712-body">
+              वरील सर्व कागदपत्रांनुसार माझ्या शेतजमिनीच्या 7/12 उताऱ्यावर <b>चुकीचे नाव दुरुस्त करून योग्य नाव नोंदविण्यात यावे</b>, ही नम्र विनंती. आपण या अर्जाचा सहानुभूतीपूर्वक विचार करून योग्य ती कार्यवाही करावी, ही विनंती.
+            </p>
+
+            <p className="rp712-body">धन्यवाद.</p>
           </div>
-
-          <p className="rp712-subject">विषय : 7/12 उताऱ्यावर चुकीचे नाव दुरुस्त करण्याबाबत अर्ज</p>
-
-          <p className="rp712-body">महोदय,</p>
-
-          <p className="rp712-body">
-            मी खाली सही करणारा/करणारी, नम्रपणे अर्ज करतो/करते की, माझ्या शेतजमिनीच्या 7/12 उताऱ्यावर <b>नावामध्ये चूक झालेली आहे</b>. सदर चूक दुरुस्त करून <b>योग्य नाव नोंदविण्यात यावे</b>, ही नम्र विनंती आहे.
-          </p>
-
-          <p className="rp712-body">माझ्या शेतजमिनीचे तपशील पुढीलप्रमाणे आहेत –</p>
-
-          <ul className="rp712-list">
-            <li><b>गाव :</b> {printData.village}</li>
-            <li><b>तालुका :</b> {printData.taluka}</li>
-            <li><b>जिल्हा :</b> {printData.district}</li>
-            <li><b>सर्व्हे नंबर / गट नंबर :</b> {printData.surveyNo}</li>
-          </ul>
-
-          <p className="rp712-body">सदर 7/12 उताऱ्यावर माझे नाव खालीलप्रमाणे चुकीच्या स्वरूपात नोंदलेले आहे –</p>
-          <ul className="rp712-list" style={{ textAlign: "center", listStyle: "none", marginLeft: 0 }}>
-            <li><b>चुकीचे नाव (7/12 वरील) :</b> {printData.oldName}</li>
-          </ul>
-
-          <p className="rp712-body">परंतु माझे योग्य व खरे नाव खालीलप्रमाणे आहे –</p>
-          <ul className="rp712-list" style={{ textAlign: "center", listStyle: "none", marginLeft: 0 }}>
-            <li><b>योग्य नाव (दुरुस्त करावयाचे) :</b> {printData.newName}</li>
-          </ul>
-
-          <p className="rp712-body">
-            वरील नाव दुरुस्ती ही सादर केलेल्या <b>अधिकृत कागदपत्रांनुसार</b> करणे आवश्यक आहे. यासाठी मी माझ्या नावाचा <b>राजपत्र (Gazette Notification)</b> प्रकाशित केलेला असून, त्याची प्रत अर्जासोबत जोडलेली आहे.
-          </p>
-
-          <p className="rp712-body">सदर नाव दुरुस्ती करिता खालील कागदपत्रे अर्जासोबत सादर करीत आहे –</p>
-
-          <ol className="rp712-ol">
-            <li>नाव बदल / दुरुस्ती संबंधी <b>राजपत्राची प्रत</b></li>
-            <li>आधार कार्ड</li>
-            <li>पॅन कार्ड / इतर ओळखपत्र</li>
-            <li>7/12 उताऱ्याची प्रत</li>
-            <li>इतर संबंधित कागदपत्रे (असल्यास)</li>
-          </ol>
-
-          <p className="rp712-body">
-            वरील सर्व कागदपत्रांनुसार माझ्या शेतजमिनीच्या 7/12 उताऱ्यावर <b>चुकीचे नाव दुरुस्त करून योग्य नाव नोंदविण्यात यावे</b>, ही नम्र विनंती. आपण या अर्जाचा सहानुभूतीपूर्वक विचार करून योग्य ती कार्यवाही करावी, ही विनंती.
-          </p>
-
-          <p className="rp712-body">धन्यवाद.</p>
 
           <div className="rp712-footer">
             <div>
@@ -183,62 +194,64 @@ const RajpatraAffidavit712 = () => {
 
         {/* ===== PAGE 2: शपथपत्र ===== */}
         <div className="rp712-box">
-          <div className="rp712-title">शपथपत्र / प्रतिज्ञापत्र</div>
-          <div className="rp712-sub">(7/12 उताऱ्यावर नाव दुरुस्ती करिता)</div>
+          <div className="rp712-content">
+            <div className="rp712-title">शपथपत्र / प्रतिज्ञापत्र</div>
+            <div className="rp712-sub">(7/12 उताऱ्यावर नाव दुरुस्ती करिता)</div>
 
-          <div className="rp712-to">
-            <p><b>मा. विद्यमान कार्यकारी दंडाधिकारी साहेब,</b></p>
-            <p>तहसील – <b>{printData.taluka}</b>,</p>
-            <p>जिल्हा – <b>{printData.district}</b></p>
+            <div className="rp712-to">
+              <p><b>मा. विद्यमान कार्यकारी दंडाधिकारी साहेब,</b></p>
+              <p>तहसील – <b>{printData.taluka}</b>,</p>
+              <p>जिल्हा – <b>{printData.district}</b></p>
+            </div>
+
+            <p className="rp712-body">मी खाली सही करणारा/करणारी,</p>
+
+            <div className="rp712-info-row">
+              <span><b>नाव :</b> {printData.newName}</span>
+              <span><b>वय :</b> {printData.age} वर्षे</span>
+              <span><b>व्यवसाय :</b> {printData.occupation || "—"}</span>
+            </div>
+            <div className="rp712-info-row">
+              <span><b>रा. :</b> {printData.village}</span>
+              <span><b>तालुका :</b> {printData.taluka}</span>
+              <span><b>जिल्हा :</b> {printData.district}</span>
+              <span><b>राज्य :</b> महाराष्ट्र</span>
+            </div>
+
+            <p className="rp712-body" style={{ marginTop: 10 }}>
+              हा सत्यप्रतिज्ञेवर खालीलप्रमाणे शपथपूर्वक कथन करीत आहे की –
+            </p>
+
+            <p className="rp712-body">
+              मी माझ्या शेतजमिनीच्या <b>7/12 उताऱ्यावर नाव दुरुस्ती करिता अर्ज</b> मा. विद्यमान कार्यकारी दंडाधिकारी साहेब, {printData.taluka} यांच्याकडे सादर केलेला आहे. सदर अर्जामध्ये नमूद केलेली सर्व माहिती, तपशील व निवेदन हे माझ्या <b>वैयक्तिक माहितीनुसार पूर्णतः खरे, अचूक व सत्य</b> आहेत.
+            </p>
+
+            <p className="rp712-body">
+              माझ्या शेतजमिनीच्या 7/12 उताऱ्यावर <b>माझे नाव चुकीच्या स्वरूपात नोंदलेले आहे</b>, ते खालीलप्रमाणे –
+            </p>
+
+            <ul className="rp712-list" style={{ textAlign: "center", listStyle: "none", marginLeft: 0 }}>
+              <li><b>चुकीचे नाव (7/12 वरील) :</b> {printData.oldName}</li>
+            </ul>
+            <p className="rp712-body">माझे योग्य व खरे नाव खालीलप्रमाणे आहे –</p>
+            <ul className="rp712-list" style={{ textAlign: "center", listStyle: "none", marginLeft: 0 }}>
+              <li><b>योग्य नाव (दुरुस्त करावयाचे) :</b> {printData.newName}</li>
+            </ul>
+
+            <p className="rp712-body">
+              सदर नाव दुरुस्ती ही अर्जासोबत सादर केलेल्या <b>अधिकृत कागदपत्रांनुसार</b> करणे आवश्यक असून, यासाठी माझ्या नावाचा <b>राजपत्र (Gazette Notification)</b> प्रकाशित झालेला आहे व त्याची प्रत अर्जासोबत जोडलेली आहे. अर्जासोबत सादर केलेले सर्व कागदपत्रे (7/12 उतारा, राजपत्र, ओळखपत्रे इ.) ही <b>खरी, वैध व कोणताही फेरफार न केलेली</b> आहेत.
+            </p>
+
+            <p className="rp712-body">
+              भविष्यात वरील माहितीपैकी कोणतीही माहिती <b>खोटी, चुकीची अथवा दिशाभूल करणारी</b> आढळल्यास, त्याबाबत होणाऱ्या सर्व <b>कायदेशीर कारवाईस मी स्वतः जबाबदार राहीन</b>. हे शपथपत्र मी कोणत्याही दबावाशिवाय, स्वेच्छेने व <b>पूर्ण शुद्धीत</b> देत आहे.
+            </p>
+
+            <div className="rp712-section-title">सत्यापन</div>
+
+            <p className="rp712-body">
+              मी, वरील शपथकर्ता, हे सत्यप्रतिज्ञेवर जाहीर करतो/करते की, वरील शपथपत्रातील सर्व मजकूर माझ्या माहितीनुसार <b>पूर्णतः खरा व सत्य</b> आहे. वरील माहिती खोटी आढळल्यास, मी <b>भा.दं.वि. कलम 193(2), 199 व 200</b> अन्वये शिक्षेस पात्र राहीन, याची मला पूर्ण जाणीव आहे. आज दिनांक <b>{printData.date}</b> रोजी समक्ष स्वाक्षरी करीत आहे.
+            </p>
           </div>
-
-          <p className="rp712-body">मी खाली सही करणारा/करणारी,</p>
-
-          <div className="rp712-info-row">
-            <span><b>नाव :</b> {printData.newName}</span>
-            <span><b>वय :</b> {printData.age} वर्षे</span>
-            <span><b>व्यवसाय :</b> {printData.occupation || "—"}</span>
-          </div>
-          <div className="rp712-info-row">
-            <span><b>रा. :</b> {printData.village}</span>
-            <span><b>तालुका :</b> {printData.taluka}</span>
-            <span><b>जिल्हा :</b> {printData.district}</span>
-            <span><b>राज्य :</b> महाराष्ट्र</span>
-          </div>
-
-          <p className="rp712-body" style={{ marginTop: 10 }}>
-            हा सत्यप्रतिज्ञेवर खालीलप्रमाणे शपथपूर्वक कथन करीत आहे की –
-          </p>
-
-          <p className="rp712-body">
-            मी माझ्या शेतजमिनीच्या <b>7/12 उताऱ्यावर नाव दुरुस्ती करिता अर्ज</b> मा. विद्यमान कार्यकारी दंडाधिकारी साहेब, {printData.taluka} यांच्याकडे सादर केलेला आहे. सदर अर्जामध्ये नमूद केलेली सर्व माहिती, तपशील व निवेदन हे माझ्या <b>वैयक्तिक माहितीनुसार पूर्णतः खरे, अचूक व सत्य</b> आहेत.
-          </p>
-
-          <p className="rp712-body">
-            माझ्या शेतजमिनीच्या 7/12 उताऱ्यावर <b>माझे नाव चुकीच्या स्वरूपात नोंदलेले आहे</b>, ते खालीलप्रमाणे –
-          </p>
-
-          <ul className="rp712-list" style={{ textAlign: "center", listStyle: "none", marginLeft: 0 }}>
-            <li><b>चुकीचे नाव (7/12 वरील) :</b> {printData.oldName}</li>
-          </ul>
-          <p className="rp712-body">माझे योग्य व खरे नाव खालीलप्रमाणे आहे –</p>
-          <ul className="rp712-list" style={{ textAlign: "center", listStyle: "none", marginLeft: 0 }}>
-            <li><b>योग्य नाव (दुरुस्त करावयाचे) :</b> {printData.newName}</li>
-          </ul>
-
-          <p className="rp712-body">
-            सदर नाव दुरुस्ती ही अर्जासोबत सादर केलेल्या <b>अधिकृत कागदपत्रांनुसार</b> करणे आवश्यक असून, यासाठी माझ्या नावाचा <b>राजपत्र (Gazette Notification)</b> प्रकाशित झालेला आहे व त्याची प्रत अर्जासोबत जोडलेली आहे. अर्जासोबत सादर केलेले सर्व कागदपत्रे (7/12 उतारा, राजपत्र, ओळखपत्रे इ.) ही <b>खरी, वैध व कोणताही फेरफार न केलेली</b> आहेत.
-          </p>
-
-          <p className="rp712-body">
-            भविष्यात वरील माहितीपैकी कोणतीही माहिती <b>खोटी, चुकीची अथवा दिशाभूल करणारी</b> आढळल्यास, त्याबाबत होणाऱ्या सर्व <b>कायदेशीर कारवाईस मी स्वतः जबाबदार राहीन</b>. हे शपथपत्र मी कोणत्याही दबावाशिवाय, स्वेच्छेने व <b>पूर्ण शुद्धीत</b> देत आहे.
-          </p>
-
-          <div className="rp712-section-title">सत्यापन</div>
-
-          <p className="rp712-body">
-            मी, वरील शपथकर्ता, हे सत्यप्रतिज्ञेवर जाहीर करतो/करते की, वरील शपथपत्रातील सर्व मजकूर माझ्या माहितीनुसार <b>पूर्णतः खरा व सत्य</b> आहे. वरील माहिती खोटी आढळल्यास, मी <b>भा.दं.वि. कलम 193(2), 199 व 200</b> अन्वये शिक्षेस पात्र राहीन, याची मला पूर्ण जाणीव आहे. आज दिनांक <b>{printData.date}</b> रोजी समक्ष स्वाक्षरी करीत आहे.
-          </p>
 
           <div className="rp712-footer">
             <div>
