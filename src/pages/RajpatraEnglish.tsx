@@ -107,96 +107,134 @@ const RajpatraEnglish = () => {
             .rajpatra-print-page, .rajpatra-print-page * { visibility: visible !important; }
             .rajpatra-print-page { position: absolute; left: 0; top: 0; width: 210mm; }
             .no-print { display: none !important; }
+            .rp-print-box-eng { border: 2px solid #000 !important; margin: 15mm auto !important; }
           }
+          .rp-print-box-eng {
+            max-width: 170mm; width: 170mm; margin: 20px auto; padding: 28px 32px;
+            font-family: 'Inter', sans-serif;
+            border: 2px solid #000; background: #fff; color: #000; line-height: 1.6;
+            box-sizing: border-box;
+          }
+          .rp-eng-logo-header { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 10px; }
+          .rp-eng-logo-header img { width: 56px; height: 56px; object-fit: contain; }
+          .rp-eng-header-text { text-align: center; }
+          .rp-eng-header-text h1 { font-size: 15px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin: 0; }
+          .rp-eng-header-text h2 { font-size: 10px; font-weight: 700; text-transform: uppercase; margin: 2px 0 0; }
+          .rp-eng-title-row { text-align: center; margin: 10px 0 8px; padding-bottom: 8px; border-bottom: 1.5px solid #333; }
+          .rp-eng-title-row h3 { font-size: 14px; font-weight: 800; text-transform: uppercase; margin: 0; }
+          .rp-eng-title-row h4 { font-size: 13px; font-weight: 700; text-transform: uppercase; margin: 2px 0 0; text-decoration: underline; }
+          .rp-eng-notice { font-size: 9.5px; font-style: italic; margin-bottom: 8px; padding: 6px 8px; border-left: 2px solid #666; line-height: 1.45; text-align: justify; }
+          .rp-eng-body { font-size: 11px; margin-bottom: 6px; text-align: justify; line-height: 1.5; }
+          .rp-eng-table { width: 100%; border-collapse: collapse; margin: 8px 0; }
+          .rp-eng-table th { border: 1.5px solid #333; padding: 4px 6px; font-size: 10px; background: #f4f4f4; font-weight: 700; text-align: center; }
+          .rp-eng-table td { border: 1.5px solid #333; padding: 4px 6px; font-size: 11px; text-align: center; }
+          .rp-eng-table td b { font-size: 12px; }
+          .rp-eng-note { font-size: 9px; font-style: italic; margin: 8px 0; line-height: 1.4; text-align: justify; }
+          .rp-eng-sig-row { display: flex; justify-content: space-between; margin: 14px 0; font-size: 10px; }
+          .rp-eng-to { margin: 12px 0; font-size: 10px; line-height: 1.5; }
+          .rp-eng-to p { margin: 1px 0; }
+          .rp-eng-reason { font-size: 11px; margin: 10px 0; padding: 5px 8px; border: 1px dashed #666; }
+          .rp-eng-signature { text-align: right; margin-top: 28px; font-size: 11px; }
+          .rp-eng-address { margin-top: 16px; font-size: 10px; border-top: 1.5px solid #333; padding-top: 8px; line-height: 1.5; }
+          .rp-eng-address p { margin: 1px 0; }
+          .rp-eng-address b { font-size: 11px; }
         `}</style>
-        <div className="rajpatra-print-container" style={{
-          maxWidth: 750, margin: "0 auto", padding: "30px 40px", fontFamily: "'Inter', sans-serif",
-          border: "2px solid #000", background: "#fff", color: "#000", lineHeight: 1.8,
-        }}>
-          <div style={{ textAlign: "center", marginBottom: 20 }}>
-            <p style={{ fontSize: 16, fontWeight: 700, textTransform: "uppercase" }}>Government of Maharashtra</p>
-            <p style={{ fontSize: 13, fontWeight: 700, textTransform: "uppercase" }}>Directorate of Government Printing, Stationery and Publication</p>
-            <p style={{ fontSize: 16, fontWeight: 700, marginTop: 8, textTransform: "uppercase" }}>Form for Change of Name</p>
-            <p style={{ fontSize: 15, fontWeight: 700, textTransform: "uppercase" }}>Notice</p>
+        <div className="rp-print-box-eng">
+          {/* Logo + Header */}
+          <div className="rp-eng-logo-header">
+            <img src="/images/maharashtra-logo.png" alt="Government of Maharashtra" />
+            <div className="rp-eng-header-text">
+              <h1>Government of Maharashtra</h1>
+              <h2>Directorate of Government Printing, Stationery and Publication</h2>
+            </div>
+          </div>
+          <div className="rp-eng-title-row">
+            <h3>Form for Change of Name</h3>
+            <h4>Notice</h4>
           </div>
 
-          <p style={{ fontSize: 11, fontStyle: "italic", marginBottom: 12 }}>
-            <b>N.B-</b> (Instructions may be followed carefully before filling up this form. Only one word should be written in
-            each space printed below. Please fill up this form in English version and in BLOCK LETTERS only)
-          </p>
+          <div className="rp-eng-notice">
+            <b>N.B–</b> Instructions may be followed carefully before filling up this form. Only one word should be written in
+            each space printed below. Please fill up this form in English version and in BLOCK LETTERS only.
+          </div>
 
-          <p style={{ fontSize: 13, marginBottom: 8 }}>
+          <p className="rp-eng-body">
             <b>It is hereby notified that the undersigned has changed his/her name from</b>
           </p>
 
-          <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: 12 }}>
+          <table className="rp-eng-table">
             <thead>
               <tr>
-                <th style={thStyle}></th>
-                <th style={thStyle}>Name</th>
-                <th style={thStyle}>Father's/Husband's Name</th>
-                <th style={thStyle}>Surname</th>
+                <th style={{ width: "16%" }}></th>
+                <th>Name</th>
+                <th>Father's / Husband's Name</th>
+                <th>Surname</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td style={tdStyle}><b>Old Name</b></td>
-                <td style={tdStyle}><b>{printData.oldFirstName?.toUpperCase()}</b></td>
-                <td style={tdStyle}><b>{printData.oldFatherName?.toUpperCase()}</b></td>
-                <td style={tdStyle}><b>{printData.oldSurname?.toUpperCase()}</b></td>
+                <td><b>Old Name</b></td>
+                <td><b>{printData.oldFirstName?.toUpperCase()}</b></td>
+                <td><b>{printData.oldFatherName?.toUpperCase()}</b></td>
+                <td><b>{printData.oldSurname?.toUpperCase()}</b></td>
               </tr>
               <tr>
-                <td style={tdStyle}><b>New Name</b></td>
-                <td style={tdStyle}><b>{printData.newFirstName?.toUpperCase()}</b></td>
-                <td style={tdStyle}><b>{printData.newFatherName?.toUpperCase()}</b></td>
-                <td style={tdStyle}><b>{printData.newSurname?.toUpperCase()}</b></td>
+                <td><b>New Name</b></td>
+                <td><b>{printData.newFirstName?.toUpperCase()}</b></td>
+                <td><b>{printData.newFatherName?.toUpperCase()}</b></td>
+                <td><b>{printData.newSurname?.toUpperCase()}</b></td>
               </tr>
             </tbody>
           </table>
 
-          <p style={{ fontSize: 11, fontStyle: "italic", marginBottom: 16 }}>
-            Note :- Government accepts no responsibility as to the authenticity of the contents of the notice. Since they are
+          <p className="rp-eng-note">
+            Note :– Government accepts no responsibility as to the authenticity of the contents of the notice. Since they are
             based entirely on the application of the concerned persons without verification of documents.
           </p>
 
-          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, margin: "20px 0" }}>
+          <div className="rp-eng-sig-row">
             <div>
               <p>Signature of the Guardian</p>
-              <p style={{ fontSize: 11 }}>( In case of Minor )</p>
+              <p>( In case of Minor )</p>
             </div>
             <div style={{ textAlign: "right" }}>
               <p>.............................................</p>
-              <p style={{ fontSize: 11 }}>Signature in Old name/ Thumb Impression with Name and Date</p>
+              <p>Signature in Old Name / Thumb Impression with Name and Date</p>
             </div>
           </div>
 
-          <div style={{ margin: "24px 0" }}>
-            <p style={{ fontSize: 13 }}>To</p>
-            <p style={{ fontSize: 13 }}><b>THE DIRECTOR,</b></p>
-            <p style={{ fontSize: 12, marginLeft: 20 }}>
+          <div className="rp-eng-to">
+            <p>To</p>
+            <p style={{ marginLeft: 20 }}><b>THE DIRECTOR,</b></p>
+            <p style={{ marginLeft: 36 }}>
               Government Printing, Stationery and Publications, Maharashtra, Mumbai 400 004.
-            </p>
-            <p style={{ fontSize: 12 }}>
               Kindly publish the above Notice in the next issue of the Maharashtra Government Gazette, Part II.
             </p>
           </div>
 
-          <p style={{ fontSize: 13 }}>Reason for change of Name: <b>{printData.reason}</b></p>
-
-          <div style={{ textAlign: "right", marginTop: 50, fontSize: 13 }}>
-            <p>Signature in New Name/Thumb Impression with Name and Date,</p>
+          <div className="rp-eng-reason">
+            Reason for change of Name : <b>{printData.reason}</b>
           </div>
 
-          <div style={{ marginTop: 30, fontSize: 13, borderTop: "1px solid #000", paddingTop: 12 }}>
-            <p><b>FOR CORRESPONDING ADDRESS:</b></p>
+          <div className="rp-eng-signature">
+            <p>Signature in New Name / Thumb Impression with Name and Date,</p>
+            <p style={{ marginTop: 24 }}>––––––––––––––––</p>
+          </div>
+
+          <div className="rp-eng-address">
+            <p><b>FOR CORRESPONDING ADDRESS :</b></p>
             <p>New Name : <b>{printData.newFullName?.toUpperCase()}</b></p>
             <p>Address : <b>{printData.fullAddress || printData.address}</b></p>
             <p>Pincode : <b>{printData.pincode}</b></p>
-            <p>Mobile No : <b>{printData.mobile}</b></p>
-            {printData.aadhaar && <p>Aadhaar No : <b>{printData.aadhaar}</b></p>}
+            <p>Mobile No. : <b>{printData.mobile}</b></p>
+            {printData.aadhaar && <p>Aadhaar No. : <b>{printData.aadhaar}</b></p>}
           </div>
         </div>
-        <div className="no-print" style={{ textAlign: "center", marginTop: 16 }}>
+        <div className="no-print" style={{ textAlign: "center", marginTop: 20, display: "flex", gap: 12, justifyContent: "center" }}>
+          <button onClick={() => { window.print(); }} style={{
+            padding: "10px 28px", background: "#16a34a", color: "#fff",
+            border: "none", borderRadius: 8, cursor: "pointer", fontSize: 14, fontWeight: 600,
+          }}>🖨️ Print Again</button>
           <button onClick={() => setPrintData(null)} style={{
             padding: "10px 28px", background: "hsl(var(--primary))", color: "#fff",
             border: "none", borderRadius: 8, cursor: "pointer", fontSize: 14, fontWeight: 600,
