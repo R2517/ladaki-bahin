@@ -128,8 +128,10 @@ const forms: FormCard[] = [
     icon: Scale,
     iconBg: "linear-gradient(135deg, #ECFDF5, #BBF7D0)",
     iconColor: "#16A34A",
-    path: "/revenue-notice",
-    ready: false,
+    path: "/rajpatra",
+    ready: true,
+    badge: "READY",
+    badgeType: "ready",
   },
   {
     id: "caste-cert",
