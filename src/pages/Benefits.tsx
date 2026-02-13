@@ -64,7 +64,7 @@ const additionalBenefits = [
   { icon: Printer, title: "एक-क्लिक प्रिंट", desc: "A4 प्रिंट-रेडी फॉर्मॅट, PDF डाउनलोड" },
   { icon: Lock, title: "SSL एन्क्रिप्शन", desc: "सर्व कनेक्शन एन्क्रिप्टेड आणि सुरक्षित" },
   { icon: TrendingUp, title: "बिझनेस ग्रोथ", desc: "डिजिटल सेवांनी अधिक ग्राहक मिळवा" },
-  { icon: IndianRupee, title: "कमी खर्च", desc: "₹30 पासून फॉर्म — कमी गुंतवणूक, अधिक नफा" },
+  { icon: IndianRupee, title: "कमी खर्च", desc: "₹1 पासून फॉर्म — कमी गुंतवणूक, अधिक नफा" },
   { icon: Layers, title: "मल्टी-सर्व्हिस", desc: "एकाच प्लॅटफॉर्मवर सर्व सेवा" },
   { icon: Database, title: "क्लाउड स्टोरेज", desc: "डेटा क्लाउडवर सेव्ह — कधीही ऍक्सेस" },
   { icon: CloudOff, title: "डेटा कायम सेव्ह", desc: "तुमचा डेटा कधीही नष्ट होत नाही" },
@@ -76,7 +76,7 @@ const comparisons = [
   { feature: "बिलिंग", traditional: "हाताने हिशोब, चुका होतात", setu: "ऑटो बिलिंग, अचूक रेकॉर्ड" },
   { feature: "पुन्हा प्रिंट", traditional: "पुन्हा सगळं टाइप करा", setu: "एका क्लिकवर री-प्रिंट" },
   { feature: "ग्राहक शोध", traditional: "फाइल्स मध्ये शोधा", setu: "सर्च बार — 1 सेकंद" },
-  { feature: "खर्च", traditional: "प्रिंटर, शाई, कागद", setu: "₹30 पासून ऑल-इनक्लूसिव्ह" },
+  { feature: "खर्च", traditional: "प्रिंटर, शाई, कागद", setu: "₹1 पासून ऑल-इनक्लूसिव्ह" },
 ];
 
 const BenefitsPage = () => {
