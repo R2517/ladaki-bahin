@@ -10,6 +10,7 @@ import {
 import { useState, useEffect, useRef } from "react";
 import { COLOR_THEMES } from "@/lib/themes";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface FormCard {
   id: string;
@@ -221,12 +222,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const { profile, isAdmin, signOut } = useAuth();
   const [search, setSearch] = useState("");
-  const [dark, setDark] = useState(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("theme") === "dark";
-    }
-    return false;
-  });
+  const { isDark: dark, toggleTheme: setDarkToggle } = useTheme();
   const [themeIdx, setThemeIdx] = useState(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("colorTheme");
@@ -238,11 +234,6 @@ const Dashboard = () => {
   const paletteRef = useRef<HTMLDivElement>(null);
 
   const currentTheme = COLOR_THEMES[themeIdx] || COLOR_THEMES[0];
-
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", dark);
-    localStorage.setItem("theme", dark ? "dark" : "light");
-  }, [dark]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -349,7 +340,7 @@ const Dashboard = () => {
             )}
             <button
               className="theme-toggle"
-              onClick={() => setDark(!dark)}
+              onClick={setDarkToggle}
               aria-label="Toggle dark mode"
             >
               {dark ? <Sun size={18} /> : <Moon size={18} />}

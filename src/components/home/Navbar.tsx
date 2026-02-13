@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Landmark, Menu, X } from "lucide-react";
+import { Landmark, Menu, X, Sun, Moon } from "lucide-react";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { isDark, toggleTheme } = useTheme();
 
   const navLinks = [
     { label: "सेवा", href: "#services" },
@@ -65,8 +67,16 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* Auth buttons */}
+          {/* Auth buttons + theme toggle */}
           <div className="hidden md:flex items-center gap-3">
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              aria-label="Toggle dark mode"
+              title={isDark ? "Light Mode" : "Dark Mode"}
+            >
+              {isDark ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
             <Button variant="ghost" asChild>
               <Link to="/login">लॉगिन</Link>
             </Button>
@@ -106,13 +116,22 @@ const Navbar = () => {
                 </Link>
               )
             )}
-            <div className="flex gap-3 pt-3 border-t">
-              <Button variant="outline" className="flex-1" asChild>
-                <Link to="/login">लॉगिन</Link>
-              </Button>
-              <Button className="flex-1 bg-gradient-to-r from-amber-500 to-orange-600" asChild>
-                <Link to="/signup">नोंदणी करा</Link>
-              </Button>
+            <div className="flex items-center justify-between pt-3 border-t">
+              <button
+                onClick={toggleTheme}
+                className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                aria-label="Toggle dark mode"
+              >
+                {isDark ? <Sun size={18} /> : <Moon size={18} />}
+              </button>
+              <div className="flex gap-3 flex-1 ml-3">
+                <Button variant="outline" className="flex-1" asChild>
+                  <Link to="/login">लॉगिन</Link>
+                </Button>
+                <Button className="flex-1 bg-gradient-to-r from-amber-500 to-orange-600" asChild>
+                  <Link to="/signup">नोंदणी करा</Link>
+                </Button>
+              </div>
             </div>
           </div>
         </div>
