@@ -5,10 +5,11 @@ import {
   Search, LayoutGrid, Radio, Home,
   CreditCard, Fingerprint, FileSpreadsheet,
   Scale, Leaf, Award, GraduationCap, BadgeCheck,
-  Sun, Moon, Palette, X,
+  Sun, Moon, Palette, X, LogOut, Wallet, User, ShieldCheck, IndianRupee,
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { COLOR_THEMES } from "@/lib/themes";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface FormCard {
   id: string;
@@ -218,6 +219,7 @@ const badgeStyles: Record<string, string> = {
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { profile, isAdmin, signOut } = useAuth();
   const [search, setSearch] = useState("");
   const [dark, setDark] = useState(() => {
     if (typeof window !== "undefined") {
@@ -316,19 +318,59 @@ const Dashboard = () => {
               )}
             </div>
           </div>
-          <button
-            className="theme-toggle"
-            onClick={() => setDark(!dark)}
-            aria-label="Toggle dark mode"
-          >
-            {dark ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <button
+              className="theme-toggle"
+              onClick={() => navigate("/wallet")}
+              aria-label="Wallet"
+              title="वॉलेट"
+              style={{ display: "flex", alignItems: "center", gap: 4 }}
+            >
+              <Wallet size={16} />
+              <span style={{ fontSize: 12, fontWeight: 700 }}>₹{(profile?.wallet_balance ?? 0).toLocaleString("en-IN")}</span>
+            </button>
+            <button
+              className="theme-toggle"
+              onClick={() => navigate("/profile")}
+              aria-label="Profile"
+              title="प्रोफाइल"
+            >
+              <User size={18} />
+            </button>
+            {isAdmin && (
+              <button
+                className="theme-toggle"
+                onClick={() => navigate("/admin")}
+                aria-label="Admin"
+                title="Admin Panel"
+              >
+                <ShieldCheck size={18} />
+              </button>
+            )}
+            <button
+              className="theme-toggle"
+              onClick={() => setDark(!dark)}
+              aria-label="Toggle dark mode"
+            >
+              {dark ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
+            <button
+              className="theme-toggle"
+              onClick={() => signOut()}
+              aria-label="Logout"
+              title="लॉगआउट"
+            >
+              <LogOut size={18} />
+            </button>
+          </div>
         </div>
         {/* === Nav Tabs === */}
         <div className="dash-nav-tabs">
           <button className="dash-nav-tab active" onClick={() => navigate("/")}>🏠 सेतू सुविधा</button>
           <button className="dash-nav-tab" onClick={() => navigate("/billing")}>💰 बिलिंग</button>
           <button className="dash-nav-tab" onClick={() => navigate("/management")}>⚙️ Management</button>
+          <button className="dash-nav-tab" onClick={() => navigate("/wallet")}>💳 वॉलेट</button>
+          <button className="dash-nav-tab" onClick={() => navigate("/profile")}>👤 प्रोफाइल</button>
         </div>
       </nav>
 

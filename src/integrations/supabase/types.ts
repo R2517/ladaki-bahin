@@ -1,4 +1,4 @@
-export type Json =
+﻿export type Json =
   | string
   | number
   | boolean
@@ -160,6 +160,36 @@ export type Database = {
           },
         ]
       }
+      form_pricing: {
+        Row: {
+          created_at: string | null
+          form_name: string
+          form_type: string
+          id: string
+          is_active: boolean | null
+          price: number
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          form_name: string
+          form_type: string
+          id?: string
+          is_active?: boolean | null
+          price?: number
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          form_name?: string
+          form_type?: string
+          id?: string
+          is_active?: boolean | null
+          price?: number
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       form_submissions: {
         Row: {
           applicant_name: string
@@ -167,6 +197,7 @@ export type Database = {
           form_data: Json
           form_type: string
           id: string
+          user_id: string | null
         }
         Insert: {
           applicant_name: string
@@ -174,6 +205,7 @@ export type Database = {
           form_data?: Json
           form_type: string
           id?: string
+          user_id?: string | null
         }
         Update: {
           applicant_name?: string
@@ -181,6 +213,7 @@ export type Database = {
           form_data?: Json
           form_type?: string
           id?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -226,6 +259,143 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          address: string | null
+          created_at: string | null
+          district: string | null
+          email: string
+          full_name: string
+          id: string
+          is_active: boolean | null
+          mobile: string | null
+          shop_name: string | null
+          shop_type: string | null
+          taluka: string | null
+          updated_at: string | null
+          wallet_balance: number | null
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string | null
+          district?: string | null
+          email: string
+          full_name: string
+          id: string
+          is_active?: boolean | null
+          mobile?: string | null
+          shop_name?: string | null
+          shop_type?: string | null
+          taluka?: string | null
+          updated_at?: string | null
+          wallet_balance?: number | null
+        }
+        Update: {
+          address?: string | null
+          created_at?: string | null
+          district?: string | null
+          email?: string
+          full_name?: string
+          id?: string
+          is_active?: boolean | null
+          mobile?: string | null
+          shop_name?: string | null
+          shop_type?: string | null
+          taluka?: string | null
+          updated_at?: string | null
+          wallet_balance?: number | null
+        }
+        Relationships: []
+      }
+      subscription_plans: {
+        Row: {
+          created_at: string | null
+          duration_days: number
+          features: Json | null
+          id: string
+          is_active: boolean | null
+          name: string
+          price: number
+        }
+        Insert: {
+          created_at?: string | null
+          duration_days?: number
+          features?: Json | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          price: number
+        }
+        Update: {
+          created_at?: string | null
+          duration_days?: number
+          features?: Json | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          price?: number
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      vle_subscriptions: {
+        Row: {
+          created_at: string | null
+          end_date: string
+          id: string
+          plan_id: string | null
+          razorpay_payment_id: string | null
+          start_date: string
+          status: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          end_date: string
+          id?: string
+          plan_id?: string | null
+          razorpay_payment_id?: string | null
+          start_date?: string
+          status?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          end_date?: string
+          id?: string
+          plan_id?: string | null
+          razorpay_payment_id?: string | null
+          start_date?: string
+          status?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vle_subscriptions_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "subscription_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       voter_id_applications: {
         Row: {
           amount: number
@@ -268,15 +438,54 @@ export type Database = {
         }
         Relationships: []
       }
+      wallet_transactions: {
+        Row: {
+          amount: number
+          balance_after: number
+          created_at: string | null
+          description: string | null
+          id: string
+          reference_id: string | null
+          type: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          balance_after: number
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          reference_id?: string | null
+          type: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          balance_after?: number
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          reference_id?: string | null
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "vle"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -403,6 +612,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "vle"],
+    },
   },
 } as const
