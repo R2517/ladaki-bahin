@@ -17,6 +17,10 @@ import RefundPolicy from "./pages/RefundPolicy";
 import Contact from "./pages/Contact";
 import Disclaimer from "./pages/Disclaimer";
 import BandkamKamgarInfo from "./pages/BandkamKamgarInfo";
+import ServicesPage from "./pages/Services";
+import HowItWorksPage from "./pages/HowItWorksPage";
+import BenefitsPage from "./pages/Benefits";
+import FaqPage from "./pages/FaqPage";
 import Dashboard from "./pages/Dashboard";
 import Hamipatra from "./pages/Hamipatra";
 import SelfDeclaration from "./pages/SelfDeclaration";
@@ -65,6 +69,10 @@ const App = () => (
             <Route path="/contact" element={<Contact />} />
             <Route path="/disclaimer" element={<Disclaimer />} />
             <Route path="/bandkam-kamgar-info" element={<BandkamKamgarInfo />} />
+            <Route path="/services" element={<ServicesPage />} />
+            <Route path="/how-it-works" element={<HowItWorksPage />} />
+            <Route path="/benefits" element={<BenefitsPage />} />
+            <Route path="/faq" element={<FaqPage />} />
 
             {/* Protected VLE routes */}
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />

@@ -9,10 +9,10 @@ const Navbar = () => {
   const { isDark, toggleTheme } = useTheme();
 
   const navLinks = [
-    { label: "सेवा", href: "#services" },
-    { label: "कसे काम करते", href: "#how-it-works" },
-    { label: "फायदे", href: "#benefits" },
-    { label: "FAQ", href: "#faq" },
+    { label: "सेवा", href: "/services" },
+    { label: "कसे काम करते", href: "/how-it-works" },
+    { label: "फायदे", href: "/benefits" },
+    { label: "FAQ", href: "/faq" },
     { label: "बांधकाम कामगार", href: "/bandkam-kamgar-info" },
     { label: "संपर्क", href: "/contact" },
   ];
