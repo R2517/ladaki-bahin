@@ -15,6 +15,7 @@ import Privacy from "./pages/Privacy";
 import RefundPolicy from "./pages/RefundPolicy";
 import Contact from "./pages/Contact";
 import Disclaimer from "./pages/Disclaimer";
+import BandkamKamgarInfo from "./pages/BandkamKamgarInfo";
 import Dashboard from "./pages/Dashboard";
 import Hamipatra from "./pages/Hamipatra";
 import SelfDeclaration from "./pages/SelfDeclaration";
@@ -61,6 +62,7 @@ const App = () => (
             <Route path="/refund" element={<RefundPolicy />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/disclaimer" element={<Disclaimer />} />
+            <Route path="/bandkam-kamgar-info" element={<BandkamKamgarInfo />} />
 
             {/* Protected VLE routes */}
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />

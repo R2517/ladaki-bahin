@@ -4,6 +4,7 @@ import Navbar from "@/components/home/Navbar";
 import HeroSection from "@/components/home/HeroSection";
 import ServicesSection from "@/components/home/ServicesSection";
 import HowItWorks from "@/components/home/HowItWorks";
+import BandkamKamgarSection from "@/components/home/BandkamKamgarSection";
 import Footer from "@/components/home/Footer";
 import { Button } from "@/components/ui/button";
 import {
@@ -52,6 +53,7 @@ const Home = () => {
       <HeroSection />
       <ServicesSection />
       <HowItWorks />
+      <BandkamKamgarSection />
 
       {/* Benefits Section */}
       <section id="benefits" className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-950">
