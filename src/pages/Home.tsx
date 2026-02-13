@@ -17,6 +17,7 @@ import {
   Wallet, BarChart3, ShieldCheck, Clock, Headphones, Zap,
   ArrowRight, CheckCircle2,
 } from "lucide-react";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const benefits = [
   { icon: Wallet, title: "वॉलेट सिस्टम", desc: "प्रत्येक फॉर्मचे शुल्क आपोआप वॉलेट मधून कापले जाते. Razorpay ने रिचार्ज करा." },
@@ -43,6 +44,12 @@ const plans = [
 ];
 
 const Home = () => {
+  const benefitsAnim = useScrollAnimation();
+  const pricingAnim = useScrollAnimation();
+  const trustAnim = useScrollAnimation();
+  const faqAnim = useScrollAnimation();
+  const ctaAnim = useScrollAnimation();
+
   useEffect(() => {
     document.title = "SETU Suvidha — महाराष्ट्रातील #1 ई-सेवा फॉर्म पोर्टल";
   }, []);
@@ -56,9 +63,9 @@ const Home = () => {
       <BandkamKamgarSection />
 
       {/* Benefits Section */}
-      <section id="benefits" className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-950">
+      <section id="benefits" className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-950" ref={benefitsAnim.ref}>
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-14">
+          <div className={`text-center mb-14 transition-all duration-700 ${benefitsAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
               सेतु/CSC केंद्रांसाठी <span className="bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">विशेष फायदे</span>
             </h2>
@@ -67,9 +74,15 @@ const Home = () => {
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {benefits.map((b) => (
-              <div key={b.title} className="p-6 rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100/50 dark:from-gray-900 dark:to-gray-900/50 border border-gray-100 dark:border-gray-800 hover:shadow-lg transition-shadow">
-                <div className="h-12 w-12 rounded-xl bg-amber-500/10 flex items-center justify-center mb-4">
+            {benefits.map((b, i) => (
+              <div
+                key={b.title}
+                className={`p-6 rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100/50 dark:from-gray-900 dark:to-gray-900/50 border border-gray-100 dark:border-gray-800 hover:shadow-xl hover:shadow-amber-500/5 transition-all duration-500 hover:-translate-y-1.5 group ${
+                  benefitsAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+                }`}
+                style={{ transitionDelay: benefitsAnim.isVisible ? `${i * 80}ms` : "0ms" }}
+              >
+                <div className="h-12 w-12 rounded-xl bg-amber-500/10 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
                   <b.icon className="h-6 w-6 text-amber-600" />
                 </div>
                 <h3 className="text-lg font-semibold mb-2">{b.title}</h3>
@@ -81,23 +94,24 @@ const Home = () => {
       </section>
 
       {/* Pricing Preview */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950" ref={pricingAnim.ref}>
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-14">
+          <div className={`text-center mb-14 transition-all duration-700 ${pricingAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
               सोप्या <span className="bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">किंमती</span>
             </h2>
             <p className="text-muted-foreground text-lg">तुमच्या गरजेनुसार प्लॅन निवडा</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {plans.map((plan) => (
+            {plans.map((plan, i) => (
               <div
                 key={plan.name}
-                className={`relative p-6 rounded-2xl border ${
+                className={`relative p-6 rounded-2xl border transition-all duration-500 hover:-translate-y-1.5 hover:shadow-xl ${
                   plan.popular
                     ? "border-amber-500 bg-gradient-to-b from-amber-50 to-white dark:from-amber-950/30 dark:to-gray-950 shadow-xl shadow-amber-500/10"
                     : "border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950"
-                }`}
+                } ${pricingAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+                style={{ transitionDelay: pricingAnim.isVisible ? `${200 + i * 150}ms` : "0ms" }}
               >
                 {plan.popular && (
                   <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-gradient-to-r from-amber-500 to-orange-600 text-white text-xs font-bold rounded-full">
@@ -115,7 +129,7 @@ const Home = () => {
                   ))}
                 </ul>
                 <Button
-                  className={`w-full ${plan.popular ? "bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700" : ""}`}
+                  className={`w-full hover:scale-[1.02] active:scale-95 transition-all ${plan.popular ? "bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700" : ""}`}
                   variant={plan.popular ? "default" : "outline"}
                   asChild
                 >
@@ -128,11 +142,17 @@ const Home = () => {
       </section>
 
       {/* Trust */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-950">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="flex flex-wrap justify-center gap-6 mb-8">
-            {["🔒 SSL Encrypted", "🏛️ Government Forms", "💳 Razorpay Secure", "📱 Mobile Friendly"].map((badge) => (
-              <span key={badge} className="px-4 py-2 rounded-full bg-gray-100 dark:bg-gray-900 text-sm font-medium">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-950" ref={trustAnim.ref}>
+        <div className={`max-w-4xl mx-auto text-center transition-all duration-700 ${trustAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
+          <div className="flex flex-wrap justify-center gap-4 mb-8">
+            {["🔒 SSL Encrypted", "🏛️ Government Forms", "💳 Razorpay Secure", "📱 Mobile Friendly"].map((badge, i) => (
+              <span
+                key={badge}
+                className={`px-5 py-2.5 rounded-full bg-gray-100 dark:bg-gray-900 text-sm font-medium hover:scale-105 transition-all duration-500 cursor-default ${
+                  trustAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                }`}
+                style={{ transitionDelay: trustAnim.isVisible ? `${i * 100}ms` : "0ms" }}
+              >
                 {badge}
               </span>
             ))}
@@ -145,16 +165,23 @@ const Home = () => {
       </section>
 
       {/* FAQ */}
-      <section id="faq" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950">
+      <section id="faq" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950" ref={faqAnim.ref}>
         <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-14">
+          <div className={`text-center mb-14 transition-all duration-700 ${faqAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
               वारंवार विचारले जाणारे <span className="bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">प्रश्न</span>
             </h2>
           </div>
           <Accordion type="single" collapsible className="space-y-3">
             {faqs.map((faq, i) => (
-              <AccordionItem key={i} value={`faq-${i}`} className="border rounded-xl px-5 bg-white dark:bg-gray-950 shadow-sm">
+              <AccordionItem
+                key={i}
+                value={`faq-${i}`}
+                className={`border rounded-xl px-5 bg-white dark:bg-gray-950 shadow-sm hover:shadow-md transition-all duration-500 ${
+                  faqAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+                }`}
+                style={{ transitionDelay: faqAnim.isVisible ? `${i * 80}ms` : "0ms" }}
+              >
                 <AccordionTrigger className="text-left font-semibold text-sm sm:text-base hover:no-underline">
                   {faq.q}
                 </AccordionTrigger>
@@ -168,20 +195,24 @@ const Home = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-amber-600 to-orange-600">
-        <div className="max-w-3xl mx-auto text-center text-white">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-amber-600 to-orange-600 relative overflow-hidden" ref={ctaAnim.ref}>
+        {/* Decorative */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl" />
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2 blur-2xl" />
+        
+        <div className={`max-w-3xl mx-auto text-center text-white relative z-10 transition-all duration-700 ${ctaAnim.isVisible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-8 scale-95"}`}>
           <h2 className="text-3xl sm:text-4xl font-bold mb-4">आजच सुरू करा!</h2>
           <p className="text-amber-100 text-lg mb-8">
             मोफत नोंदणी करा आणि तुमच्या केंद्राचे सर्व फॉर्म काम डिजिटल करा.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Button size="lg" className="bg-white text-amber-700 hover:bg-gray-100 h-13 px-8 text-base font-semibold" asChild>
+            <Button size="lg" className="bg-white text-amber-700 hover:bg-gray-100 h-13 px-8 text-base font-semibold hover:scale-105 active:scale-95 transition-all" asChild>
               <Link to="/signup">
                 मोफत नोंदणी करा
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 h-13 px-8 text-base" asChild>
+            <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 h-13 px-8 text-base hover:scale-105 active:scale-95 transition-all" asChild>
               <Link to="/contact">संपर्क करा</Link>
             </Button>
           </div>

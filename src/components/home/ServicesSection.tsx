@@ -2,6 +2,7 @@ import {
   FileText, Shield, AlertTriangle, FilePlus, Users, Award,
   CreditCard, Vote, HardHat, BookOpen, Globe, Scale,
 } from "lucide-react";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const services = [
   { icon: FileText, title: "हमीपत्र", desc: "शासकीय कामांसाठी हमीपत्र तयार करा", color: "from-blue-500 to-blue-600" },
@@ -19,10 +20,12 @@ const services = [
 ];
 
 const ServicesSection = () => {
+  const { ref, isVisible } = useScrollAnimation();
+
   return (
-    <section id="services" className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-950">
+    <section id="services" className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-950" ref={ref}>
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-14">
+        <div className={`text-center mb-14 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
           <h2 className="text-3xl sm:text-4xl font-bold mb-4">
             आमच्या <span className="bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">सेवा</span>
           </h2>
@@ -32,12 +35,15 @@ const ServicesSection = () => {
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-          {services.map((svc) => (
+          {services.map((svc, i) => (
             <div
               key={svc.title}
-              className="group relative p-5 rounded-2xl bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 hover:border-amber-200 dark:hover:border-amber-800 hover:shadow-xl hover:shadow-amber-500/5 transition-all duration-300 hover:-translate-y-1"
+              className={`group relative p-5 rounded-2xl bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 hover:border-amber-200 dark:hover:border-amber-800 hover:shadow-xl hover:shadow-amber-500/5 transition-all duration-500 hover:-translate-y-1.5 ${
+                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+              }`}
+              style={{ transitionDelay: isVisible ? `${i * 60}ms` : "0ms" }}
             >
-              <div className={`h-11 w-11 rounded-xl bg-gradient-to-br ${svc.color} flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 transition-transform`}>
+              <div className={`h-11 w-11 rounded-xl bg-gradient-to-br ${svc.color} flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
                 <svc.icon className="h-5 w-5 text-white" />
               </div>
               <h3 className="font-semibold text-sm sm:text-base mb-1">{svc.title}</h3>
