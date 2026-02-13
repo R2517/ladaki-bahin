@@ -118,7 +118,7 @@ const Wallet = () => {
   return (
     <div className="min-h-screen bg-background p-4 md:p-8">
       <div className="max-w-4xl mx-auto">
-        <Button variant="ghost" onClick={() => navigate("/")} className="mb-4">
+        <Button variant="ghost" onClick={() => navigate("/dashboard")} className="mb-4">
           <ArrowLeft className="mr-2 h-4 w-4" />
           मागे जा
         </Button>

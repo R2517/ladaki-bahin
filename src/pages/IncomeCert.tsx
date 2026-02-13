@@ -187,7 +187,7 @@ const IncomeCert = () => {
       {/* Nav */}
       <nav className="dash-nav no-print" style={{ background: themeGradient }}>
         <div className="dash-nav-inner">
-          <div className="dash-brand" style={{ cursor: "pointer" }} onClick={() => navigate("/")}>
+          <div className="dash-brand" style={{ cursor: "pointer" }} onClick={() => navigate("/dashboard")}>
             <div className="dash-brand-icon"><Landmark size={22} color="#fff" /></div>
             <div>
               <span className="dash-brand-title">SETU Suvidha</span>
@@ -208,7 +208,7 @@ const IncomeCert = () => {
           onClick={() => {
             if (view === "form") setView("card");
             else if (view === "list") setView("card");
-            else navigate("/");
+            else navigate("/dashboard");
           }}
         >
           <ArrowLeft size={18} /> {view === "card" ? "डॅशबोर्ड वर परत जा" : "कार्ड वर परत जा"}

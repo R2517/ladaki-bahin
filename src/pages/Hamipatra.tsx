@@ -85,7 +85,7 @@ const Hamipatra = () => {
     <div className="dash-root">
       <nav className="dash-nav no-print" style={{ background: themeGradient }}>
         <div className="dash-nav-inner">
-          <div className="dash-brand" style={{ cursor: "pointer" }} onClick={() => navigate("/")}>
+          <div className="dash-brand" style={{ cursor: "pointer" }} onClick={() => navigate("/dashboard")}>
             <div className="dash-brand-icon"><Landmark size={22} color="#fff" /></div>
             <div>
               <span className="dash-brand-title">SETU Suvidha</span>
@@ -99,7 +99,7 @@ const Hamipatra = () => {
       </nav>
 
       <div className="no-print" style={{ padding: "12px 16px 0" }}>
-        <button className="back-btn px-[9px] py-[7px] font-extralight font-sans shadow-sm rounded-sm" style={{ color: `hsl(var(--primary))` }} onClick={() => showForm ? setShowForm(false) : navigate("/")}>
+        <button className="back-btn px-[9px] py-[7px] font-extralight font-sans shadow-sm rounded-sm" style={{ color: `hsl(var(--primary))` }} onClick={() => showForm ? setShowForm(false) : navigate("/dashboard")}>
           <ArrowLeft size={18} /> {showForm ? "कार्ड वर परत जा" : "डॅशबोर्ड वर परत जा"}
         </button>
       </div>

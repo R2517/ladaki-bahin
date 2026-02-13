@@ -172,7 +172,7 @@ const RajPatra = () => {
         </div>
         {/* === Nav Tabs === */}
         <div className="dash-nav-tabs">
-          <button className="dash-nav-tab" onClick={() => navigate("/")}>🏠 सेतू सुविधा</button>
+          <button className="dash-nav-tab" onClick={() => navigate("/dashboard")}>🏠 सेतू सुविधा</button>
           <button className="dash-nav-tab" onClick={() => navigate("/billing")}>💰 बिलिंग</button>
           <button className="dash-nav-tab" onClick={() => navigate("/management")}>⚙️ Management</button>
         </div>

@@ -51,7 +51,7 @@ const AdminSidebar = () => {
       </nav>
 
       <div className="space-y-2 pt-4 border-t border-border">
-        <Button variant="ghost" className="w-full justify-start" onClick={() => navigate("/")}>
+        <Button variant="ghost" className="w-full justify-start" onClick={() => navigate("/dashboard")}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           VLE Dashboard
         </Button>

@@ -6,8 +6,15 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import AdminRoute from "@/components/auth/AdminRoute";
+import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import About from "./pages/About";
+import Terms from "./pages/Terms";
+import Privacy from "./pages/Privacy";
+import RefundPolicy from "./pages/RefundPolicy";
+import Contact from "./pages/Contact";
+import Disclaimer from "./pages/Disclaimer";
 import Dashboard from "./pages/Dashboard";
 import Hamipatra from "./pages/Hamipatra";
 import SelfDeclaration from "./pages/SelfDeclaration";
@@ -45,11 +52,18 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             {/* Public routes */}
+            <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/refund" element={<RefundPolicy />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/disclaimer" element={<Disclaimer />} />
 
             {/* Protected VLE routes */}
-            <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/hamipatra" element={<ProtectedRoute><Hamipatra /></ProtectedRoute>} />
             <Route path="/self-declaration" element={<ProtectedRoute><SelfDeclaration /></ProtectedRoute>} />
             <Route path="/grievance" element={<ProtectedRoute><Grievance /></ProtectedRoute>} />
