@@ -9,7 +9,7 @@ const Footer = () => {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2 mb-4">
-              <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center">
+              <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
                 <Landmark size={18} className="text-white" />
               </div>
               <span className="text-lg font-bold text-white">SETU Suvidha</span>
@@ -23,11 +23,11 @@ const Footer = () => {
           <div>
             <h4 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">पेजेस</h4>
             <ul className="space-y-2.5">
-              <li><Link to="/" className="text-sm hover:text-teal-400 transition-colors">मुख्यपृष्ठ</Link></li>
-              <li><Link to="/about" className="text-sm hover:text-teal-400 transition-colors">आमच्याबद्दल</Link></li>
-              <li><Link to="/contact" className="text-sm hover:text-teal-400 transition-colors">संपर्क</Link></li>
-              <li><Link to="/login" className="text-sm hover:text-teal-400 transition-colors">लॉगिन</Link></li>
-              <li><Link to="/signup" className="text-sm hover:text-teal-400 transition-colors">नोंदणी</Link></li>
+              <li><Link to="/" className="text-sm hover:text-amber-400 transition-colors">मुख्यपृष्ठ</Link></li>
+              <li><Link to="/about" className="text-sm hover:text-amber-400 transition-colors">आमच्याबद्दल</Link></li>
+              <li><Link to="/contact" className="text-sm hover:text-amber-400 transition-colors">संपर्क</Link></li>
+              <li><Link to="/login" className="text-sm hover:text-amber-400 transition-colors">लॉगिन</Link></li>
+              <li><Link to="/signup" className="text-sm hover:text-amber-400 transition-colors">नोंदणी</Link></li>
             </ul>
           </div>
 
@@ -35,10 +35,10 @@ const Footer = () => {
           <div>
             <h4 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">कायदेशीर</h4>
             <ul className="space-y-2.5">
-              <li><Link to="/terms" className="text-sm hover:text-teal-400 transition-colors">अटी व शर्ती</Link></li>
-              <li><Link to="/privacy" className="text-sm hover:text-teal-400 transition-colors">गोपनीयता धोरण</Link></li>
-              <li><Link to="/refund" className="text-sm hover:text-teal-400 transition-colors">परतावा धोरण</Link></li>
-              <li><Link to="/disclaimer" className="text-sm hover:text-teal-400 transition-colors">अस्वीकरण</Link></li>
+              <li><Link to="/terms" className="text-sm hover:text-amber-400 transition-colors">अटी व शर्ती</Link></li>
+              <li><Link to="/privacy" className="text-sm hover:text-amber-400 transition-colors">गोपनीयता धोरण</Link></li>
+              <li><Link to="/refund" className="text-sm hover:text-amber-400 transition-colors">परतावा धोरण</Link></li>
+              <li><Link to="/disclaimer" className="text-sm hover:text-amber-400 transition-colors">अस्वीकरण</Link></li>
             </ul>
           </div>
 

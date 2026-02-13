@@ -377,7 +377,7 @@ const BandkamKamgarInfo = () => {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-14">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4">
-              SETU Suvidha पोर्टलवर कसे <span className="bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">manage करायचे?</span>
+              SETU Suvidha पोर्टलवर कसे <span className="bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">manage करायचे?</span>
             </h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
               सेतू संचालकांसाठी बांधकाम कामगार ग्राहक व्यवस्थापन सोपे आणि डिजिटल.
@@ -386,8 +386,8 @@ const BandkamKamgarInfo = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {portalFeatures.map((f) => (
               <div key={f.title} className="p-5 rounded-2xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 hover:shadow-lg transition-shadow">
-                <div className="h-11 w-11 rounded-xl bg-teal-500/10 flex items-center justify-center mb-4">
-                  <f.icon className="h-5 w-5 text-teal-600" />
+                <div className="h-11 w-11 rounded-xl bg-amber-500/10 flex items-center justify-center mb-4">
+                  <f.icon className="h-5 w-5 text-amber-600" />
                 </div>
                 <h3 className="text-base font-semibold mb-1.5">{f.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>

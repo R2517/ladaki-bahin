@@ -11,6 +11,7 @@ const Navbar = () => {
     { label: "कसे काम करते", href: "#how-it-works" },
     { label: "फायदे", href: "#benefits" },
     { label: "FAQ", href: "#faq" },
+    { label: "बांधकाम कामगार", href: "/bandkam-kamgar-info" },
     { label: "संपर्क", href: "/contact" },
   ];
 
@@ -28,11 +29,11 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-teal-500/25 group-hover:shadow-teal-500/40 transition-shadow">
+            <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/25 group-hover:shadow-amber-500/40 transition-shadow">
               <Landmark size={18} className="text-white" />
             </div>
             <div className="flex flex-col">
-              <span className="text-lg font-bold bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">
+              <span className="text-lg font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
                 SETU Suvidha
               </span>
               <span className="text-[10px] text-muted-foreground -mt-1 hidden sm:block">
@@ -69,7 +70,7 @@ const Navbar = () => {
             <Button variant="ghost" asChild>
               <Link to="/login">लॉगिन</Link>
             </Button>
-            <Button asChild className="bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 shadow-lg shadow-teal-500/25">
+            <Button asChild className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 shadow-lg shadow-amber-500/25">
               <Link to="/signup">मोफत नोंदणी करा</Link>
             </Button>
           </div>
@@ -109,7 +110,7 @@ const Navbar = () => {
               <Button variant="outline" className="flex-1" asChild>
                 <Link to="/login">लॉगिन</Link>
               </Button>
-              <Button className="flex-1 bg-gradient-to-r from-teal-500 to-emerald-600" asChild>
+              <Button className="flex-1 bg-gradient-to-r from-amber-500 to-orange-600" asChild>
                 <Link to="/signup">नोंदणी करा</Link>
               </Button>
             </div>

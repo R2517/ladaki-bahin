@@ -27,7 +27,7 @@ const HowItWorks = () => {
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-14">
           <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-            कसे <span className="bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">काम करते?</span>
+            कसे <span className="bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">काम करते?</span>
           </h2>
           <p className="text-muted-foreground text-lg max-w-xl mx-auto">
             फक्त ३ सोप्या स्टेप्स मध्ये तुमचं काम पूर्ण
@@ -36,15 +36,15 @@ const HowItWorks = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
           {/* Connector line (desktop) */}
-          <div className="hidden md:block absolute top-16 left-[17%] right-[17%] h-0.5 bg-gradient-to-r from-teal-200 via-emerald-300 to-teal-200 dark:from-teal-800 dark:via-emerald-700 dark:to-teal-800" />
+          <div className="hidden md:block absolute top-16 left-[17%] right-[17%] h-0.5 bg-gradient-to-r from-amber-200 via-orange-300 to-amber-200 dark:from-amber-800 dark:via-orange-700 dark:to-amber-800" />
 
           {steps.map((s) => (
             <div key={s.step} className="relative text-center group">
               <div className="relative mx-auto mb-6">
-                <div className="h-20 w-20 mx-auto rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center shadow-xl shadow-teal-500/20 group-hover:shadow-teal-500/40 group-hover:scale-110 transition-all duration-300">
+                <div className="h-20 w-20 mx-auto rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-xl shadow-amber-500/20 group-hover:shadow-amber-500/40 group-hover:scale-110 transition-all duration-300">
                   <s.icon className="h-9 w-9 text-white" />
                 </div>
-                <span className="absolute -top-2 -right-2 h-8 w-8 rounded-full bg-white dark:bg-gray-900 border-2 border-teal-500 flex items-center justify-center text-xs font-bold text-teal-600">
+                <span className="absolute -top-2 -right-2 h-8 w-8 rounded-full bg-white dark:bg-gray-900 border-2 border-amber-500 flex items-center justify-center text-xs font-bold text-amber-600">
                   {s.step}
                 </span>
               </div>

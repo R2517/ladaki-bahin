@@ -54,11 +54,11 @@ const Signup = () => {
   return (
     <div className="min-h-screen flex">
       {/* Left: Branding panel */}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-700 overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-orange-600 via-amber-600 to-yellow-700 overflow-hidden">
         <div className="absolute inset-0">
           <div className="absolute top-32 right-20 w-72 h-72 bg-white/5 rounded-full blur-2xl animate-pulse" />
-          <div className="absolute bottom-32 left-10 w-64 h-64 bg-teal-300/10 rounded-full blur-3xl animate-pulse delay-1000" />
-          <div className="absolute top-1/3 left-1/3 w-80 h-80 bg-cyan-400/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-32 left-10 w-64 h-64 bg-amber-300/10 rounded-full blur-3xl animate-pulse delay-1000" />
+          <div className="absolute top-1/3 left-1/3 w-80 h-80 bg-yellow-400/5 rounded-full blur-3xl" />
         </div>
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)", backgroundSize: "30px 30px" }} />
 
@@ -67,7 +67,7 @@ const Signup = () => {
             <Landmark size={32} className="text-white" />
           </div>
           <h2 className="text-4xl font-extrabold mb-3 text-center">SETU Suvidha</h2>
-          <p className="text-emerald-100 text-lg mb-12 text-center max-w-sm">
+          <p className="text-amber-100 text-lg mb-12 text-center max-w-sm">
             तुमचं सेतु/CSC केंद्र डिजिटल करा — मोफत!
           </p>
 
@@ -78,8 +78,8 @@ const Signup = () => {
               { icon: Zap, text: "मोबाईल आणि कॉम्प्युटर दोन्हीवर" },
             ].map((item) => (
               <div key={item.text} className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3">
-                <item.icon className="h-5 w-5 text-emerald-200 flex-shrink-0" />
-                <span className="text-sm text-emerald-50">{item.text}</span>
+                <item.icon className="h-5 w-5 text-amber-200 flex-shrink-0" />
+                <span className="text-sm text-amber-50">{item.text}</span>
               </div>
             ))}
           </div>
@@ -96,11 +96,11 @@ const Signup = () => {
 
           {/* Mobile logo */}
           <div className="lg:hidden flex items-center gap-2.5 mb-8">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center shadow-lg">
+            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg">
               <Landmark size={20} className="text-white" />
             </div>
             <div>
-              <span className="text-xl font-bold bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">SETU Suvidha</span>
+              <span className="text-xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">SETU Suvidha</span>
               <span className="block text-xs text-muted-foreground">सेतू सुविधा — ई-सेवा पोर्टल</span>
             </div>
           </div>
@@ -133,7 +133,7 @@ const Signup = () => {
 
             <Button
               type="submit"
-              className="w-full h-11 bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 shadow-lg shadow-teal-500/25 text-base"
+              className="w-full h-11 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 shadow-lg shadow-amber-500/25 text-base"
               disabled={isLoading}
             >
               {isLoading ? (
@@ -149,7 +149,7 @@ const Signup = () => {
 
           <p className="text-sm text-center text-muted-foreground mt-6">
             आधीच खातं आहे?{" "}
-            <Link to="/login" className="text-teal-600 hover:text-teal-700 font-semibold hover:underline">
+            <Link to="/login" className="text-amber-600 hover:text-amber-700 font-semibold hover:underline">
               लॉगिन करा
             </Link>
           </p>
@@ -157,8 +157,8 @@ const Signup = () => {
           <div className="mt-8 pt-6 border-t text-center">
             <p className="text-xs text-muted-foreground">
               नोंदणी करून तुम्ही आमच्या{" "}
-              <Link to="/terms" className="text-teal-600 hover:underline">अटी</Link> आणि{" "}
-              <Link to="/privacy" className="text-teal-600 hover:underline">गोपनीयता धोरण</Link> मान्य करता.
+              <Link to="/terms" className="text-amber-600 hover:underline">अटी</Link> आणि{" "}
+              <Link to="/privacy" className="text-amber-600 hover:underline">गोपनीयता धोरण</Link> मान्य करता.
             </p>
           </div>
         </div>

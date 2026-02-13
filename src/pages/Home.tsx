@@ -60,7 +60,7 @@ const Home = () => {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-14">
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-              सेतु/CSC केंद्रांसाठी <span className="bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">विशेष फायदे</span>
+              सेतु/CSC केंद्रांसाठी <span className="bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">विशेष फायदे</span>
             </h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
               तुमचे दुकान डिजिटल करा. ग्राहक व्यवस्थापन, बिलिंग आणि फॉर्म सगळं एकाच ठिकाणी.
@@ -69,8 +69,8 @@ const Home = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {benefits.map((b) => (
               <div key={b.title} className="p-6 rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100/50 dark:from-gray-900 dark:to-gray-900/50 border border-gray-100 dark:border-gray-800 hover:shadow-lg transition-shadow">
-                <div className="h-12 w-12 rounded-xl bg-teal-500/10 flex items-center justify-center mb-4">
-                  <b.icon className="h-6 w-6 text-teal-600" />
+                <div className="h-12 w-12 rounded-xl bg-amber-500/10 flex items-center justify-center mb-4">
+                  <b.icon className="h-6 w-6 text-amber-600" />
                 </div>
                 <h3 className="text-lg font-semibold mb-2">{b.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{b.desc}</p>
@@ -85,7 +85,7 @@ const Home = () => {
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-14">
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-              सोप्या <span className="bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">किंमती</span>
+              सोप्या <span className="bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">किंमती</span>
             </h2>
             <p className="text-muted-foreground text-lg">तुमच्या गरजेनुसार प्लॅन निवडा</p>
           </div>
@@ -95,12 +95,12 @@ const Home = () => {
                 key={plan.name}
                 className={`relative p-6 rounded-2xl border ${
                   plan.popular
-                    ? "border-teal-500 bg-gradient-to-b from-teal-50 to-white dark:from-teal-950/30 dark:to-gray-950 shadow-xl shadow-teal-500/10"
+                    ? "border-amber-500 bg-gradient-to-b from-amber-50 to-white dark:from-amber-950/30 dark:to-gray-950 shadow-xl shadow-amber-500/10"
                     : "border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950"
                 }`}
               >
                 {plan.popular && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-gradient-to-r from-teal-500 to-emerald-600 text-white text-xs font-bold rounded-full">
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-gradient-to-r from-amber-500 to-orange-600 text-white text-xs font-bold rounded-full">
                     लोकप्रिय
                   </span>
                 )}
@@ -109,13 +109,13 @@ const Home = () => {
                 <ul className="space-y-2.5 mb-6">
                   {plan.features.map((f) => (
                     <li key={f} className="flex items-start gap-2 text-sm">
-                      <CheckCircle2 className="h-4 w-4 text-teal-500 mt-0.5 flex-shrink-0" />
+                      <CheckCircle2 className="h-4 w-4 text-amber-500 mt-0.5 flex-shrink-0" />
                       <span>{f}</span>
                     </li>
                   ))}
                 </ul>
                 <Button
-                  className={`w-full ${plan.popular ? "bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700" : ""}`}
+                  className={`w-full ${plan.popular ? "bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700" : ""}`}
                   variant={plan.popular ? "default" : "outline"}
                   asChild
                 >
@@ -149,7 +149,7 @@ const Home = () => {
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-14">
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-              वारंवार विचारले जाणारे <span className="bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">प्रश्न</span>
+              वारंवार विचारले जाणारे <span className="bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">प्रश्न</span>
             </h2>
           </div>
           <Accordion type="single" collapsible className="space-y-3">
@@ -168,14 +168,14 @@ const Home = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-teal-600 to-emerald-600">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-amber-600 to-orange-600">
         <div className="max-w-3xl mx-auto text-center text-white">
           <h2 className="text-3xl sm:text-4xl font-bold mb-4">आजच सुरू करा!</h2>
-          <p className="text-teal-100 text-lg mb-8">
+          <p className="text-amber-100 text-lg mb-8">
             मोफत नोंदणी करा आणि तुमच्या केंद्राचे सर्व फॉर्म काम डिजिटल करा.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Button size="lg" className="bg-white text-teal-700 hover:bg-gray-100 h-13 px-8 text-base font-semibold" asChild>
+            <Button size="lg" className="bg-white text-amber-700 hover:bg-gray-100 h-13 px-8 text-base font-semibold" asChild>
               <Link to="/signup">
                 मोफत नोंदणी करा
                 <ArrowRight className="ml-2 h-5 w-5" />
