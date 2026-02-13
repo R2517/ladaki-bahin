@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { HardHat, Users, Shield, CalendarClock, ArrowRight, ClipboardList, Wallet, Bell } from "lucide-react";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const features = [
   {
@@ -32,15 +33,17 @@ const stats = [
 ];
 
 const BandkamKamgarSection = () => {
+  const { ref, isVisible } = useScrollAnimation();
+
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-amber-50 via-orange-50/50 to-yellow-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 overflow-hidden relative">
+    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-amber-50 via-orange-50/50 to-yellow-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 overflow-hidden relative" ref={ref}>
       {/* Decorative elements */}
-      <div className="absolute top-10 right-10 w-40 h-40 bg-amber-200/20 rounded-full blur-3xl" />
-      <div className="absolute bottom-10 left-10 w-56 h-56 bg-orange-200/20 rounded-full blur-3xl" />
+      <div className="absolute top-10 right-10 w-40 h-40 bg-amber-200/20 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute bottom-10 left-10 w-56 h-56 bg-orange-200/20 rounded-full blur-3xl animate-pulse delay-1000" />
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
-        <div className="text-center mb-14">
+        <div className={`text-center mb-14 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 text-sm font-medium mb-4">
             <HardHat className="h-4 w-4" />
             MahaBOCW — बांधकाम कामगार कल्याण मंडळ
@@ -59,12 +62,15 @@ const BandkamKamgarSection = () => {
 
         {/* Feature Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-14">
-          {features.map((f) => (
+          {features.map((f, i) => (
             <div
               key={f.title}
-              className="p-5 rounded-2xl bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border border-amber-100 dark:border-gray-800 hover:shadow-lg hover:shadow-amber-500/5 transition-all hover:-translate-y-0.5"
+              className={`p-5 rounded-2xl bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border border-amber-100 dark:border-gray-800 hover:shadow-lg hover:shadow-amber-500/10 transition-all duration-500 hover:-translate-y-1.5 group ${
+                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+              }`}
+              style={{ transitionDelay: isVisible ? `${200 + i * 100}ms` : "0ms" }}
             >
-              <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-amber-500/10 to-orange-500/10 flex items-center justify-center mb-4">
+              <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-amber-500/10 to-orange-500/10 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
                 <f.icon className="h-5 w-5 text-amber-600 dark:text-amber-400" />
               </div>
               <h3 className="text-base font-semibold mb-1.5">{f.title}</h3>
@@ -74,7 +80,7 @@ const BandkamKamgarSection = () => {
         </div>
 
         {/* Stats + CTA */}
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-8 p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-amber-600 to-orange-600 text-white">
+        <div className={`flex flex-col lg:flex-row items-center justify-between gap-8 p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-amber-600 to-orange-600 text-white transition-all duration-700 delay-700 ${isVisible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-8 scale-95"}`}>
           <div className="flex flex-wrap justify-center lg:justify-start gap-8 sm:gap-12">
             {stats.map((s) => (
               <div key={s.label} className="text-center">
@@ -86,7 +92,7 @@ const BandkamKamgarSection = () => {
           <div className="flex flex-col sm:flex-row gap-3">
             <Button
               size="lg"
-              className="bg-white text-amber-700 hover:bg-amber-50 h-12 px-6 text-base font-semibold shadow-lg"
+              className="bg-white text-amber-700 hover:bg-amber-50 h-12 px-6 text-base font-semibold shadow-lg hover:scale-105 active:scale-95 transition-all"
               asChild
             >
               <Link to="/bandkam-kamgar-info">
@@ -97,7 +103,7 @@ const BandkamKamgarSection = () => {
             <Button
               size="lg"
               variant="outline"
-              className="border-white/30 text-white hover:bg-white/10 h-12 px-6 text-base"
+              className="border-white/30 text-white hover:bg-white/10 h-12 px-6 text-base hover:scale-105 active:scale-95 transition-all"
               asChild
             >
               <Link to="/signup">
