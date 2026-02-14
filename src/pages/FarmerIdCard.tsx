@@ -42,8 +42,15 @@ interface FarmerCardData {
   issueDate?: string;
 }
 
-const Cropper = lazy(() => import("react-easy-crop"));
-const FarmerCardTemplate = lazy(() => import("@/components/farmer/FarmerCardTemplate"));
+const lazyRetry = (fn: () => Promise<any>) =>
+  lazy(() => fn().catch(() => {
+    // Force reload on chunk load failure (stale cache)
+    window.location.reload();
+    return fn();
+  }));
+
+const Cropper = lazyRetry(() => import("react-easy-crop"));
+const FarmerCardTemplate = lazyRetry(() => import("@/components/farmer/FarmerCardTemplate"));
 
 // ─── Crop helpers ────────────────────────────────────────────────
 function createImage(url: string): Promise<HTMLImageElement> {
