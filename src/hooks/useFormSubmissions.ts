@@ -25,7 +25,7 @@ const FORM_TYPE_TO_PRICING_KEY: Record<string, string> = {
 };
 
 // Safety timeout — never let loading hang for more than 10 seconds
-const FETCH_TIMEOUT_MS = 10000;
+const FETCH_TIMEOUT_MS = 30000;
 
 export const useFormSubmissions = (formType: string) => {
   const [submissions, setSubmissions] = useState<FormSubmission[]>([]);
