@@ -88,7 +88,7 @@ const FarmerIdCard = () => {
   const navigate = useNavigate();
   const themeGradient = getThemeGradient();
   const { profile } = useAuth();
-  const { submissions, loading, addSubmission, deleteSubmission } = useFormSubmissions(FORM_TYPE);
+  const { submissions, loading, fetchError, addSubmission, deleteSubmission, refresh } = useFormSubmissions(FORM_TYPE);
 
   // View state
   const [view, setView] = useState<"list" | "form" | "preview">("list");
@@ -645,14 +645,32 @@ const FarmerIdCard = () => {
 
         {/* Table */}
         {loading ? (
-          <div className="flex justify-center py-12">
+          <div className="flex flex-col items-center justify-center py-12 gap-3">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600" />
+            <p className="text-sm text-muted-foreground">रेकॉर्ड लोड होत आहेत...</p>
+          </div>
+        ) : fetchError ? (
+          <div className="text-center py-16 text-muted-foreground space-y-3">
+            <X size={48} className="mx-auto mb-2 text-red-400 opacity-60" />
+            <p className="font-medium text-red-600 dark:text-red-400">{fetchError}</p>
+            <Button variant="outline" onClick={refresh} className="mt-2">
+              <Search size={16} className="mr-2" />पुन्हा प्रयत्न करा (Retry)
+            </Button>
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-16 text-muted-foreground">
             <Sprout size={48} className="mx-auto mb-3 opacity-30" />
-            <p className="font-medium">कोणतेही रेकॉर्ड सापडले नाही.</p>
-            <p className="text-sm mt-1">नवीन शेतकरी ओळखपत्र तयार करण्यासाठी "नवीन कार्ड" बटण दाबा.</p>
+            {submissions.length === 0 ? (
+              <>
+                <p className="font-medium text-base">तुम्ही अजून कोणतेही शेतकरी ओळखपत्र तयार केलेले नाही.</p>
+                <p className="text-sm mt-1">वरील "नवीन शेतकरी ओळखपत्र बनवा" बटण दाबा.</p>
+              </>
+            ) : (
+              <>
+                <p className="font-medium">शोध निकाल सापडले नाहीत.</p>
+                <p className="text-sm mt-1">कृपया वेगळे शोध शब्द वापरा.</p>
+              </>
+            )}
           </div>
         ) : (
           <div className="overflow-x-auto rounded-lg border">

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -24,85 +24,131 @@ const FORM_TYPE_TO_PRICING_KEY: Record<string, string> = {
   "शेतकरी ओळखपत्र": "farmer_id_card",
 };
 
+// Safety timeout — never let loading hang for more than 10 seconds
+const FETCH_TIMEOUT_MS = 10000;
+
 export const useFormSubmissions = (formType: string) => {
   const [submissions, setSubmissions] = useState<FormSubmission[]>([]);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState<string | null>(null);
+  const mountedRef = useRef(true);
 
   const fetchSubmissions = useCallback(async () => {
+    if (!mountedRef.current) return;
     setLoading(true);
-    const { data, error } = await supabase
-      .from("form_submissions")
-      .select("*")
-      .eq("form_type", formType)
-      .order("created_at", { ascending: false });
+    setFetchError(null);
 
-    if (error) {
-      console.error("Fetch error:", error);
+    // Safety timeout
+    const timer = setTimeout(() => {
+      if (mountedRef.current) {
+        console.warn("[useFormSubmissions] Fetch timeout for:", formType);
+        setLoading(false);
+        setFetchError("डेटा लोड करण्यास खूप वेळ लागत आहे. कृपया पुन्हा प्रयत्न करा.");
+      }
+    }, FETCH_TIMEOUT_MS);
+
+    try {
+      const { data, error } = await supabase
+        .from("form_submissions")
+        .select("*")
+        .eq("form_type", formType)
+        .order("created_at", { ascending: false });
+
+      clearTimeout(timer);
+      if (!mountedRef.current) return;
+
+      if (error) {
+        console.error("[useFormSubmissions] Fetch error:", error);
+        setFetchError("Data लोड करताना Error आला. कृपया पुन्हा प्रयत्न करा.");
+        toast.error("Data लोड करताना Error आला");
+      } else {
+        setSubmissions((data as FormSubmission[]) || []);
+        setFetchError(null);
+      }
+    } catch (err) {
+      clearTimeout(timer);
+      if (!mountedRef.current) return;
+      console.error("[useFormSubmissions] Unexpected error:", err);
+      setFetchError("नेटवर्क Error — कृपया इंटरनेट कनेक्शन तपासा.");
       toast.error("Data लोड करताना Error आला");
-    } else {
-      setSubmissions((data as FormSubmission[]) || []);
+    } finally {
+      clearTimeout(timer);
+      if (mountedRef.current) setLoading(false);
     }
-    setLoading(false);
   }, [formType]);
 
   useEffect(() => {
+    mountedRef.current = true;
     fetchSubmissions();
+    return () => { mountedRef.current = false; };
   }, [fetchSubmissions]);
 
   const addSubmission = async (applicantName: string, formData: Record<string, any>) => {
-    // Get current user
-    const { data: { user } } = await supabase.auth.getUser();
+    try {
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
 
-    // Deduct wallet if pricing key exists
-    const pricingKey = FORM_TYPE_TO_PRICING_KEY[formType];
-    if (pricingKey && user) {
-      const { data: deductResult, error: deductError } = await supabase.functions.invoke("deduct-wallet", {
-        body: { form_type: pricingKey },
+      // Deduct wallet if pricing key exists
+      const pricingKey = FORM_TYPE_TO_PRICING_KEY[formType];
+      if (pricingKey && user) {
+        const { data: deductResult, error: deductError } = await supabase.functions.invoke("deduct-wallet", {
+          body: { form_type: pricingKey },
+        });
+
+        if (deductError) {
+          toast.error("वॉलेट शुल्क कापता आलं नाही");
+          return false;
+        }
+
+        if (deductResult?.error) {
+          if (deductResult.error === "Insufficient balance") {
+            toast.error(deductResult.message || "शिल्लक अपुरी आहे. कृपया वॉलेट रिचार्ज करा.");
+          } else {
+            toast.error(deductResult.error);
+          }
+          return false;
+        }
+      }
+
+      const { error } = await supabase.from("form_submissions").insert({
+        form_type: formType,
+        applicant_name: applicantName,
+        form_data: formData,
+        user_id: user?.id,
       });
 
-      if (deductError) {
-        toast.error("वॉलेट शुल्क कापता आलं नाही");
+      if (error) {
+        console.error("[useFormSubmissions] Insert error:", error);
+        toast.error("Data Save करताना Error आला");
         return false;
       }
-
-      if (deductResult?.error) {
-        if (deductResult.error === "Insufficient balance") {
-          toast.error(deductResult.message || "शिल्लक अपुरी आहे. कृपया वॉलेट रिचार्ज करा.");
-        } else {
-          toast.error(deductResult.error);
-        }
-        return false;
-      }
-    }
-
-    const { error } = await supabase.from("form_submissions").insert({
-      form_type: formType,
-      applicant_name: applicantName,
-      form_data: formData,
-      user_id: user?.id,
-    });
-
-    if (error) {
-      console.error("Insert error:", error);
-      toast.error("Data Save करताना Error आला");
+      toast.success("Data यशस्वीरित्या Save झाला!");
+      await fetchSubmissions();
+      return true;
+    } catch (err) {
+      console.error("[useFormSubmissions] addSubmission error:", err);
+      toast.error("Data Save करताना Error आला. कृपया पुन्हा प्रयत्न करा.");
       return false;
     }
-    toast.success("Data यशस्वीरित्या Save झाला!");
-    await fetchSubmissions();
-    return true;
   };
 
   const deleteSubmission = async (id: string) => {
-    const { error } = await supabase.from("form_submissions").delete().eq("id", id);
-    if (error) {
-      console.error("Delete error:", error);
+    try {
+      const { error } = await supabase.from("form_submissions").delete().eq("id", id);
+      if (error) {
+        console.error("[useFormSubmissions] Delete error:", error);
+        toast.error("Delete करताना Error आला");
+        return false;
+      }
+      toast.success("Record हटवला!");
+      setSubmissions((prev) => prev.filter((s) => s.id !== id));
+      return true;
+    } catch (err) {
+      console.error("[useFormSubmissions] deleteSubmission error:", err);
       toast.error("Delete करताना Error आला");
       return false;
     }
-    toast.success("Record हटवला!");
-    setSubmissions((prev) => prev.filter((s) => s.id !== id));
-    return true;
   };
 
-  return { submissions, loading, addSubmission, deleteSubmission, refresh: fetchSubmissions };
+  return { submissions, loading, fetchError, addSubmission, deleteSubmission, refresh: fetchSubmissions };
 };
