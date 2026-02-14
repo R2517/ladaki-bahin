@@ -250,34 +250,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // ─── Sign In with error recovery ─────────────────────────────
   const signIn = async (email: string, password: string) => {
     try {
-      // Clear any stale tokens before attempting login
-      forceAuthClear();
-
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) {
-        // Clear tokens on auth error to prevent stale state
-        forceAuthClear();
         return { error };
       }
 
+      // Session is set automatically by onAuthStateChange listener
+      // But we also set it here for immediate availability
       if (data.session && mountedRef.current) {
         setSession(data.session);
         setUser(data.session.user);
-        await Promise.all([
+        // Fetch profile and role but don't block login on it
+        Promise.all([
           fetchProfile(data.session.user.id),
           fetchRole(data.session.user.id),
-        ]);
-        startHeartbeat();
+        ]).then(() => {
+          startHeartbeat();
+        }).catch(() => {});
       }
 
       return { error: null };
     } catch (err) {
       console.error("[Auth] signIn error:", err);
-      forceAuthClear();
       return { error: err as Error };
     }
   };
