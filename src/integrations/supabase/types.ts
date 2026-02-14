@@ -36,6 +36,7 @@ export type Database = {
           registration_type: string
           status: string
           taluka: string | null
+          user_id: string | null
           village: string | null
         }
         Insert: {
@@ -59,6 +60,7 @@ export type Database = {
           registration_type?: string
           status?: string
           taluka?: string | null
+          user_id?: string | null
           village?: string | null
         }
         Update: {
@@ -82,6 +84,7 @@ export type Database = {
           registration_type?: string
           status?: string
           taluka?: string | null
+          user_id?: string | null
           village?: string | null
         }
         Relationships: []
@@ -106,6 +109,7 @@ export type Database = {
           scholarship_category: string | null
           status: string
           student_name: string | null
+          user_id: string | null
           year: string | null
         }
         Insert: {
@@ -127,6 +131,7 @@ export type Database = {
           scholarship_category?: string | null
           status?: string
           student_name?: string | null
+          user_id?: string | null
           year?: string | null
         }
         Update: {
@@ -148,6 +153,7 @@ export type Database = {
           scholarship_category?: string | null
           status?: string
           student_name?: string | null
+          user_id?: string | null
           year?: string | null
         }
         Relationships: [
@@ -230,6 +236,7 @@ export type Database = {
           payment_mode: string | null
           payment_status: string
           received_amount: number
+          user_id: string | null
         }
         Insert: {
           amount?: number
@@ -243,6 +250,7 @@ export type Database = {
           payment_mode?: string | null
           payment_status?: string
           received_amount?: number
+          user_id?: string | null
         }
         Update: {
           amount?: number
@@ -256,6 +264,7 @@ export type Database = {
           payment_mode?: string | null
           payment_status?: string
           received_amount?: number
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -409,6 +418,7 @@ export type Database = {
           payment_mode: string | null
           payment_status: string
           received_amount: number
+          user_id: string | null
         }
         Insert: {
           amount?: number
@@ -422,6 +432,7 @@ export type Database = {
           payment_mode?: string | null
           payment_status?: string
           received_amount?: number
+          user_id?: string | null
         }
         Update: {
           amount?: number
@@ -435,6 +446,7 @@ export type Database = {
           payment_mode?: string | null
           payment_status?: string
           received_amount?: number
+          user_id?: string | null
         }
         Relationships: []
       }

@@ -1,64 +1,58 @@
-import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, IndianRupee, FileText, CreditCard } from "lucide-react";
+import { Users, IndianRupee, FileText, RefreshCw } from "lucide-react";
+
+const fetchAdminStats = async () => {
+  const [profilesRes, formsRes, walletRes] = await Promise.all([
+    supabase.from("profiles").select("id, is_active"),
+    supabase.from("form_submissions").select("id", { count: "exact", head: true }),
+    supabase.from("wallet_transactions").select("amount, type").eq("type", "credit"),
+  ]);
+
+  const profiles = profilesRes.data || [];
+  const totalForms = formsRes.count || 0;
+  const totalRevenue = (walletRes.data || [])
+    .reduce((sum: number, t: any) => sum + Number(t.amount), 0);
+
+  return {
+    totalVles: profiles.length,
+    activeVles: profiles.filter((p: any) => p.is_active).length,
+    totalRevenue,
+    totalForms,
+  };
+};
 
 const AdminDashboard = () => {
-  const [stats, setStats] = useState({
-    totalVles: 0,
-    activeVles: 0,
-    totalRevenue: 0,
-    totalForms: 0,
+  const { data: stats, isLoading, refetch } = useQuery({
+    queryKey: ["admin-dashboard-stats"],
+    queryFn: fetchAdminStats,
+    staleTime: 5 * 60 * 1000, // 5 min cache
+    refetchOnWindowFocus: false,
   });
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchStats();
-  }, []);
-
-  const fetchStats = async () => {
-    try {
-      const [profilesRes, formsRes, walletRes] = await Promise.all([
-        supabase.from("profiles").select("id, is_active"),
-        supabase.from("form_submissions").select("id"),
-        supabase.from("wallet_transactions").select("amount, type"),
-      ]);
-
-      const profiles = profilesRes.data || [];
-      const forms = formsRes.data || [];
-      const walletTxns = walletRes.data || [];
-
-      const totalRevenue = walletTxns
-        .filter((t: any) => t.type === "credit")
-        .reduce((sum: number, t: any) => sum + Number(t.amount), 0);
-
-      setStats({
-        totalVles: profiles.length,
-        activeVles: profiles.filter((p: any) => p.is_active).length,
-        totalRevenue,
-        totalForms: forms.length,
-      });
-    } catch (err) {
-      console.error("Failed to fetch stats:", err);
-    }
-    setLoading(false);
-  };
+  const s = stats || { totalVles: 0, activeVles: 0, totalRevenue: 0, totalForms: 0 };
 
   const statCards = [
-    { label: "एकूण VLE", value: stats.totalVles, icon: Users, color: "text-blue-600" },
-    { label: "सक्रिय VLE", value: stats.activeVles, icon: Users, color: "text-green-600" },
-    { label: "एकूण महसूल (₹)", value: `₹${stats.totalRevenue.toLocaleString("en-IN")}`, icon: IndianRupee, color: "text-emerald-600" },
-    { label: "एकूण फॉर्म", value: stats.totalForms, icon: FileText, color: "text-purple-600" },
+    { label: "एकूण VLE", value: s.totalVles, icon: Users, color: "text-blue-600" },
+    { label: "सक्रिय VLE", value: s.activeVles, icon: Users, color: "text-green-600" },
+    { label: "एकूण महसूल (₹)", value: `₹${s.totalRevenue.toLocaleString("en-IN")}`, icon: IndianRupee, color: "text-emerald-600" },
+    { label: "एकूण फॉर्म", value: s.totalForms, icon: FileText, color: "text-purple-600" },
   ];
 
   return (
     <div className="flex min-h-screen bg-background">
       <AdminSidebar />
       <main className="flex-1 p-6 md:p-8">
-        <h1 className="text-2xl font-bold mb-6">Admin डॅशबोर्ड</h1>
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-bold">Admin डॅशबोर्ड</h1>
+          <button onClick={() => refetch()} className="p-2 rounded-md hover:bg-muted" title="Refresh">
+            <RefreshCw size={18} className={isLoading ? "animate-spin" : ""} />
+          </button>
+        </div>
 
-        {loading ? (
+        {isLoading ? (
           <div className="flex justify-center py-12">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
           </div>

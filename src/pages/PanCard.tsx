@@ -90,6 +90,7 @@ const PanCard = () => {
       return;
     }
 
+    const { data: { user } } = await supabase.auth.getUser();
     const { error } = await supabase.from("pan_card_applications").insert({
       application_type: form.application_type,
       application_number: form.application_number.trim(),
@@ -100,6 +101,7 @@ const PanCard = () => {
       received_amount: parseFloat(form.received_amount) || 0,
       payment_status: form.payment_status,
       payment_mode: form.payment_mode,
+      user_id: user?.id,
     });
 
     if (error) {
