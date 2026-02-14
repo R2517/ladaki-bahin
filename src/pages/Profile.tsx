@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { ArrowLeft, Save, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { getDistricts, getTalukas } from "@/data/maharashtra-districts";
 
 const Profile = () => {
   const { profile, refreshProfile } = useAuth();
@@ -142,21 +143,36 @@ const Profile = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="district">जिल्हा</Label>
-                <Input
-                  id="district"
+                <Select
                   value={form.district}
-                  onChange={(e) => setForm({ ...form, district: e.target.value })}
-                  placeholder="जिल्हा"
-                />
+                  onValueChange={(val) => setForm({ ...form, district: val, taluka: "" })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="जिल्हा निवडा" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {getDistricts().map((d) => (
+                      <SelectItem key={d} value={d}>{d}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="taluka">तालुका</Label>
-                <Input
-                  id="taluka"
+                <Select
                   value={form.taluka}
-                  onChange={(e) => setForm({ ...form, taluka: e.target.value })}
-                  placeholder="तालुका"
-                />
+                  onValueChange={(val) => setForm({ ...form, taluka: val })}
+                  disabled={!form.district}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="तालुका निवडा" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {getTalukas(form.district).map((t) => (
+                      <SelectItem key={t} value={t}>{t}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 
