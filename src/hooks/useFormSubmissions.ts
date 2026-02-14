@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
 
 export interface FormSubmission {
   id: string;
@@ -24,37 +25,36 @@ const FORM_TYPE_TO_PRICING_KEY: Record<string, string> = {
   "शेतकरी ओळखपत्र": "farmer_id_card",
 };
 
-// Safety timeout — never let loading hang for more than 10 seconds
-const FETCH_TIMEOUT_MS = 30000;
-
 export const useFormSubmissions = (formType: string) => {
   const [submissions, setSubmissions] = useState<FormSubmission[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState<string | null>(null);
   const mountedRef = useRef(true);
+  const { user, loading: authLoading } = useAuth();
 
   const fetchSubmissions = useCallback(async () => {
+    // Don't fetch if auth is still loading or no user
+    if (authLoading) return;
+    if (!user) {
+      if (mountedRef.current) {
+        setSubmissions([]);
+        setLoading(false);
+      }
+      return;
+    }
+
     if (!mountedRef.current) return;
     setLoading(true);
     setFetchError(null);
-
-    // Safety timeout
-    const timer = setTimeout(() => {
-      if (mountedRef.current) {
-        console.warn("[useFormSubmissions] Fetch timeout for:", formType);
-        setLoading(false);
-        setFetchError("डेटा लोड करण्यास खूप वेळ लागत आहे. कृपया पुन्हा प्रयत्न करा.");
-      }
-    }, FETCH_TIMEOUT_MS);
 
     try {
       const { data, error } = await supabase
         .from("form_submissions")
         .select("*")
         .eq("form_type", formType)
-        .order("created_at", { ascending: false });
+        .order("created_at", { ascending: false })
+        .limit(100);
 
-      clearTimeout(timer);
       if (!mountedRef.current) return;
 
       if (error) {
@@ -66,16 +66,14 @@ export const useFormSubmissions = (formType: string) => {
         setFetchError(null);
       }
     } catch (err) {
-      clearTimeout(timer);
       if (!mountedRef.current) return;
       console.error("[useFormSubmissions] Unexpected error:", err);
       setFetchError("नेटवर्क Error — कृपया इंटरनेट कनेक्शन तपासा.");
       toast.error("Data लोड करताना Error आला");
     } finally {
-      clearTimeout(timer);
       if (mountedRef.current) setLoading(false);
     }
-  }, [formType]);
+  }, [formType, user, authLoading]);
 
   useEffect(() => {
     mountedRef.current = true;
@@ -85,10 +83,8 @@ export const useFormSubmissions = (formType: string) => {
 
   const addSubmission = async (applicantName: string, formData: Record<string, any>) => {
     try {
-      // Get current user
       const { data: { user } } = await supabase.auth.getUser();
 
-      // Deduct wallet if pricing key exists
       const pricingKey = FORM_TYPE_TO_PRICING_KEY[formType];
       if (pricingKey && user) {
         const { data: deductResult, error: deductError } = await supabase.functions.invoke("deduct-wallet", {
