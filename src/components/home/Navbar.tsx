@@ -1,29 +1,45 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Landmark, Menu, X, Sun, Moon } from "lucide-react";
+import { Landmark, Menu, X, Sun, Moon, ChevronDown } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
   const { isDark, toggleTheme } = useTheme();
+  const moreRef = useRef<HTMLDivElement>(null);
 
-  const navLinks = [
+  // Close "More" dropdown on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (moreRef.current && !moreRef.current.contains(e.target as Node)) {
+        setMoreOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const mainLinks = [
     { label: "सेवा", href: "/services" },
     { label: "कसे काम करते", href: "/how-it-works" },
     { label: "फायदे", href: "/benefits" },
     { label: "FAQ", href: "/faq" },
-    { label: "बांधकाम कामगार", href: "/bandkam-kamgar-info" },
     { label: "संपर्क", href: "/contact" },
   ];
 
-  const scrollTo = (href: string) => {
-    setMobileOpen(false);
-    if (href.startsWith("#")) {
-      const el = document.querySelector(href);
-      el?.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+  const moreLinks = [
+    { label: "आमच्याबद्दल", href: "/about" },
+    { label: "बांधकाम कामगार", href: "/bandkam-kamgar-info" },
+    { label: "डॅशबोर्ड", href: "/dashboard" },
+    { label: "अटी व शर्ती", href: "/terms" },
+    { label: "गोपनीयता धोरण", href: "/privacy" },
+    { label: "रिफंड पॉलिसी", href: "/refund" },
+    { label: "अस्वीकरण", href: "/disclaimer" },
+  ];
+
+  const allLinks = [...mainLinks, ...moreLinks];
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-950/80 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-800/50">
@@ -45,26 +61,41 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-6">
-            {navLinks.map((link) =>
-              link.href.startsWith("#") ? (
-                <button
-                  key={link.label}
-                  onClick={() => scrollTo(link.href)}
-                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  {link.label}
-                </button>
-              ) : (
-                <Link
-                  key={link.label}
-                  to={link.href}
-                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  {link.label}
-                </Link>
-              )
-            )}
+          <div className="hidden md:flex items-center gap-5">
+            {mainLinks.map((link) => (
+              <Link
+                key={link.label}
+                to={link.href}
+                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              >
+                {link.label}
+              </Link>
+            ))}
+
+            {/* More dropdown */}
+            <div className="relative" ref={moreRef}>
+              <button
+                onClick={() => setMoreOpen((p) => !p)}
+                className="flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              >
+                अधिक
+                <ChevronDown size={14} className={`transition-transform ${moreOpen ? "rotate-180" : ""}`} />
+              </button>
+              {moreOpen && (
+                <div className="absolute right-0 top-full mt-2 w-52 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                  {moreLinks.map((link) => (
+                    <Link
+                      key={link.label}
+                      to={link.href}
+                      onClick={() => setMoreOpen(false)}
+                      className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Auth buttons + theme toggle */}
@@ -92,31 +123,21 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile menu — shows ALL pages */}
       {mobileOpen && (
         <div className="md:hidden bg-white/95 dark:bg-gray-950/95 backdrop-blur-xl border-b border-gray-200 dark:border-gray-800 animate-in slide-in-from-top-2">
-          <div className="px-4 py-4 space-y-3">
-            {navLinks.map((link) =>
-              link.href.startsWith("#") ? (
-                <button
-                  key={link.label}
-                  onClick={() => scrollTo(link.href)}
-                  className="block w-full text-left text-sm font-medium text-muted-foreground hover:text-foreground py-2"
-                >
-                  {link.label}
-                </button>
-              ) : (
-                <Link
-                  key={link.label}
-                  to={link.href}
-                  onClick={() => setMobileOpen(false)}
-                  className="block text-sm font-medium text-muted-foreground hover:text-foreground py-2"
-                >
-                  {link.label}
-                </Link>
-              )
-            )}
-            <div className="flex items-center justify-between pt-3 border-t">
+          <div className="px-4 py-4 space-y-1">
+            {allLinks.map((link) => (
+              <Link
+                key={link.label}
+                to={link.href}
+                onClick={() => setMobileOpen(false)}
+                className="block text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg px-3 py-2 transition-colors"
+              >
+                {link.label}
+              </Link>
+            ))}
+            <div className="flex items-center justify-between pt-3 mt-2 border-t">
               <button
                 onClick={toggleTheme}
                 className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
