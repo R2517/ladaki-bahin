@@ -1,9 +1,6 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
-import Cropper from "react-easy-crop";
 import {
   ArrowLeft, Sprout, Plus, Search, Trash2, Eye, Download, Printer,
   Camera, Upload, X, ChevronDown, ChevronUp, User, MapPin, ImageIcon, Wallet,
@@ -16,13 +13,37 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+
 import { getThemeGradient } from "@/lib/themes";
 import { useFormSubmissions } from "@/hooks/useFormSubmissions";
 import { useAuth } from "@/contexts/AuthContext";
 import { getDistricts, getTalukas } from "@/data/maharashtra-districts";
-import FarmerCardTemplate from "@/components/farmer/FarmerCardTemplate";
-import type { FarmerCardData } from "@/components/farmer/FarmerCardTemplate";
 import type { FormSubmission } from "@/hooks/useFormSubmissions";
+
+interface FarmerCardData {
+  nameMarathi: string;
+  nameEnglish: string;
+  dateOfBirth: string;
+  gender: string;
+  mobile: string;
+  aadhaar: string;
+  farmerId: string;
+  address: string;
+  photoUrl: string;
+  landHoldings: {
+    district: string;
+    taluka: string;
+    village: string;
+    gatNumber?: string;
+    accountNumber?: string;
+    areaHectares: string;
+  }[];
+  showAccountNumber?: boolean;
+  issueDate?: string;
+}
+
+const Cropper = lazy(() => import("react-easy-crop"));
+const FarmerCardTemplate = lazy(() => import("@/components/farmer/FarmerCardTemplate"));
 
 // ─── Crop helpers ────────────────────────────────────────────────
 function createImage(url: string): Promise<HTMLImageElement> {
@@ -166,6 +187,8 @@ const FarmerIdCard = () => {
     if (!el) return;
     setDownloading(true);
     try {
+      const html2canvas = (await import("html2canvas")).default;
+      const { jsPDF } = await import("jspdf");
       const canvas = await html2canvas(el, { scale: 3, useCORS: true, backgroundColor: "#ffffff" });
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
@@ -322,7 +345,9 @@ const FarmerIdCard = () => {
 
           {/* Card */}
           <div id="farmer-card-print" className="bg-white p-6 rounded-xl flex flex-col items-center gap-4">
-            <FarmerCardTemplate data={previewData} />
+            <Suspense fallback={<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600" />}>
+              <FarmerCardTemplate data={previewData} />
+            </Suspense>
           </div>
         </div>
       </div>
@@ -554,15 +579,17 @@ const FarmerIdCard = () => {
             <DialogTitle>फोटो क्रॉप करा</DialogTitle>
             <div className="relative w-full h-64 bg-black rounded-lg overflow-hidden">
               {rawImage && (
-                <Cropper
-                  image={rawImage}
-                  crop={crop}
-                  zoom={zoom}
-                  aspect={1}
-                  onCropChange={setCrop}
-                  onZoomChange={setZoom}
-                  onCropComplete={onCropComplete}
-                />
+                <Suspense fallback={<div className="flex items-center justify-center h-full"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600" /></div>}>
+                  <Cropper
+                    image={rawImage}
+                    crop={crop}
+                    zoom={zoom}
+                    aspect={1}
+                    onCropChange={setCrop}
+                    onZoomChange={setZoom}
+                    onCropComplete={onCropComplete}
+                  />
+                </Suspense>
               )}
             </div>
             <div className="flex items-center gap-2">
