@@ -72,23 +72,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   useEffect(() => {
+    let mounted = true;
+
     supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!mounted) return;
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
-        fetchProfile(session.user.id);
-        fetchRole(session.user.id);
+        fetchProfile(session.user.id).catch(() => {});
+        fetchRole(session.user.id).catch(() => {});
       }
       setLoading(false);
+    }).catch(() => {
+      if (mounted) setLoading(false);
     });
+
+    // Safety timeout — never stay loading forever
+    const safetyTimer = setTimeout(() => {
+      if (mounted) setLoading(false);
+    }, 8000);
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
+        if (!mounted) return;
         setSession(session);
         setUser(session?.user ?? null);
         if (session?.user) {
-          await fetchProfile(session.user.id);
-          await fetchRole(session.user.id);
+          try {
+            await fetchProfile(session.user.id);
+            await fetchRole(session.user.id);
+          } catch {
+            // Profile/role fetch failed — user still authenticated
+          }
         } else {
           setProfile(null);
           setRole("vle");
@@ -97,7 +112,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     );
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      clearTimeout(safetyTimer);
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signUp = async (email: string, password: string, fullName: string) => {
