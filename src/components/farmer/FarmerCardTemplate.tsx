@@ -10,6 +10,7 @@ export interface FarmerCardData {
   aadhaar: string;
   farmerId: string;
   address: string;
+  pinCode?: string;
   photoUrl: string;
   landHoldings: {
     district: string;
@@ -56,22 +57,6 @@ const cardShell: React.CSSProperties = {
   boxSizing: "border-box",
 };
 
-// ─── Inline AgriStack Logo SVG ─────────────────────────────
-const AgriStackLogo = ({ size = 40 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="50" cy="50" r="48" fill="#f0fdf4" stroke="#16a34a" strokeWidth="2"/>
-    <path d="M50 18 C45 28, 35 35, 30 50 C25 65, 35 80, 50 82 C65 80, 75 65, 70 50 C65 35, 55 28, 50 18Z" fill="#16a34a" opacity="0.15"/>
-    <path d="M50 25 L50 70" stroke="#15803d" strokeWidth="3" strokeLinecap="round"/>
-    <path d="M50 35 C42 30, 32 32, 30 40" stroke="#16a34a" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-    <path d="M50 45 C58 40, 68 42, 70 50" stroke="#16a34a" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-    <path d="M50 55 C42 50, 32 52, 30 60" stroke="#22c55e" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-    <ellipse cx="50" cy="22" rx="4" ry="6" fill="#16a34a"/>
-    <ellipse cx="43" cy="27" rx="3" ry="5" fill="#22c55e" transform="rotate(-30 43 27)"/>
-    <ellipse cx="57" cy="27" rx="3" ry="5" fill="#22c55e" transform="rotate(30 57 27)"/>
-    <text x="50" y="94" textAnchor="middle" fontSize="10" fontWeight="700" fill="#d4af37" fontFamily="Inter, sans-serif">AgriStack</text>
-  </svg>
-);
-
 // ─── Wheat Pattern Background SVG ──────────────────────────
 const WheatPattern = ({ opacity = 0.12 }: { opacity?: number }) => (
   <svg
@@ -84,7 +69,6 @@ const WheatPattern = ({ opacity = 0.12 }: { opacity?: number }) => (
         <stop offset="100%" stopColor="#b8860b" stopOpacity="1"/>
       </linearGradient>
     </defs>
-    {/* Wheat stalks */}
     {[40, 80, 130, 175, 220, 265, 310, 355].map((x, i) => (
       <g key={i} transform={`translate(${x},0) rotate(${(i % 2 === 0 ? -3 : 3)}, 0, 150)`}>
         <line x1="0" y1="150" x2="0" y2="30" stroke="url(#wg)" strokeWidth="2"/>
@@ -97,14 +81,25 @@ const WheatPattern = ({ opacity = 0.12 }: { opacity?: number }) => (
         <ellipse cx="0" cy="22" rx="3" ry="7" fill="url(#wg)"/>
       </g>
     ))}
-    {/* Ground line */}
     <path d="M0 140 Q50 130, 100 138 Q150 146, 200 135 Q250 125, 300 137 Q350 148, 400 133" stroke="#d4af37" strokeWidth="1" opacity="0.4" fill="none"/>
     <rect x="0" y="142" width="400" height="10" fill="#d4af37" opacity="0.08"/>
   </svg>
 );
 
+// Build full address string from land holdings
+const buildFullAddress = (data: FarmerCardData) => {
+  const l = data.landHoldings?.[0];
+  const parts: string[] = [];
+  if (data.address) parts.push(data.address);
+  if (l?.village) parts.push(l.village);
+  if (l?.taluka) parts.push(`ता. ${l.taluka}`);
+  if (l?.district) parts.push(`जि. ${l.district.split(" (")[0]}`);
+  if (data.pinCode) parts.push(data.pinCode);
+  return parts.join(", ");
+};
+
 // ═══════════════════════════════════════════════════════════
-// FRONT SIDE — Inspired by Image 1 reference
+// FRONT SIDE
 // ═══════════════════════════════════════════════════════════
 const FarmerCardFront = ({ data }: { data: FarmerCardData }) => {
   const qrData = JSON.stringify({
@@ -113,19 +108,24 @@ const FarmerCardFront = ({ data }: { data: FarmerCardData }) => {
     mobile: data.mobile,
     village: data.landHoldings?.[0]?.village || "",
   });
-  const village = data.landHoldings?.[0]?.village || "";
-  const district = data.landHoldings?.[0]?.district?.split(" (")[0] || "";
+
+  const hasPhoto = !!data.photoUrl;
+  const fullAddress = buildFullAddress(data);
 
   return (
     <div style={cardShell} className="farmer-id-card">
       <WheatPattern opacity={0.12} />
 
-      {/* ── Header: Logo + Title ── */}
+      {/* ── Header: Logo left + Title right ── */}
       <div style={{
         display: "flex", alignItems: "center", justifyContent: "space-between",
-        padding: "2.5mm 3mm 1mm", position: "relative", zIndex: 1,
+        padding: "2mm 3mm 1mm", position: "relative", zIndex: 1,
       }}>
-        <AgriStackLogo size={36} />
+        <img
+          src="/images/agri-stack-logo.png"
+          alt="AgriStack"
+          style={{ height: "13mm", width: "auto", objectFit: "contain" }}
+        />
         <div style={{ textAlign: "right" }}>
           <div style={{ fontSize: "11pt", fontWeight: 800, color: "#1a5f3a", letterSpacing: "0.5px", lineHeight: 1.1 }}>
             FARMER ID CARD
@@ -136,45 +136,51 @@ const FarmerCardFront = ({ data }: { data: FarmerCardData }) => {
         </div>
       </div>
 
-      {/* ── Name Section ── */}
-      <div style={{ padding: "0 3mm", position: "relative", zIndex: 1 }}>
-        <div style={{ fontSize: "12pt", fontWeight: 700, color: "#000", lineHeight: 1.15 }}>
-          {data.nameEnglish}
-        </div>
-        <div style={{ fontSize: "9.5pt", fontWeight: 600, color: "#333", marginTop: "0.5mm" }}>
-          {data.nameMarathi}
-        </div>
-      </div>
-
-      {/* ── Body: Photo + Details + QR ── */}
+      {/* ── Body: Photo (optional) + Details + QR ── */}
       <div style={{
-        display: "flex", alignItems: "flex-start", gap: "3mm",
-        padding: "1.5mm 3mm 0", position: "relative", zIndex: 1,
+        display: "flex", alignItems: "flex-start", gap: "2.5mm",
+        padding: "1mm 3mm 0", position: "relative", zIndex: 1,
       }}>
-        {/* Photo */}
-        <div style={{
-          width: "18mm", height: "22mm", flexShrink: 0,
-          border: "1px solid #1a5f3a", borderRadius: "2mm",
-          overflow: "hidden", background: "#f5f5f0",
-          display: "flex", alignItems: "center", justifyContent: "center",
-        }}>
-          {data.photoUrl ? (
+        {/* Photo - only show if provided */}
+        {hasPhoto && (
+          <div style={{
+            width: "18mm", height: "22mm", flexShrink: 0,
+            border: "1px solid #1a5f3a", borderRadius: "2mm",
+            overflow: "hidden", background: "#f5f5f0",
+            display: "flex", alignItems: "center", justifyContent: "center",
+          }}>
             <img src={data.photoUrl} alt="Photo" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-          ) : (
-            <svg width="20" height="24" viewBox="0 0 20 24" fill="none"><circle cx="10" cy="7" r="5" fill="#ccc"/><path d="M0 22 C0 16, 5 13, 10 13 C15 13, 20 16, 20 22" fill="#ccc"/></svg>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Details column */}
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontSize: "10pt", fontWeight: 700, fontFamily: "'Courier New', monospace", color: "#000", letterSpacing: "0.5px" }}>
-            FID-{data.farmerId}
+          {/* Name: Marathi on top, English below */}
+          <div style={{ fontSize: "10pt", fontWeight: 700, color: "#000", lineHeight: 1.15 }}>
+            {data.nameMarathi}
           </div>
-          <div style={{ fontSize: "8.5pt", fontFamily: "'Courier New', monospace", color: "#333", marginTop: "1mm" }}>
+          <div style={{ fontSize: "8.5pt", fontWeight: 600, color: "#333", marginTop: "0.3mm" }}>
+            {data.nameEnglish}
+          </div>
+
+          {/* Farmer ID NO */}
+          <div style={{ marginTop: "1.5mm" }}>
+            <div style={{ fontSize: "6.5pt", fontWeight: 600, color: "#666", letterSpacing: "0.3px", textTransform: "uppercase" }}>
+              Farmer ID No
+            </div>
+            <div style={{ fontSize: "10pt", fontWeight: 700, fontFamily: "'Courier New', monospace", color: "#000", letterSpacing: "0.5px" }}>
+              {data.farmerId}
+            </div>
+          </div>
+
+          {/* Aadhaar */}
+          <div style={{ fontSize: "7pt", fontFamily: "'Courier New', monospace", color: "#555", marginTop: "0.5mm" }}>
             {maskAadhaar(data.aadhaar)}
           </div>
-          <div style={{ fontSize: "7.5pt", color: "#666", marginTop: "1.5mm" }}>
-            {village}{district ? `, ${district}` : ""}
+
+          {/* Address */}
+          <div style={{ fontSize: "6pt", color: "#666", marginTop: "1mm", lineHeight: 1.25, maxHeight: "8mm", overflow: "hidden" }}>
+            {fullAddress}
           </div>
         </div>
 
@@ -194,14 +200,17 @@ const FarmerCardFront = ({ data }: { data: FarmerCardData }) => {
         padding: "1mm 3mm", fontSize: "5.5pt", color: "#888",
       }}>
         <span>Issue: {formatDate(data.issueDate || new Date().toISOString().slice(0, 10))}</span>
-        <span style={{ fontWeight: 600, color: "#1a5f3a", fontSize: "6pt" }}>SETU Suvidha</span>
+        <div style={{ display: "flex", alignItems: "center", gap: "1mm", fontSize: "6pt", color: "#333" }}>
+          <Phone size={7} style={{ color: "#1a5f3a" }} />
+          <span>+91-{data.mobile}</span>
+        </div>
       </div>
     </div>
   );
 };
 
 // ═══════════════════════════════════════════════════════════
-// BACK SIDE — Land details + disclaimer
+// BACK SIDE — Land details + disclaimer at bottom
 // ═══════════════════════════════════════════════════════════
 const FarmerCardBack = ({ data }: { data: FarmerCardData }) => {
   const totalArea = data.landHoldings.reduce((sum, l) => sum + (parseFloat(l.areaHectares) || 0), 0);
@@ -266,33 +275,18 @@ const FarmerCardBack = ({ data }: { data: FarmerCardData }) => {
         </div>
       </div>
 
-      {/* ── Disclaimer ── */}
+      {/* ── Footer: Disclaimer at bottom ── */}
       <div style={{
-        margin: "1.5mm 2.5mm 0", padding: "1.5mm 2mm",
-        background: "#fffbf0", border: "1px dashed #d4af37", borderRadius: "1.5mm",
-        textAlign: "center", position: "relative", zIndex: 1,
+        position: "absolute", bottom: 0, left: 0, right: 0, zIndex: 1,
+        padding: "1.5mm 3mm",
+        background: "#fffbf0", borderTop: "1px dashed #d4af37",
+        textAlign: "center",
       }}>
         <div style={{ fontSize: "5.5pt", fontStyle: "italic", color: "#666", lineHeight: 1.3 }}>
           वैयक्तिक वापरासाठी, सरकारी ओळखपत्र नाही
         </div>
         <div style={{ fontSize: "5pt", fontStyle: "italic", color: "#888" }}>
           For personal use only. Not a government-issued ID
-        </div>
-      </div>
-
-      {/* ── Footer: Logo + Mobile ── */}
-      <div style={{
-        position: "absolute", bottom: 0, left: 0, right: 0, zIndex: 1,
-        display: "flex", justifyContent: "space-between", alignItems: "center",
-        padding: "1mm 3mm",
-      }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "1.5mm" }}>
-          <AgriStackLogo size={18} />
-          <span style={{ fontSize: "5.5pt", fontWeight: 600, color: "#1a5f3a" }}>SETU Suvidha</span>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "1mm", fontSize: "6pt", color: "#333" }}>
-          <Phone size={8} style={{ color: "#1a5f3a" }} />
-          <span>+91-{data.mobile}</span>
         </div>
       </div>
     </div>

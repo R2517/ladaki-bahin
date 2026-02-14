@@ -29,6 +29,7 @@ interface FarmerCardData {
   aadhaar: string;
   farmerId: string;
   address: string;
+  pinCode?: string;
   photoUrl: string;
   landHoldings: {
     district: string;
@@ -111,7 +112,7 @@ const FarmerIdCard = () => {
   const [aadhaar, setAadhaar] = useState("");
   const [farmerId, setFarmerId] = useState("");
   const [address, setAddress] = useState("");
-
+  const [pinCode, setPinCode] = useState("");
   // Form state — Land Details
   const [showAccountNumber, setShowAccountNumber] = useState(false);
   const [autoFillVillage, setAutoFillVillage] = useState(false);
@@ -145,8 +146,7 @@ const FarmerIdCard = () => {
     if (!/^[6-9]\d{9}$/.test(mobile)) { toast.error("१० अंकी मोबाईल नंबर टाका"); return false; }
     if (!/^\d{12}$/.test(aadhaar)) { toast.error("१२ अंकी आधार नंबर टाका"); return false; }
     if (!/^\d{11}$/.test(farmerId)) { toast.error("११ अंकी शेतकरी ID टाका"); return false; }
-    if (address.trim().length < 10) { toast.error("संपूर्ण पत्ता टाका (किमान १० अक्षरे)"); return false; }
-    if (!photoUrl) { toast.error("शेतकरी फोटो अपलोड करणे अनिवार्य आहे"); return false; }
+    if (address.trim().length < 5) { toast.error("संपूर्ण पत्ता टाका (किमान ५ अक्षरे)"); return false; }
 
     for (let i = 0; i < landHoldings.length; i++) {
       const l = landHoldings[i];
@@ -162,7 +162,7 @@ const FarmerIdCard = () => {
   // ─── Build card data ─────────────────────────────────────────
   const buildCardData = (): FarmerCardData => ({
     nameMarathi, nameEnglish, dateOfBirth, gender, mobile, aadhaar, farmerId,
-    address, photoUrl, showAccountNumber, landHoldings,
+    address, pinCode, photoUrl, showAccountNumber, landHoldings,
     issueDate: new Date().toISOString().slice(0, 10),
   });
 
@@ -339,7 +339,7 @@ const FarmerIdCard = () => {
   // ─── Reset form ───────────────────────────────────────────────
   const resetForm = () => {
     setNameMarathi(""); setNameEnglish(""); setDateOfBirth(""); setGender("");
-    setMobile(""); setAadhaar(""); setFarmerId(""); setAddress("");
+    setMobile(""); setAadhaar(""); setFarmerId(""); setAddress(""); setPinCode("");
     setPhotoUrl(""); setLandHoldings([emptyLand()]);
     setShowAccountNumber(false); setAutoFillVillage(false);
     setExpandedSection(0);
@@ -487,9 +487,15 @@ const FarmerIdCard = () => {
                     <Input value={farmerId} onChange={(e) => setFarmerId(e.target.value.replace(/\D/g, "").slice(0, 11))} placeholder="11 अंकी शेतकरी ID" maxLength={11} />
                   </div>
                 </div>
-                <div className="space-y-1.5">
-                  <Label>पूर्ण पत्ता *</Label>
-                  <Textarea value={address} onChange={(e) => setAddress(e.target.value)} placeholder="गाव, तालुका, जिल्हा, पिनकोड" rows={2} />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <Label>पूर्ण पत्ता *</Label>
+                    <Textarea value={address} onChange={(e) => setAddress(e.target.value)} placeholder="घर नं., रस्ता, वस्ती" rows={2} />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label>पिनकोड</Label>
+                    <Input value={pinCode} onChange={(e) => setPinCode(e.target.value.replace(/\D/g, "").slice(0, 6))} placeholder="6 अंकी पिनकोड" maxLength={6} />
+                  </div>
                 </div>
                 <Button type="button" onClick={() => setExpandedSection(1)} className="bg-green-600 hover:bg-green-700">
                   पुढे — जमीन तपशील →
