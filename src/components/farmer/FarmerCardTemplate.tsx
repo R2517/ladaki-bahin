@@ -121,11 +121,17 @@ const FarmerCardFront = ({ data }: { data: FarmerCardData }) => {
         display: "flex", alignItems: "center", justifyContent: "space-between",
         padding: "2mm 3mm 1mm", position: "relative", zIndex: 1,
       }}>
-        <img
-          src="/images/agri-stack-logo.png"
-          alt="AgriStack"
-          style={{ height: "13mm", width: "auto", objectFit: "contain" }}
-        />
+        <div style={{
+          height: "13mm", width: "13mm", borderRadius: "2mm",
+          background: "#1a5f3a", display: "flex", alignItems: "center", justifyContent: "center",
+          padding: "1.5mm", boxShadow: "0 1px 3px rgba(0,0,0,0.15)",
+        }}>
+          <img
+            src="/images/agri-stack-logo.png"
+            alt="AgriStack"
+            style={{ height: "100%", width: "100%", objectFit: "contain", filter: "brightness(0) invert(1)" }}
+          />
+        </div>
         <div style={{ textAlign: "right" }}>
           <div style={{ fontSize: "11pt", fontWeight: 800, color: "#1a5f3a", letterSpacing: "0.5px", lineHeight: 1.1 }}>
             FARMER ID CARD
