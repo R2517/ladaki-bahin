@@ -8,8 +8,8 @@ import { toast } from "sonner";
 import { Eye, EyeOff, LogIn, Landmark, ArrowLeft, FileText, Shield, Users } from "lucide-react";
 import { forceAuthClear } from "@/utils/authCleanup";
 
-// Login request timeout (10 seconds)
-const LOGIN_TIMEOUT_MS = 10000;
+// Login request timeout (30 seconds — includes profile & role fetch)
+const LOGIN_TIMEOUT_MS = 30000;
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -42,26 +42,25 @@ const Login = () => {
       // Race between signIn and a timeout
       const result = await Promise.race([
         signIn(email, password),
-        new Promise<{ error: Error }>((_, reject) =>
-          setTimeout(() => reject(new Error("timeout")), LOGIN_TIMEOUT_MS)
+        new Promise<{ error: Error }>((resolve) =>
+          setTimeout(() => resolve({ error: new Error("timeout") }), LOGIN_TIMEOUT_MS)
         ),
       ]);
 
       if (result.error) {
+        if (result.error.message === "timeout") {
+          toast.error("लॉगिन टाइमआउट — कृपया इंटरनेट कनेक्शन तपासा आणि पुन्हा प्रयत्न करा.");
+        } else {
+          toast.error(result.error.message || "लॉगिन अयशस्वी झाले");
+        }
         forceAuthClear();
-        toast.error(result.error.message || "लॉगिन अयशस्वी झाले");
       } else {
         toast.success("लॉगिन यशस्वी!");
         navigate("/dashboard");
       }
     } catch (err: any) {
-      // Timeout or unexpected error
       forceAuthClear();
-      if (err?.message === "timeout") {
-        toast.error("लॉगिन टाइमआउट — कृपया इंटरनेट कनेक्शन तपासा आणि पुन्हा प्रयत्न करा.");
-      } else {
-        toast.error(err?.message || "लॉगिन अयशस्वी झाले. कृपया पुन्हा प्रयत्न करा.");
-      }
+      toast.error(err?.message || "लॉगिन अयशस्वी झाले. कृपया पुन्हा प्रयत्न करा.");
     } finally {
       setIsLoading(false);
       isSubmittingRef.current = false;

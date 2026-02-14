@@ -35,7 +35,7 @@ interface AuthContextType {
 }
 
 // Maximum time to wait for initial auth check before giving up
-const AUTH_LOADING_TIMEOUT_MS = 6000;
+const AUTH_LOADING_TIMEOUT_MS = 15000;
 // Refresh session 5 minutes before expiry
 const REFRESH_BEFORE_EXPIRY_SEC = 300;
 // Session heartbeat interval (check every 4 minutes)
