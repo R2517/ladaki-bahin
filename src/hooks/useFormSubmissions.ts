@@ -21,6 +21,7 @@ const FORM_TYPE_TO_PRICING_KEY: Record<string, string> = {
   "राजपत्र-मराठी": "rajpatra_marathi",
   "राजपत्र-english": "rajpatra_english",
   "राजपत्र-७/१२": "rajpatra_affidavit_712",
+  "शेतकरी ओळखपत्र": "farmer_id_card",
 };
 
 export const useFormSubmissions = (formType: string) => {

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import {
   FileText, Shield, AlertTriangle, FilePlus, Users, Award,
   CreditCard, Vote, HardHat, BookOpen, Globe, Scale,
-  ArrowRight, CheckCircle2, Printer, Clock, IndianRupee,
+  ArrowRight, CheckCircle2, Printer, Clock, IndianRupee, Sprout,
 } from "lucide-react";
 
 const services = [
@@ -117,6 +117,15 @@ const services = [
     color: "from-fuchsia-500 to-purple-600",
     price: "₹3 पासून",
     path: "/rajpatra-affidavit-712",
+  },
+  {
+    icon: Sprout,
+    title: "शेतकरी ओळखपत्र (Farmer ID Card)",
+    desc: "शेतकऱ्यांसाठी प्रोफेशनल ओळखपत्र तयार करा. फोटो, वैयक्तिक माहिती, जमीन तपशील आणि QR कोड सह डिजिटल ID कार्ड.",
+    features: ["फोटो क्रॉप", "जमीन तपशील", "QR कोड", "PDF डाउनलोड"],
+    color: "from-green-500 to-emerald-600",
+    price: "₹5 पासून",
+    path: "/farmer-id-card",
   },
 ];
 

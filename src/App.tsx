@@ -37,6 +37,7 @@ import RajPatra from "./pages/RajPatra";
 import RajpatraMarathi from "./pages/RajpatraMarathi";
 import RajpatraEnglish from "./pages/RajpatraEnglish";
 import RajpatraAffidavit712 from "./pages/RajpatraAffidavit712";
+import FarmerIdCard from "./pages/FarmerIdCard";
 import Profile from "./pages/Profile";
 import Wallet from "./pages/Wallet";
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -91,6 +92,7 @@ const App = () => (
             <Route path="/rajpatra-marathi" element={<ProtectedRoute><RajpatraMarathi /></ProtectedRoute>} />
             <Route path="/rajpatra-english" element={<ProtectedRoute><RajpatraEnglish /></ProtectedRoute>} />
             <Route path="/rajpatra-affidavit-712" element={<ProtectedRoute><RajpatraAffidavit712 /></ProtectedRoute>} />
+            <Route path="/farmer-id-card" element={<ProtectedRoute><FarmerIdCard /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/wallet" element={<ProtectedRoute><Wallet /></ProtectedRoute>} />
 
