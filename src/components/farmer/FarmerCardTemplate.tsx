@@ -43,6 +43,50 @@ const calcAge = (d: string) => {
   return age;
 };
 
+/* ─── Standard ID card: 85.6mm × 53.98mm ─── */
+const CARD_W = "85.6mm";
+const CARD_H = "53.98mm";
+
+/* Inline style objects — guaranteed to survive print & PDF */
+const cardShell: React.CSSProperties = {
+  width: CARD_W,
+  height: CARD_H,
+  position: "relative",
+  background: "#fff",
+  border: "2.5px solid #15803d",
+  borderRadius: "10px",
+  overflow: "hidden",
+  fontFamily: "'Noto Sans Devanagari', 'Inter', sans-serif",
+  WebkitPrintColorAdjust: "exact",
+  printColorAdjust: "exact",
+  colorAdjust: "exact",
+  pageBreakInside: "avoid",
+  boxSizing: "border-box",
+};
+
+const headerBar: React.CSSProperties = {
+  background: "linear-gradient(to right, #15803d, #16a34a, #059669)",
+  color: "#fff",
+  padding: "3px 8px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+};
+
+const footerBar: React.CSSProperties = {
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  right: 0,
+  background: "#f0fdf4",
+  borderTop: "1px solid #bbf7d0",
+  padding: "2px 8px",
+  display: "flex",
+  justifyContent: "space-between",
+  fontSize: "6.5pt",
+  color: "#15803d",
+};
+
 const FarmerCardFront = ({ data }: { data: FarmerCardData }) => {
   const qrValue = `FARMER:${data.farmerId}|MOBILE:${data.mobile}|NAME:${data.nameEnglish}`;
   const issue = data.issueDate || new Date().toISOString().slice(0, 10);
@@ -50,86 +94,76 @@ const FarmerCardFront = ({ data }: { data: FarmerCardData }) => {
   validDate.setFullYear(validDate.getFullYear() + 2);
 
   return (
-    <div
-      className="relative bg-white border-[3px] border-green-700 rounded-xl overflow-hidden"
-      style={{ width: "400px", height: "252px" }}
-    >
+    <div style={cardShell} className="farmer-id-card">
       {/* Green header bar */}
-      <div className="bg-gradient-to-r from-green-700 via-green-600 to-emerald-600 text-white px-3 py-1.5 flex items-center justify-between">
-        <div className="flex items-center gap-1.5">
-          <Sprout size={16} className="text-yellow-300" />
-          <span className="font-bold text-[11px] tracking-wide">शेतकरी ओळखपत्र</span>
+      <div style={headerBar}>
+        <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+          <Sprout size={13} style={{ color: "#fde047" }} />
+          <span style={{ fontWeight: 700, fontSize: "8.5pt", letterSpacing: "0.3px" }}>शेतकरी ओळखपत्र</span>
         </div>
-        <span className="text-[9px] font-medium opacity-90">FARMER IDENTITY CARD</span>
-      </div>
-
-      {/* Watermark */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.04]">
-        <Sprout size={160} className="text-green-800" />
+        <span style={{ fontSize: "7pt", fontWeight: 500, opacity: 0.9 }}>FARMER IDENTITY CARD</span>
       </div>
 
       {/* Body */}
-      <div className="flex gap-3 px-3 pt-2 relative z-10">
+      <div style={{ display: "flex", gap: "8px", padding: "5px 8px 0", position: "relative", zIndex: 1 }}>
         {/* Photo */}
-        <div className="flex-shrink-0 flex flex-col items-center gap-1">
-          <div className="w-[80px] h-[95px] border-2 border-green-600 rounded-md overflow-hidden bg-green-50">
+        <div style={{ flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: "2px" }}>
+          <div style={{
+            width: "22mm", height: "26mm",
+            border: "1.5px solid #16a34a", borderRadius: "4px",
+            overflow: "hidden", background: "#f0fdf4",
+            display: "flex", alignItems: "center", justifyContent: "center",
+          }}>
             {data.photoUrl ? (
-              <img src={data.photoUrl} alt="Farmer" className="w-full h-full object-cover" />
+              <img src={data.photoUrl} alt="Farmer" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-green-300">
-                <Sprout size={32} />
-              </div>
+              <Sprout size={28} style={{ color: "#bbf7d0" }} />
             )}
           </div>
-          <span className="text-[7px] text-green-700 font-semibold">{data.farmerId}</span>
+          <span style={{ fontSize: "5.5pt", color: "#15803d", fontWeight: 600 }}>{data.farmerId}</span>
         </div>
 
         {/* Details */}
-        <div className="flex-1 min-w-0 text-[9.5px] leading-[15px]">
-          <div className="mb-0.5">
-            <span className="font-bold text-green-800 text-[11px]">{data.nameMarathi}</span>
+        <div style={{ flex: 1, minWidth: 0, fontSize: "7.5pt", lineHeight: "11pt" }}>
+          <div style={{ marginBottom: "1px" }}>
+            <span style={{ fontWeight: 700, color: "#166534", fontSize: "9pt" }}>{data.nameMarathi}</span>
             <br />
-            <span className="text-gray-600 text-[9px]">{data.nameEnglish}</span>
+            <span style={{ color: "#6b7280", fontSize: "7pt" }}>{data.nameEnglish}</span>
           </div>
-          <table className="w-full">
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <tbody>
+              {[
+                ["जन्मतारीख:", `${formatDate(data.dateOfBirth)} (वय: ${calcAge(data.dateOfBirth)})`],
+                ["लिंग:", data.gender],
+                ["मोबाईल:", data.mobile],
+                ["आधार:", maskAadhaar(data.aadhaar)],
+              ].map(([label, val]) => (
+                <tr key={label}>
+                  <td style={{ color: "#9ca3af", paddingRight: "3px", whiteSpace: "nowrap", fontSize: "7pt" }}>{label}</td>
+                  <td style={{ fontWeight: 500, color: "#1f2937", fontSize: "7pt" }}>{val}</td>
+                </tr>
+              ))}
               <tr>
-                <td className="text-gray-500 pr-1 whitespace-nowrap">जन्मतारीख:</td>
-                <td className="font-medium text-gray-800">{formatDate(data.dateOfBirth)} (वय: {calcAge(data.dateOfBirth)})</td>
-              </tr>
-              <tr>
-                <td className="text-gray-500 pr-1 whitespace-nowrap">लिंग:</td>
-                <td className="font-medium text-gray-800">{data.gender}</td>
-              </tr>
-              <tr>
-                <td className="text-gray-500 pr-1 whitespace-nowrap">मोबाईल:</td>
-                <td className="font-medium text-gray-800">{data.mobile}</td>
-              </tr>
-              <tr>
-                <td className="text-gray-500 pr-1 whitespace-nowrap">आधार:</td>
-                <td className="font-medium text-gray-800">{maskAadhaar(data.aadhaar)}</td>
-              </tr>
-              <tr>
-                <td className="text-gray-500 pr-1 whitespace-nowrap align-top">पत्ता:</td>
-                <td className="font-medium text-gray-800 break-words text-[8.5px] leading-[12px]">{data.address}</td>
+                <td style={{ color: "#9ca3af", paddingRight: "3px", whiteSpace: "nowrap", verticalAlign: "top", fontSize: "7pt" }}>पत्ता:</td>
+                <td style={{ fontWeight: 500, color: "#1f2937", wordBreak: "break-word", fontSize: "6.5pt", lineHeight: "9pt" }}>{data.address}</td>
               </tr>
             </tbody>
           </table>
         </div>
 
         {/* QR */}
-        <div className="flex-shrink-0 flex flex-col items-center gap-0.5">
-          <div className="bg-white p-1 border border-green-200 rounded">
-            <QRCodeSVG value={qrValue} size={52} level="M" />
+        <div style={{ flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: "1px" }}>
+          <div style={{ background: "#fff", padding: "2px", border: "1px solid #dcfce7", borderRadius: "3px" }}>
+            <QRCodeSVG value={qrValue} size={48} level="M" />
           </div>
         </div>
       </div>
 
       {/* Footer */}
-      <div className="absolute bottom-0 left-0 right-0 bg-green-50 border-t border-green-200 px-3 py-1 flex justify-between text-[7.5px] text-green-700">
+      <div style={footerBar}>
         <span>दिनांक: {formatDate(issue)}</span>
         <span>वैध: {formatDate(validDate.toISOString().slice(0, 10))}</span>
-        <span className="font-semibold">SETU Suvidha</span>
+        <span style={{ fontWeight: 700 }}>SETU Suvidha</span>
       </div>
     </div>
   );
@@ -137,73 +171,68 @@ const FarmerCardFront = ({ data }: { data: FarmerCardData }) => {
 
 const FarmerCardBack = ({ data }: { data: FarmerCardData }) => {
   const totalArea = data.landHoldings.reduce((sum, l) => sum + (parseFloat(l.areaHectares) || 0), 0);
+  const thCell: React.CSSProperties = {
+    border: "1px solid #86efac", padding: "1px 3px", textAlign: "left",
+    fontSize: "6.5pt", fontWeight: 700, color: "#166534", background: "#dcfce7",
+  };
+  const tdCell: React.CSSProperties = {
+    border: "1px solid #bbf7d0", padding: "1px 3px", fontSize: "6.5pt", color: "#1f2937",
+  };
 
   return (
-    <div
-      className="relative bg-white border-[3px] border-green-700 rounded-xl overflow-hidden"
-      style={{ width: "400px", height: "252px" }}
-    >
+    <div style={cardShell} className="farmer-id-card">
       {/* Header */}
-      <div className="bg-gradient-to-r from-green-700 via-green-600 to-emerald-600 text-white px-3 py-1.5 text-center">
-        <span className="font-bold text-[10px]">जमिनीचा तपशील — Land Holdings</span>
-      </div>
-
-      {/* Watermark */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03]">
-        <Sprout size={140} className="text-green-800" />
+      <div style={{ ...headerBar, justifyContent: "center" }}>
+        <span style={{ fontWeight: 700, fontSize: "8pt" }}>जमिनीचा तपशील — Land Holdings</span>
       </div>
 
       {/* Table */}
-      <div className="px-2 pt-1.5 relative z-10">
-        <table className="w-full text-[8px] border-collapse">
+      <div style={{ padding: "4px 6px 0", position: "relative", zIndex: 1 }}>
+        <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
-            <tr className="bg-green-100 text-green-800">
-              <th className="border border-green-300 px-1 py-0.5 text-left">क्र.</th>
-              <th className="border border-green-300 px-1 py-0.5 text-left">जिल्हा</th>
-              <th className="border border-green-300 px-1 py-0.5 text-left">तालुका</th>
-              <th className="border border-green-300 px-1 py-0.5 text-left">गाव</th>
-              <th className="border border-green-300 px-1 py-0.5 text-left">गट नं.</th>
-              {data.showAccountNumber && (
-                <th className="border border-green-300 px-1 py-0.5 text-left">खाते नं.</th>
-              )}
-              <th className="border border-green-300 px-1 py-0.5 text-right">क्षेत्र (हे.)</th>
+            <tr>
+              <th style={thCell}>क्र.</th>
+              <th style={thCell}>जिल्हा</th>
+              <th style={thCell}>तालुका</th>
+              <th style={thCell}>गाव</th>
+              <th style={thCell}>गट नं.</th>
+              {data.showAccountNumber && <th style={thCell}>खाते नं.</th>}
+              <th style={{ ...thCell, textAlign: "right" }}>क्षेत्र (हे.)</th>
             </tr>
           </thead>
           <tbody>
             {data.landHoldings.slice(0, 6).map((l, i) => (
-              <tr key={i} className={i % 2 === 0 ? "bg-white" : "bg-green-50/50"}>
-                <td className="border border-green-200 px-1 py-0.5">{i + 1}</td>
-                <td className="border border-green-200 px-1 py-0.5 truncate max-w-[60px]">{l.district?.split(" (")[0]}</td>
-                <td className="border border-green-200 px-1 py-0.5 truncate max-w-[50px]">{l.taluka}</td>
-                <td className="border border-green-200 px-1 py-0.5 truncate max-w-[50px]">{l.village}</td>
-                <td className="border border-green-200 px-1 py-0.5">{l.gatNumber || "-"}</td>
-                {data.showAccountNumber && (
-                  <td className="border border-green-200 px-1 py-0.5">{l.accountNumber || "-"}</td>
-                )}
-                <td className="border border-green-200 px-1 py-0.5 text-right">{parseFloat(l.areaHectares).toFixed(2)}</td>
+              <tr key={i} style={{ background: i % 2 === 0 ? "#fff" : "#f0fdf4" }}>
+                <td style={tdCell}>{i + 1}</td>
+                <td style={{ ...tdCell, maxWidth: "16mm", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{l.district?.split(" (")[0]}</td>
+                <td style={{ ...tdCell, maxWidth: "14mm", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{l.taluka}</td>
+                <td style={{ ...tdCell, maxWidth: "14mm", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{l.village}</td>
+                <td style={tdCell}>{l.gatNumber || "-"}</td>
+                {data.showAccountNumber && <td style={tdCell}>{l.accountNumber || "-"}</td>}
+                <td style={{ ...tdCell, textAlign: "right" }}>{parseFloat(l.areaHectares).toFixed(2)}</td>
               </tr>
             ))}
-            <tr className="bg-green-100 font-bold text-green-800">
-              <td className="border border-green-300 px-1 py-0.5" colSpan={data.showAccountNumber ? 6 : 5}>
+            <tr>
+              <td style={{ ...thCell, fontWeight: 700 }} colSpan={data.showAccountNumber ? 6 : 5}>
                 एकूण क्षेत्र (Total Area)
               </td>
-              <td className="border border-green-300 px-1 py-0.5 text-right">{totalArea.toFixed(2)} हे.</td>
+              <td style={{ ...thCell, textAlign: "right", fontWeight: 700 }}>{totalArea.toFixed(2)} हे.</td>
             </tr>
           </tbody>
         </table>
       </div>
 
       {/* Footer */}
-      <div className="absolute bottom-0 left-0 right-0 bg-green-50 border-t border-green-200 px-3 py-1 flex justify-between items-center text-[7px] text-green-700">
+      <div style={footerBar}>
         <span>हे ओळखपत्र SETU Suvidha पोर्टलद्वारे तयार केले आहे.</span>
-        <span className="font-bold text-[8px]">setusuvidha.com</span>
+        <span style={{ fontWeight: 700, fontSize: "7pt" }}>setusuvidha.com</span>
       </div>
     </div>
   );
 };
 
 const FarmerCardTemplate = ({ data, id }: { data: FarmerCardData; id?: string }) => (
-  <div id={id || "farmer-card"} className="flex flex-col items-center gap-4">
+  <div id={id || "farmer-card"} className="farmer-card-wrapper" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "12px" }}>
     <FarmerCardFront data={data} />
     <FarmerCardBack data={data} />
   </div>

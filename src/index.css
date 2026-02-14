@@ -1556,7 +1556,14 @@ html, body {
   .a4-page { width: 100%; padding: 20mm 20mm 20mm 25mm; border: 2px solid #000; box-sizing: border-box; }
   .inc-print-page { page-break-after: always; }
   .inc-print-sidebar { display: none !important; }
-  @page { size: A4 portrait; margin: 0; }
+  @page { size: A4 portrait; margin: 10mm; }
+
+  /* Force all colors and backgrounds to print */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
 
   /* Hide all toast/sonner notifications in print */
   [data-sonner-toaster],
@@ -1570,6 +1577,34 @@ html, body {
   [class*="Toaster"],
   [class*="toaster"] {
     display: none !important;
+  }
+
+  /* ─── Farmer ID Card print rules ─── */
+  .farmer-id-card {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+
+  .farmer-card-wrapper {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 8mm !important;
+  }
+
+  /* Hide all UI chrome when printing from main page */
+  .print\\:hidden,
+  header,
+  nav {
+    display: none !important;
+  }
+
+  /* Ensure images and SVGs print */
+  img, svg {
+    max-width: 100% !important;
+    page-break-inside: avoid !important;
   }
 }
 

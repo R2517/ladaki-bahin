@@ -209,10 +209,68 @@ const FarmerIdCard = () => {
     const el = document.getElementById("farmer-card-print");
     if (!el) return;
     const win = window.open("", "_blank");
-    if (!win) return;
-    win.document.write(`<html><head><title>Farmer Card</title><style>body{margin:0;display:flex;justify-content:center;padding:20px}@media print{body{padding:0}}</style></head><body>${el.innerHTML}</body></html>`);
+    if (!win) { toast.error("Pop-up ब्लॉक आहे. कृपया pop-up allow करा."); return; }
+
+    // Clone card HTML and embed all inline styles — no external CSS needed
+    const cardHtml = el.innerHTML;
+    win.document.write(`<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>शेतकरी ओळखपत्र — Print</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      font-family: 'Noto Sans Devanagari', 'Inter', sans-serif;
+      background: #fff;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      color-adjust: exact !important;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 12mm 0;
+      gap: 8mm;
+    }
+    svg { display: inline-block; }
+    img { max-width: 100%; page-break-inside: avoid; }
+    .farmer-id-card { page-break-inside: avoid; }
+    .print-settings-guide {
+      text-align: center;
+      font-size: 10pt;
+      color: #6b7280;
+      border: 1px dashed #d1d5db;
+      border-radius: 8px;
+      padding: 8px 16px;
+      margin-bottom: 4mm;
+      max-width: 90mm;
+    }
+    @media print {
+      .print-settings-guide { display: none !important; }
+      body { padding: 8mm 0; }
+      @page { size: A4 portrait; margin: 10mm; }
+    }
+  </style>
+</head>
+<body>
+  <div class="print-settings-guide">
+    ⚙️ Print सेटिंग: <b>Scale = 100%</b> | <b>Background graphics = ✅ ON</b><br/>
+    पेपर: A4 | Orientation: Portrait
+  </div>
+  ${cardHtml}
+</body>
+</html>`);
     win.document.close();
-    setTimeout(() => { win.print(); win.close(); }, 500);
+
+    // Wait for fonts & images to load, then trigger print
+    setTimeout(() => {
+      win.focus();
+      win.print();
+    }, 800);
   };
 
   // ─── Photo handling ───────────────────────────────────────────
