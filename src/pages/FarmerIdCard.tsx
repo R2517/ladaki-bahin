@@ -623,6 +623,15 @@ const FarmerIdCard = () => {
       </header>
 
       <div className="max-w-5xl mx-auto p-4 space-y-4">
+        {/* Add New Card — prominent CTA */}
+        <Button
+          onClick={() => setView("form")}
+          className="w-full bg-green-600 hover:bg-green-700 text-white py-6 text-base font-bold shadow-lg rounded-xl flex items-center justify-center gap-2"
+        >
+          <Plus size={22} />
+          <span>+ नवीन शेतकरी ओळखपत्र बनवा</span>
+        </Button>
+
         {/* Search */}
         <div className="relative">
           <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />

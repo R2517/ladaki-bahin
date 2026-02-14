@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -6,17 +6,24 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Eye, EyeOff, LogIn, Landmark, ArrowLeft, FileText, Shield, Users } from "lucide-react";
+import { forceAuthClear } from "@/utils/authCleanup";
+
+// Login request timeout (10 seconds)
+const LOGIN_TIMEOUT_MS = 10000;
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const isSubmittingRef = useRef(false);
   const { signIn } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     document.title = "लॉगिन — SETU Suvidha";
+    // Clear stale tokens when login page loads (user may have been redirected here)
+    forceAuthClear();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -26,15 +33,38 @@ const Login = () => {
       return;
     }
 
+    // Prevent concurrent login attempts
+    if (isSubmittingRef.current) return;
+    isSubmittingRef.current = true;
     setIsLoading(true);
-    const { error } = await signIn(email, password);
-    setIsLoading(false);
 
-    if (error) {
-      toast.error(error.message || "लॉगिन अयशस्वी झाले");
-    } else {
-      toast.success("लॉगिन यशस्वी!");
-      navigate("/dashboard");
+    try {
+      // Race between signIn and a timeout
+      const result = await Promise.race([
+        signIn(email, password),
+        new Promise<{ error: Error }>((_, reject) =>
+          setTimeout(() => reject(new Error("timeout")), LOGIN_TIMEOUT_MS)
+        ),
+      ]);
+
+      if (result.error) {
+        forceAuthClear();
+        toast.error(result.error.message || "लॉगिन अयशस्वी झाले");
+      } else {
+        toast.success("लॉगिन यशस्वी!");
+        navigate("/dashboard");
+      }
+    } catch (err: any) {
+      // Timeout or unexpected error
+      forceAuthClear();
+      if (err?.message === "timeout") {
+        toast.error("लॉगिन टाइमआउट — कृपया इंटरनेट कनेक्शन तपासा आणि पुन्हा प्रयत्न करा.");
+      } else {
+        toast.error(err?.message || "लॉगिन अयशस्वी झाले. कृपया पुन्हा प्रयत्न करा.");
+      }
+    } finally {
+      setIsLoading(false);
+      isSubmittingRef.current = false;
     }
   };
 
