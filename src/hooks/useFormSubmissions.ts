@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { useAuth } from "@/contexts/AuthContext";
 
 export interface FormSubmission {
   id: string;
@@ -30,24 +29,31 @@ export const useFormSubmissions = (formType: string) => {
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState<string | null>(null);
   const mountedRef = useRef(true);
-  const { user, loading: authLoading } = useAuth();
+  const fetchingRef = useRef(false);
 
   const fetchSubmissions = useCallback(async () => {
-    // Don't fetch if auth is still loading or no user
-    if (authLoading) return;
-    if (!user) {
-      if (mountedRef.current) {
-        setSubmissions([]);
-        setLoading(false);
-      }
-      return;
-    }
+    // Prevent concurrent fetches
+    if (fetchingRef.current) return;
+    fetchingRef.current = true;
 
-    if (!mountedRef.current) return;
+    if (!mountedRef.current) { fetchingRef.current = false; return; }
     setLoading(true);
     setFetchError(null);
 
     try {
+      // First check if we have a session
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!mountedRef.current) { fetchingRef.current = false; return; }
+      
+      if (!session) {
+        console.warn("[useFormSubmissions] No session available");
+        setSubmissions([]);
+        setLoading(false);
+        fetchingRef.current = false;
+        return;
+      }
+
       const { data, error } = await supabase
         .from("form_submissions")
         .select("*")
@@ -55,7 +61,7 @@ export const useFormSubmissions = (formType: string) => {
         .order("created_at", { ascending: false })
         .limit(100);
 
-      if (!mountedRef.current) return;
+      if (!mountedRef.current) { fetchingRef.current = false; return; }
 
       if (error) {
         console.error("[useFormSubmissions] Fetch error:", error);
@@ -66,19 +72,28 @@ export const useFormSubmissions = (formType: string) => {
         setFetchError(null);
       }
     } catch (err) {
-      if (!mountedRef.current) return;
+      if (!mountedRef.current) { fetchingRef.current = false; return; }
       console.error("[useFormSubmissions] Unexpected error:", err);
       setFetchError("नेटवर्क Error — कृपया इंटरनेट कनेक्शन तपासा.");
       toast.error("Data लोड करताना Error आला");
     } finally {
       if (mountedRef.current) setLoading(false);
+      fetchingRef.current = false;
     }
-  }, [formType, user, authLoading]);
+  }, [formType]);
 
   useEffect(() => {
     mountedRef.current = true;
-    fetchSubmissions();
-    return () => { mountedRef.current = false; };
+    
+    // Small delay to ensure auth session is available after navigation
+    const timer = setTimeout(() => {
+      fetchSubmissions();
+    }, 500);
+
+    return () => {
+      mountedRef.current = false;
+      clearTimeout(timer);
+    };
   }, [fetchSubmissions]);
 
   const addSubmission = async (applicantName: string, formData: Record<string, any>) => {
