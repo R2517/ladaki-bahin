@@ -81,6 +81,7 @@ const VoterIdCard = () => {
       toast.error("Mobile number 10 अंकी असावा");
       return;
     }
+    const { data: { user } } = await supabase.auth.getUser();
     const { error } = await supabase.from("voter_id_applications").insert({
       application_type: form.application_type,
       application_number: form.application_number.trim(),
@@ -91,6 +92,7 @@ const VoterIdCard = () => {
       received_amount: parseFloat(form.received_amount) || 0,
       payment_status: form.payment_status,
       payment_mode: form.payment_mode,
+      user_id: user?.id,
     });
     if (error) { console.error(error); toast.error("Save करताना Error आला"); return; }
     toast.success("Record यशस्वीरित्या Save झाला!");

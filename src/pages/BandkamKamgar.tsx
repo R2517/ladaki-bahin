@@ -352,6 +352,7 @@ const BandkamKamgar = () => {
     const isNew = regForm.registration_type === "new";
     if (!isNew && !regForm.application_number.trim()) { toast.error("Application Number आवश्यक आहे (MH...)"); return; }
 
+    const { data: { user } } = await supabase.auth.getUser();
     const { data: inserted, error } = await supabase.from("bandkam_registrations").insert({
       registration_type: regForm.registration_type,
       applicant_name: regForm.applicant_name.trim(),
@@ -372,6 +373,7 @@ const BandkamKamgar = () => {
       payment_status: regForm.payment_status,
       payment_mode: regForm.payment_mode,
       application_number: isNew ? null : regForm.application_number.trim() || null,
+      user_id: user?.id,
     }).select().single();
     if (error || !inserted) { toast.error("Save Error"); console.error(error); return; }
 
@@ -380,6 +382,7 @@ const BandkamKamgar = () => {
       registration_id: string; applicant_name: string; scheme_type: string;
       status: string; amount: number; commission_percent: number; commission_amount: number;
       received_amount: number; payment_status: string; payment_mode: string;
+      user_id: string | undefined;
     }> = [];
     const customerName = regForm.applicant_name.trim();
     if (regForm.safety_kit === "yes") {
@@ -388,6 +391,7 @@ const BandkamKamgar = () => {
         scheme_type: "safety_kit", status: "pending",
         amount: 0, commission_percent: 0, commission_amount: 0,
         received_amount: 0, payment_status: "unpaid", payment_mode: "cash",
+        user_id: user?.id,
       });
     } else {
       kitEntries.push({
@@ -395,6 +399,7 @@ const BandkamKamgar = () => {
         scheme_type: "safety_kit", status: "delivered",
         amount: 0, commission_percent: 0, commission_amount: 0,
         received_amount: 0, payment_status: "unpaid", payment_mode: "cash",
+        user_id: user?.id,
       });
     }
     if (regForm.essential_kit === "yes") {
@@ -403,6 +408,7 @@ const BandkamKamgar = () => {
         scheme_type: "essential_kit", status: "pending",
         amount: 0, commission_percent: 0, commission_amount: 0,
         received_amount: 0, payment_status: "unpaid", payment_mode: "cash",
+        user_id: user?.id,
       });
     } else {
       kitEntries.push({
@@ -410,6 +416,7 @@ const BandkamKamgar = () => {
         scheme_type: "essential_kit", status: "delivered",
         amount: 0, commission_percent: 0, commission_amount: 0,
         received_amount: 0, payment_status: "unpaid", payment_mode: "cash",
+        user_id: user?.id,
       });
     }
     // Auto-create scholarship entries for selected categories
@@ -418,6 +425,7 @@ const BandkamKamgar = () => {
       scheme_type: "scholarship", scholarship_category: cat, status: "pending",
       amount: 0, commission_percent: 0, commission_amount: 0,
       received_amount: 0, payment_status: "unpaid", payment_mode: "cash",
+      user_id: user?.id,
     }));
 
     const allAutoEntries = [...kitEntries, ...scholarshipEntries];
@@ -565,6 +573,7 @@ const BandkamKamgar = () => {
     const commAmt = Math.round((amt * pct) / 100);
     const kit = isKitType(schemeForm.scheme_type);
 
+    const { data: { user: currentUser } } = await supabase.auth.getUser();
     const { error } = await supabase.from("bandkam_schemes").insert({
       registration_id: selectedCustomer.id,
       applicant_name: selectedCustomer.applicant_name,
@@ -583,6 +592,7 @@ const BandkamKamgar = () => {
       apply_date: schemeForm.apply_date || null,
       appointment_date: !kit ? schemeForm.appointment_date || null : null,
       delivery_date: kit ? schemeForm.delivery_date || null : null,
+      user_id: currentUser?.id,
     });
     if (error) { toast.error("Save Error"); console.error(error); return; }
     toast.success("Scheme Entry Save! ✅");
